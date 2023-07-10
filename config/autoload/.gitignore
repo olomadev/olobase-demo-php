@@ -1,0 +1,6 @@
+local.php
+*.local.php
+production.php
+prod.php
+test.php
+qa.php

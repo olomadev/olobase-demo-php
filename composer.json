@@ -1,0 +1,121 @@
+{
+    "name": "mezzio/mezzio-skeleton",
+    "description": "Laminas mezzio skeleton. Begin developing PSR-15 middleware applications in seconds!",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "laminas",
+        "mezzio",
+        "skeleton",
+        "middleware",
+        "psr",
+        "psr-7",
+        "psr-11",
+        "psr-15"
+    ],
+    "homepage": "https://mezzio.dev",
+    "support": {
+        "docs": "https://docs.mezzio.dev/mezzio/",
+        "issues": "https://github.com/mezzio/mezzio-skeleton/issues",
+        "source": "https://github.com/mezzio/mezzio-skeleton",
+        "rss": "https://github.com/mezzio/mezzio-skeleton/releases.atom",
+        "chat": "https://laminas.dev/chat",
+        "forum": "https://discourse.laminas.dev"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "laminas/laminas-component-installer": true
+        }
+    },
+    "extra": {
+        "laminas": {
+            "component-whitelist": [
+                "mezzio/mezzio",
+                "mezzio/mezzio-helpers",
+                "mezzio/mezzio-router",
+                "laminas/laminas-httphandlerrunner",
+                "mezzio/mezzio-laminasrouter",
+                "mezzio/mezzio-laminasviewrenderer"
+            ]
+        }
+    },
+    "require": {
+        "php": "^7.4 || ~8.0.0 || ~8.1.0",
+        "composer/package-versions-deprecated": "^1.10.99",
+        "doctrine/annotations": "^1.13",
+        "doctrine/orm": "^2.12",
+        "firebase/php-jwt": "^6.2",
+        "laminas/laminas-cache": "^3.1",
+        "laminas/laminas-cache-storage-adapter-redis": "^2.1",
+        "laminas/laminas-component-installer": "^2.7",
+        "laminas/laminas-config-aggregator": "^1.7",
+        "laminas/laminas-db": "^2.15",
+        "laminas/laminas-diactoros": "^2.11",
+        "laminas/laminas-eventmanager": "^3.5",
+        "laminas/laminas-i18n": "^2.15",
+        "laminas/laminas-i18n-resources": "^2.8",
+        "laminas/laminas-inputfilter": "^2.18",
+        "laminas/laminas-mail": "^2.16",
+        "laminas/laminas-mime": "^2.9",
+        "laminas/laminas-mvc-i18n": "^1.3",
+        "laminas/laminas-paginator": "^2.12",
+        "laminas/laminas-serializer": "^2.13",
+        "laminas/laminas-servicemanager": "^3.13",
+        "laminas/laminas-stdlib": "^3.10",
+        "laminas/laminas-zendframework-bridge": "^1.5",
+        "league/mime-type-detection": "^1.11",
+        "mezzio/mezzio": "^3.11",
+        "mezzio/mezzio-authentication": "^1.4",
+        "mezzio/mezzio-authentication-laminasauthentication": "^1.3",
+        "mezzio/mezzio-authorization": "^1.4",
+        "mezzio/mezzio-cors": "^1.3",
+        "mezzio/mezzio-helpers": "^5.8",
+        "mezzio/mezzio-laminasrouter": "^3.4",
+        "php-http/guzzle6-adapter": "^2.0",
+        "phpoffice/phpspreadsheet": "^1.23",
+        "predis/predis": "^2.1",
+        "psr/container": "^1.1.2",
+        "psr/http-client": "^1.0",
+        "shuchkin/simplexlsx": "^1.0",
+        "zircote/swagger-php": "^4.4"
+    },
+    "require-dev": {
+        "laminas/laminas-development-mode": "^3.6.0",
+        "mezzio/mezzio-tooling": "2.5",
+        "roave/security-advisories": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/App/src/"
+        },
+        "files": [
+            "src/global.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AppTest\\": "test/AppTest/"
+        }
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "@development-enable"
+        ],
+        "development-disable": "laminas-development-mode disable",
+        "development-enable": "laminas-development-mode enable",
+        "development-status": "laminas-development-mode status",
+        "mezzio": "mezzio --ansi",
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "swagger" : "vendor/bin/openapi /var/www/butce-backend -e vendor -o public/swagger/web/swagger.json",
+        "clear-config-cache": "php bin/clear-config-cache.php",
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "serve": "php -S 0.0.0.0:8080 -t public/",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    }
+}

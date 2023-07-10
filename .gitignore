@@ -1,0 +1,11 @@
+/clover.xml
+/coveralls-upload.json
+/vendor/
+.phpunit.result.cache
+/tools/
+.php_cs.cache
+.idea/
+debugfiles/
+composer.lock
+/nbproject/private/
+nbproject
