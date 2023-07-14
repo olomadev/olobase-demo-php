@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use Exception;
-use App\Utils\ColumnFilters;
+use Oloma\Php\ColumnFiltersInterface;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
@@ -11,8 +11,9 @@ use Laminas\Paginator\Adapter\DbSelect;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
+use Oloma\Php\Authorization\PermissionModelInterface;
 
-class PermissionModel
+class PermissionModel implements PermissionModelInterface
 {
     private $conn;
     private $cache;
@@ -23,7 +24,7 @@ class PermissionModel
     public function __construct(
         TableGatewayInterface $permissions,
         StorageInterface $cache,
-        ColumnFilters $columnFilters
+        ColumnFiltersInterface $columnFilters
     )
     {
         $this->cache = $cache;

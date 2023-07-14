@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use Exception;
-use App\Utils\ColumnFilters;
+use Oloma\Php\ColumnFiltersInterface;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
@@ -29,7 +29,7 @@ class CustomerModel
         TableGatewayInterface $customerAllowances,
         TableGatewayInterface $customerExpenseTypes,
         TableGatewayInterface $customerDepartments,
-        ColumnFilters $columnFilters
+        ColumnFiltersInterface $columnFilters
     ) {
         $this->adapter = $customers->getAdapter();
         $this->customers = $customers;

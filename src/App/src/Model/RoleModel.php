@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use Exception;
-use App\Utils\ColumnFilters;
+use Oloma\Php\ColumnFiltersInterface;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
@@ -33,7 +33,7 @@ class RoleModel
         TableGatewayInterface $roles,
         TableGatewayInterface $rolePermissions,
         StorageInterface $cache,
-        ColumnFilters $columnFilters
+        ColumnFiltersInterface $columnFilters
     )
     {
         $this->roles = $roles;

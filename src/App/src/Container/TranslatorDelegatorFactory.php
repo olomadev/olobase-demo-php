@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Container;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\I18n\Translator\Resources;
 use Laminas\I18n\Translator\Translator;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;

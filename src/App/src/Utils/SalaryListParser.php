@@ -103,7 +103,9 @@ class SalaryListParser
                 array_unshift($row , $i); // add row number
 
                 foreach ($row as $k => $v) {
-
+                    if (empty($headers[$k]['key'])) { // don't store empty keys
+                        break;
+                    }
                     $headerKey = $headers[$k]['key'];
                     // validations
                     // 

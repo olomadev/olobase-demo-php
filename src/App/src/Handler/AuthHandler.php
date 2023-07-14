@@ -8,15 +8,15 @@ use function json_decode;
 use function json_last_error;
 
 use Exception;
-use App\Utils\Error;
 use App\Utils\Mailer;
 use App\Model\AuthModel;
 use App\Model\TokenModel;
 use App\Filter\AuthFilter;
 use App\Filter\SendResetPasswordFilter;
 use App\Filter\ResetPasswordFilter;
-use App\Authentication\JwtEncoder;
 use Mezzio\Authentication\UserInterface;
+use Oloma\Php\Error\ErrorWrapperInterface as ErrorWrapper;
+use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
 use Mezzio\Authentication\AuthenticationInterface;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 use Laminas\InputFilter\InputFilterPluginManager;
@@ -33,8 +33,7 @@ class AuthHandler extends AbstractHandler
         AuthModel $authModel,
         TokenModel $tokenModel,
         JwtEncoder $encoder,
-        Mailer $mailer,
-        Error $error
+        ErrorWrapper $error
     ) {
         $this->auth = $auth;
         $this->filter = $filter;
@@ -43,7 +42,6 @@ class AuthHandler extends AbstractHandler
         $this->translator = $translator;
         $this->authModel = $authModel;
         $this->error = $error;
-        $this->mailer = $mailer;
     }
 
     /**
@@ -62,25 +60,6 @@ class AuthHandler extends AbstractHandler
     public function onGetFindAllPermissions()
     {
         $data = $this->authModel->findAllPermissions();
-        return new JsonResponse(['data' => $data]);
-    }
-
-    /**
-     * @OA\Get(
-     *   path="/auth/getFindResources",
-     *   tags={"Auth"},
-     *   summary="Get resource data with role permissions",
-     *   operationId="auth_getFindResources",
-     *
-     *   @OA\Response(
-     *     response=200,
-     *     description="Successful operation",
-     *   )
-     *)
-     **/
-    public function onGetFindResources()
-    {
-        $data = $this->authModel->findResources();
         return new JsonResponse(['data' => $data]);
     }
 
@@ -242,33 +221,33 @@ class AuthHandler extends AbstractHandler
      **/
     public function onPostSendResetPassword(array $post)
     {
-        $inputFilter = $this->filter->get(SendResetPasswordFilter::class);
-        $inputFilter->setInputData($post);
-        if ($inputFilter->isValid()) {
-            $username = $inputFilter->getValue('username');
-            $code = $this->authModel->generateResetPassword($username);
-            $userRow = $this->authModel->findOneByUsername($username);
+        // $inputFilter = $this->filter->get(SendResetPasswordFilter::class);
+        // $inputFilter->setInputData($post);
+        // if ($inputFilter->isValid()) {
+        //     $username = $inputFilter->getValue('username');
+        //     $code = $this->authModel->generateResetPassword($username);
+        //     $userRow = $this->authModel->findOneByUsername($username);
             
-            // send reset password e-mail to user
-            //
-            $link = 'http://'.PROJECT_DOMAIN.'/resetPassword?resetCode='.$code;
-            $this->mailer->isHtml(true);
-            $this->mailer->setLocale($this->translator->getLocale());
-            $data = [
-                'email' => $username,
-                'resetPasswordLink' => urlencode($link),
-                'themeColor' => $userRow['themeColor']
-            ];
-            $body = $this->mailer->getTemplate('forgotPassword', $data);
-            $this->mailer->to($username);
-            $this->mailer->subject($this->translator->translate('Forgotten Password', 'templates'));
-            $this->mailer->body($body);
-            $this->mailer->send();
+        //     // send reset password e-mail to user
+        //     //
+        //     $link = 'http://'.PROJECT_DOMAIN.'/resetPassword?resetCode='.$code;
+        //     $this->mailer->isHtml(true);
+        //     $this->mailer->setLocale($this->translator->getLocale());
+        //     $data = [
+        //         'email' => $username,
+        //         'resetPasswordLink' => urlencode($link),
+        //         'themeColor' => $userRow['themeColor']
+        //     ];
+        //     $body = $this->mailer->getTemplate('forgotPassword', $data);
+        //     $this->mailer->to($username);
+        //     $this->mailer->subject($this->translator->translate('Forgotten Password', 'templates'));
+        //     $this->mailer->body($body);
+        //     $this->mailer->send();
 
-        } else {
-            return new JsonResponse($this->error->getMessages($inputFilter), 400);
-        }
-        return new JsonResponse([]);
+        // } else {
+        //     return new JsonResponse($this->error->getMessages($inputFilter), 400);
+        // }
+        // return new JsonResponse([]);
     }
 
     /**
@@ -290,14 +269,14 @@ class AuthHandler extends AbstractHandler
      **/
     public function onPostResetPassword(array $post)
     {
-        $inputFilter = $this->filter->get(ResetPasswordFilter::class);
-        $inputFilter->setInputData($post);
-        if ($inputFilter->isValid()) {
-            $this->authModel->resetPassword($inputFilter->getValue('username'));
-        } else {
-            return new JsonResponse($this->error->getMessages($inputFilter), 400);
-        }
-        return new JsonResponse([]);
+        // $inputFilter = $this->filter->get(ResetPasswordFilter::class);
+        // $inputFilter->setInputData($post);
+        // if ($inputFilter->isValid()) {
+        //     $this->authModel->resetPassword($inputFilter->getValue('username'));
+        // } else {
+        //     return new JsonResponse($this->error->getMessages($inputFilter), 400);
+        // }
+        // return new JsonResponse([]);
     }
 
     /**

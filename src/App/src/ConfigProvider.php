@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace App;
 
 use Predis\ClientInterface;
-use App\Utils\Error;
-use App\Utils\Mailer;
-use App\Utils\ErrorMailer;
-use App\Utils\DataManager;
-use App\Utils\CacheFlush;
-use App\Utils\EventManager;
-use App\Utils\ColumnFilters;
+use Oloma\Php\ColumnFiltersInterface;
+use Oloma\Php\Authentication\JwtEncoderInterface;
+use Oloma\Php\Authorization\PermissionModelInterface;
+
 use Laminas\Cache\Storage\StorageInterface;
 use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
-use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
-use Laminas\EventManager\EventManagerInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
+use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 
 /**
@@ -43,39 +40,41 @@ class ConfigProvider
             'dependencies' => $this->getDependencies(),
             'input_filters' => [
                 'factories' => [
-                    Filter\AuthFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\CollectionInputFilter::class => Container\CollectionInputFilterFactory::class,
-                    Filter\ObjectInputFilter::class => Container\ObjectInputFilterFactory::class,
+                    Filter\AuthFilter::class => InvokableFactory::class,
                     Filter\AccountSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\DepartmentSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\CompanySaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\DisabilitySaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\EmployeeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\EmployeeListSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\EmployeeGradeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\EmployeeProfileSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\EmployeeListImportFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\ExpenseTypeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\PaymentTypeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\PayrollSchemeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\JobTitleSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\JobTitleListImportFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\JobTitleListSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\MinWageSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\DisabilityFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\NotificationSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\ExchangeRateSaveFilter::class => ReflectionBasedAbstractFactory::class,
                     Filter\PasswordUpdateFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\PasswordSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\PermissionSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\RoleSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\ResetPasswordFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\SalarySaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\SalaryListSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\SendResetPasswordFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\UserSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\WorkplaceSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\FileUploadFilter::class => ReflectionBasedAbstractFactory::class,
+                    Filter\ObjectInputFilter::class => Container\ObjectInputFilterFactory::class,
+                    Filter\CollectionInputFilter::class => Container\CollectionInputFilterFactory::class,
+
+                    // Filter\DepartmentSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\CompanySaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\DisabilitySaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\EmployeeSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\EmployeeListSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\EmployeeGradeSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\EmployeeProfileSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\EmployeeListImportFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\ExpenseTypeSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\PaymentTypeSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\PayrollSchemeSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\JobTitleSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\JobTitleListImportFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\JobTitleListSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\MinWageSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\DisabilityFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\NotificationSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\ExchangeRateSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\PasswordUpdateFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\PasswordSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\PermissionSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\RoleSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\ResetPasswordFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\SalarySaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\SalaryListSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\SendResetPasswordFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\UserSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\WorkplaceSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\FileUploadFilter::class => ReflectionBasedAbstractFactory::class,
                 ],
             ],
         ];
@@ -102,70 +101,66 @@ class ConfigProvider
 
                 // Classes
                 //
-                Authentication\JwtEncoder::class => Container\JwtEncoderFactory::class,
                 Authentication\JwtAuthentication::class => Container\JwtAuthenticationFactory::class,
-                Middleware\JwtAuthenticationMiddleware::class => Container\JwtAuthenticationMiddlewareFactory::class,
-                Middleware\JwtAuthenticationDocumentMiddleware::class => Container\JwtAuthenticationDocumentMiddlewareFactory::class,
                 Middleware\ClientMiddleware::class => ReflectionBasedAbstractFactory::class,
-                \Mezzio\Authentication\UserInterface::class => Container\DefaultUserFactory::class,
-                \Mezzio\Authorization\AuthorizationInterface::class => Container\AuthorizationFactory::class,
+                Middleware\JwtAuthenticationMiddleware::class => Container\JwtAuthenticationMiddlewareFactory::class,
                 StorageInterface::class => Container\CacheFactory::class,
-                SimpleCacheInterface::class => Container\SimpleCacheFactory::class,
-                CacheFlush::class => Container\CacheFlushFactory::class,
-                ColumnFilters::class => Container\ColumnFiltersFactory::class,
-                DataManager::class => Container\DataManagerFactory::class,
-                EventManager::class => Container\EventManagerFactory::class,
+                SimpleCacheInterface::class => Container\SimpleCacheFactory::class,   
+                             
                 Mailer::class => Container\MailerFactory::class,
                 ErrorMailer::class => Container\ErrorMailerFactory::class,
-                Error::class => Container\ErrorFactory::class,
-                EventManagerInterface::class => Container\LaminasEventManagerFactory::class,
                 ClientInterface::class => Container\PredisFactory::class,
-                // AppListener::class => ReflectionBasedAbstractFactory::class,
-                // NotificationListener::class => ReflectionBasedAbstractFactory::class,
 
                 // Handlers
                 //
-                Handler\Api\AccountHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\AgreementTypesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\AuthHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\AreaCodesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\CustomerHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\DepartmentHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\SubDepartmentHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\CountriesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\CitiesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\CommonFunctionsHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\CompanyHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\DisabilitiesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\FileHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\EmployeeHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\EmployeeListsHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\EmployeeTypesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\EmployeeGroupsHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\EmployeeGradesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\EmployeeProfilesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\CostCentersHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\JobTitlesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\JobTitleListsHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\MinumumWagesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\NotificationHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\NotifyModulesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\NotifyDatesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\PaymentTypeHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\PaymentTypesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\PayrollSchemeHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\MonthsHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\PermissionHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\RoleHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\RolesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\RoleKeysHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\SalariesHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\SalaryListsHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\ExchangeRatesHandler::class => ReflectionBasedAbstractFactory::class,                
-                Handler\Api\SqlOrderHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\UserHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\YearsHandler::class => ReflectionBasedAbstractFactory::class,
-                Handler\Api\WorkplaceHandler::class => ReflectionBasedAbstractFactory::class,
+                Handler\Auth\TokenHandler::class => Handler\Auth\TokenHandlerFactory::class,
+                Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
+                Handler\Auth\LogoutHandler::class => Handler\Auth\LogoutHandlerFactory::class,
+                Handler\Auth\FindAllPermissionsHandler::class => Handler\Auth\FindAllPermissionsHandlerFactory::class,
+                Handler\Account\FindMeHandler::class => Handler\Account\FindMeHandlerFactory::class,
+                Handler\Account\UpdateHandler::class => Handler\Account\UpdateHandlerFactory::class,
+                Handler\Account\UpdatePasswordHandler::class => Handler\Account\UpdatePasswordHandlerFactory::class,
+                // Handler\AccountHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\AgreementTypesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\AuthHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\AreaCodesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\CustomerHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\DepartmentHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\SubDepartmentHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\CountriesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\CitiesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\CommonFunctionsHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\CompanyHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\DisabilitiesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\FileHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\EmployeeHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\EmployeeListsHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\EmployeeTypesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\EmployeeGroupsHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\EmployeeGradesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\EmployeeProfilesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\CostCentersHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\JobTitlesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\JobTitleListsHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\MinumumWagesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\NotificationHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\NotifyModulesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\NotifyDatesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\PaymentTypeHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\PaymentTypesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\PayrollSchemeHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\MonthsHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\PermissionHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\RoleHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\RolesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\RoleKeysHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\SalariesHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\SalaryListsHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\ExchangeRatesHandler::class => ReflectionBasedAbstractFactory::class,                
+                // Handler\SqlOrderHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\UserHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\YearsHandler::class => ReflectionBasedAbstractFactory::class,
+                // Handler\WorkplaceHandler::class => ReflectionBasedAbstractFactory::class,
 
                 // Models
                 //
@@ -173,7 +168,7 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $employeeCostAllowance = new TableGateway('employeeCostAllowanceSheetLabel', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $employeeCostAllowances = new TableGateway('employeeCostAllowances', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\AllowanceModel(
                         $employeeCostAllowance,
                         $employeeCostAllowances,
@@ -197,7 +192,7 @@ class ConfigProvider
                     $customerAllowances = new TableGateway('employeeCostAllowances', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $customerExpenseTypes = new TableGateway('customerExpenseTypes', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $customerDepartments = new TableGateway('customerDepartments', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\CustomerModel(
                         $customers,
                         $customerJobTitles,
@@ -210,13 +205,13 @@ class ConfigProvider
                 Model\DepartmentModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $departments = new TableGateway('departments', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\DepartmentModel($departments, $columnFilters);
                 },
                 Model\CompanyModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $companies = new TableGateway('companies', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\CompanyModel($companies, $columnFilters);
                 },
                 Model\CommonModel::class => function ($container) {
@@ -227,7 +222,7 @@ class ConfigProvider
                 },
                 Model\DisabilityModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $disabilities = new TableGateway('disabilities', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\DisabilityModel($disabilities, $columnFilters);
                 },
@@ -236,7 +231,7 @@ class ConfigProvider
                     $employees = new TableGateway('employees', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $employeeGroups = new TableGateway('employeeGroups', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeModel(
                         $employees,
                         $employeeGroups,
@@ -248,7 +243,7 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $employeeList = new TableGateway('employeeList', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeListModel(
                         $employeeList,
                         $cacheStorage,
@@ -258,25 +253,25 @@ class ConfigProvider
                 Model\EmployeeGradeModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $employeeGrades = new TableGateway('employeeGrades', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeGradeModel($employeeGrades, $columnFilters);
                 },
                 Model\EmployeeProfileModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $employeeProfiles = new TableGateway('employeeProfiles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeProfileModel($employeeProfiles, $columnFilters);
                 },
                 Model\ExchangeRatesModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $exchangeRates = new TableGateway('exchangeRates', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\ExchangeRatesModel($exchangeRates, $columnFilters);
                 },
                 Model\JobTitleModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $jobtitles = new TableGateway('jobTitles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\JobTitleModel(
                         $jobtitles,
                         $columnFilters
@@ -286,7 +281,7 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $jobTitleList = new TableGateway('jobTitleList', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\JobTitleListModel(
                         $jobTitleList,
                         $cacheStorage,
@@ -296,28 +291,33 @@ class ConfigProvider
                 Model\PaymentTypeModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $paymentTypes = new TableGateway('paymentTypes', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\PaymentTypeModel(
                         $paymentTypes,
                         $columnFilters
                     );
                 },
-                Model\PermissionModel::class => function ($container) {
+                PermissionModelInterface::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $tableGateway = new TableGateway('permissions', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    return new Model\PermissionModel($tableGateway, $cacheStorage);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
+                    $permissions = new TableGateway('permissions', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    return new Model\PermissionModel(
+                        $permissions, 
+                        $cacheStorage,
+                        $columnFilters
+                    );
                 },
                 Model\PayrollSchemeModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $payrollScheme = new TableGateway('payrollScheme', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\PayrollSchemeModel($payrollScheme, $columnFilters);
                 },
                 Model\RoleModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $roles = new TableGateway('roles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $rolePermissions = new TableGateway('rolePermissions', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\RoleModel(
@@ -331,7 +331,7 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $salaryList = new TableGateway('salaryList', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\SalaryListModel(
                         $salaryList,
                         $cacheStorage,
@@ -340,19 +340,19 @@ class ConfigProvider
                 },
                 Model\SalaryModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $salaries = new TableGateway('salaries', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\SalaryModel($salaries, $columnFilters);
                 },
                 Model\MinWageModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $minWage = new TableGateway('minWage', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\MinWageModel($minWage, $columnFilters);
                 },
                 Model\NotificationModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $notifications = new TableGateway('notifications', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $notificationUsers = new TableGateway('notificationUsers', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\NotificationModel($notifications, $notificationUsers, $columnFilters);
@@ -360,7 +360,7 @@ class ConfigProvider
                 Model\PermissionModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $permissions = new TableGateway('permissions', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\PermissionModel($permissions, $cacheStorage, $columnFilters);
                 },
@@ -371,7 +371,7 @@ class ConfigProvider
                 },
                 Model\TokenModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $jwtEncoder = $container->get(Authentication\JwtEncoder::class);
+                    $jwtEncoder = $container->get(JwtEncoderInterface::class);
                     $users = new TableGateway('users', $dbAdapter, null);
                     $refreshToken = new TableGateway('refreshTokens', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     return new Model\TokenModel($container->get('config'), $jwtEncoder, $users, $refreshToken);
@@ -381,7 +381,7 @@ class ConfigProvider
                     $users = new TableGateway('users', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $userRoles = new TableGateway('userRoles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $userAvatars = new TableGateway('userAvatars', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $cacheStorage = $container->get(StorageInterface::class);
                     return new Model\UserModel(
                         $users,
@@ -395,7 +395,7 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $workplaces = new TableGateway('workplaces', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $cacheStorage = $container->get(StorageInterface::class);
-                    $columnFilters = $container->get(ColumnFilters::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\WorkplaceModel($workplaces, $columnFilters, $cacheStorage);
                 },
 

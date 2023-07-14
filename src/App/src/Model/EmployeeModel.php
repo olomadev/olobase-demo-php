@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use Exception;
-use App\Utils\ColumnFilters;
+use Oloma\Php\ColumnFiltersInterface;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
@@ -30,7 +30,7 @@ class EmployeeModel
         TableGatewayInterface $employees,
         TableGatewayInterface $employeeGroups,
         StorageInterface $cache,
-        ColumnFilters $columnFilters
+        ColumnFiltersInterface $columnFilters
     ) {
         $this->adapter = $employees->getAdapter();
         $this->employees = $employees;

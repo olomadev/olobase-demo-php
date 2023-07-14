@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Handler\Api;
 
+use Psr\Http\Server\RequestHandlerInterface;
+
 /**
- * @OA\Info(title="Bütçe API", version="1.0"),
+ * @OA\Info(title="Demo API", version="1.0"),
  * @OA\Schemes(format="http"),
  * @OA\SecurityScheme(
  *     securityScheme="bearerAuth",
@@ -19,7 +21,7 @@ namespace App\Handler\Api;
  *     type="basic",
  * ),
  */
-class AbstractHandler extends OlomaHandler
+class AbstractHandler extends RequestHandlerInterface
 {
    
 }

@@ -10,9 +10,6 @@ use Laminas\InputFilter\InputInterface;
 use Laminas\InputFilter\InputFilterInterface;
 use Laminas\InputFilter\InputFilter as LaminasInputFilter;
 
-/**
- * @author Ersin Güvenç <eguvenc@gmail.com>
- */
 class InputFilter extends LaminasInputFilter
 {
     protected $user;

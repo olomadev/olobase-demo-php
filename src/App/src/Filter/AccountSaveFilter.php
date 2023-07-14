@@ -15,14 +15,9 @@ use Laminas\InputFilter\InputFilterPluginManager;
 
 class AccountSaveFilter extends InputFilter
 {
-    public function __construct(
-        AdapterInterface $adapter,
-        InputFilterPluginManager $filter
-    )
+    public function __construct(AdapterInterface $adapter)
     {
-        $this->filter = $filter;
         $this->adapter = $adapter;
-        $this->user = $this->getUser();
     }
 
     public function setInputData(array $data)
@@ -44,7 +39,7 @@ class AccountSaveFilter extends InputFilter
                         'field'   => 'email',
                         'exclude' => [
                             'field' => 'userId',
-                            'value' => $this->user->getId(),
+                            'value' => $this->getUser()->getId(),
                         ],
                         'adapter' => $this->adapter,
                     ]
@@ -122,8 +117,8 @@ class AccountSaveFilter extends InputFilter
             ]
         ]);
 
-        // Set input data
+        // render & set data
         //
-        $this->setData($data);
+        $this->renderInputData($data);
     }
 }

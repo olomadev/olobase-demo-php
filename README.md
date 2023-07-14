@@ -3,6 +3,14 @@
 
 Vuetify admin php demo application.
 
+
+## Installation Instructions
+
+* 
+*
+*
+
+
 ## Sharing VMWare Ubuntu Files with Windows
 
 https://opensource.com/article/21/4/share-files-linux-windows
@@ -49,17 +57,17 @@ Start samba service
 service smbd restart
 ```
 
-# Swagger - swagger.yaml/json dosyası oluşturma
+## How to Create Swagger.json
 
-Bu komut swagger.json dosyasını otomatik olarak project root da yaratır.
+Use this command
 
-### xampp
+### Xampp
 
 ```
 $ vendor/bin/openapi c:/xampp/htdocs/va-demo-api -e vendor -o public/swagger/web/swagger.json
 ```
 
-### ubuntu
+### Linux
 
 ```
 $ vendor/bin/openapi /var/www/va-demo-api -e vendor -o public/swagger/web/swagger.json

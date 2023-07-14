@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Container;
 
-use Interop\Container\ContainerInterface;
-use App\Authentication\JwtEncoder;
-use App\Authentication\AuthenticationAdapter;
 use App\Model\AuthModel;
 use App\Model\TokenModel;
+use Psr\Container\ContainerInterface;
+use App\Authentication\AuthenticationAdapter;
 use Laminas\Db\Adapter\Adapter;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
 use Laminas\Authentication\Adapter\DbTable\CallbackCheckAdapter;
 use Mezzio\Authentication\Exception;
 use Mezzio\Authentication\UserInterface;

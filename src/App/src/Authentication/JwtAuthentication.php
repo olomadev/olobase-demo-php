@@ -6,7 +6,8 @@ namespace App\Authentication;
 
 use App\Model\AuthModel;
 use App\Model\TokenModel;
-use App\Exception\BadTokenException;
+use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
+use Oloma\Php\Exception\BadTokenException;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Authentication\Adapter\AdapterInterface;
@@ -217,21 +218,5 @@ class JwtAuthentication implements AuthenticationInterface
     {
         return $this->tokenModel;
     }
-
-    // private function getRefChannel(array $post)
-    // {
-    //     $refChannel = isset($post['ref_channel']) ? $post['ref_channel'] : 'web';
-    //     switch ($refChannel) {
-    //         case 'web':
-    //             $refChannel = 'web';
-    //             break;
-    //         case 'mobile':
-    //             $refChannel = 'mobile';
-    //             break;
-    //         default:
-    //             $refChannel = 'web';
-    //             break;
-    //     }
-    //     return $refChannel;
-    // }
+    
 }

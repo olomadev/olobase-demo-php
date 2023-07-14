@@ -47,7 +47,11 @@ class JobTitleListParser
                 if ($xlsx = SimpleXLSX::parse($xlsxFile)) {
                     $sheetData = $xlsx->rows();
                 } else {
-                    file_put_contents(PROJECT_ROOT."/data/tmp/error-output.txt", SimpleXLSX::parseError()." Error Line: ".__LINE__, FILE_APPEND | LOCK_EX);
+                    file_put_contents(
+                        PROJECT_ROOT."/data/tmp/error-output.txt", 
+                        SimpleXLSX::parseError()." Error Line: ".__LINE__, 
+                        FILE_APPEND | LOCK_EX
+                    );
                 }
             }
         }
@@ -61,13 +65,15 @@ class JobTitleListParser
                 "key" => "no",
             ];
             foreach ($sheetData[0] as $head => $title) {
-                $headers[$h] = [
-                    "title" => $this->translator->translate($title, "labels"),
-                    "align" => "start",
-                    "sortable" => true,
-                    "key" => $title,
-                ];
-                ++$h;
+                if (! empty($title)) {
+                    $headers[$h] = [
+                        "title" => $this->translator->translate($title, "labels"),
+                        "align" => "start",
+                        "sortable" => true,
+                        "key" => $title,
+                    ];
+                    ++$h;
+                }
             }
             $data['data'][0] = $headers;
             $headersValidationArray = $sheetData[0];
@@ -98,7 +104,9 @@ class JobTitleListParser
                 array_unshift($row , $i); // add row number
 
                 foreach ($row as $k => $v) {
-
+                    if (empty($headers[$k]['key'])) { // don't store empty keys
+                        break;
+                    }
                     $headerKey = $headers[$k]['key'];
                     // validations
                     // 

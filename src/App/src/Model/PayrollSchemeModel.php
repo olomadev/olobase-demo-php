@@ -21,7 +21,7 @@ class PayrollSchemeModel
 
     public function __construct(
         TableGatewayInterface $payrollScheme,
-        ColumnFilters $columnFilters
+        ColumnFiltersInterface $columnFilters
     ) {
         $this->adapter = $payrollScheme->getAdapter();
         $this->payrollScheme = $payrollScheme;

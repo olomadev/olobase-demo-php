@@ -19,9 +19,9 @@ class AppListener implements ListenerAggregateInterface
     const onUserLogin = 'onUserLogin';
     const ERROR_MEMBERSHIP_SERVICE_IS_LIMITED = 'Membership service is limited to users in specific campaigns only';
 
-    public function __construct(UserCampaignModel $userCampaignModel)
+    public function __construct()
     {
-        $this->userCampaignModel = $userCampaignModel;
+
     }
 
     public function attach(EventManagerInterface $events, $priority = 1)

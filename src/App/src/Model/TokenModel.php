@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-// Db metotları
-// https://odan.github.io/2019/12/01/slim4-laminas-db-query-builder-setup.html#update
-
 use Exception;
-use App\Authentication\JwtEncoder;
 use Mezzio\Authentication\UserInterface;
+use Oloma\Php\Authentication\JwtEncoderInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
 
@@ -21,7 +18,7 @@ class TokenModel
 
     public function __construct(
         array $config,
-        JwtEncoder $encoder,
+        JwtEncoderInterface $encoder,
         TableGatewayInterface $users,
         TableGatewayInterface $refreshToken
     )

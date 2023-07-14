@@ -12,7 +12,6 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
-    \Laminas\Mvc\I18n\ConfigProvider::class,
     \Laminas\I18n\ConfigProvider::class,
     \Laminas\Cache\Storage\Adapter\Redis\ConfigProvider::class,
     \Mezzio\Tooling\ConfigProvider::class,
@@ -22,14 +21,10 @@ $aggregator = new ConfigAggregator([
     \Mezzio\Authorization\ConfigProvider::class,
     \Laminas\Serializer\ConfigProvider::class,
     \Laminas\Cache\ConfigProvider::class,
-    // \Mezzio\Authentication\LaminasAuthentication\ConfigProvider::class,
-    // \Mezzio\Authentication\OAuth2\ConfigProvider::class,
-    // \Mezzio\Authentication\ConfigProvider::class,
     \Laminas\Db\ConfigProvider::class,
     \Laminas\InputFilter\ConfigProvider::class,
     \Laminas\Filter\ConfigProvider::class,
     \Laminas\HttpHandlerRunner\ConfigProvider::class,
-    // \Mezzio\LaminasView\ConfigProvider::class,
     \Mezzio\Router\LaminasRouter\ConfigProvider::class,
     \Laminas\Router\ConfigProvider::class,
     \Laminas\Validator\ConfigProvider::class,
@@ -43,7 +38,12 @@ $aggregator = new ConfigAggregator([
     class_exists(\Mezzio\Swoole\ConfigProvider::class)
         ? \Mezzio\Swoole\ConfigProvider::class
         : function(){ return[]; },
+    
+    // Oloma components
+    \Oloma\Php\ConfigProvider::class,
+
     // Default App module config
+    // 
     App\ConfigProvider::class,
     // Load application config in a pre-defined order in such a way that local settings
     // overwrite global settings. (Loaded as first to last):

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Laminas\Stratigility\Middleware\NotFoundHandler;
 use Mezzio\Application;
-use Mezzio\Cors\Middleware\CorsMiddleware;
+// use Mezzio\Cors\Middleware\CorsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
 use Mezzio\MiddlewareFactory;
@@ -88,6 +88,10 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(DispatchMiddleware::class);
     // $app->pipe(\Mezzio\ProblemDetails\ProblemDetailsNotFoundHandler::class);
 
+    // At this point, if no Response is returned by any middleware, the
+    // NotFoundHandler kicks in; alternately, you can provide other fallback
+    // middleware to execute.
+    // 
     $notFoundHandler = new NotFoundHandler(
         function () {
             $response = new Response;
@@ -100,9 +104,5 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         }
     );
     $app->pipe($notFoundHandler);
-
-    // At this point, if no Response is returned by any middleware, the
-    // NotFoundHandler kicks in; alternately, you can provide other fallback
-    // middleware to execute.
     // $app->pipe(NotFoundHandler::class);
 };

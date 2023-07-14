@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use Exception;
-use App\Utils\ColumnFilters;
+use Oloma\Php\ColumnFiltersInterface;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
@@ -25,7 +25,7 @@ class UserModel
         TableGatewayInterface $users,
         TableGatewayInterface $userRoles,
         TableGatewayInterface $userAvatars,
-        ColumnFilters $columnFilters,
+        ColumnFiltersInterface $columnFilters,
         StorageInterface $cache
     ) {
         $this->adapter = $users->getAdapter();
@@ -35,51 +35,6 @@ class UserModel
         $this->columnFilters = $columnFilters;
         $this->cache = $cache;
         $this->conn = $this->adapter->getDriver()->getConnection();
-    }
-
-    public function findOptions()
-    {
-        $platform = $this->adapter->getPlatform();
-        $concat = "CONCAT_WS(' ' , CONCAT('<', CONCAT_WS(' ', u.firstname , u.lastname) , '>') , u.email)";
-        $concatName = $platform->quoteIdentifierInFragment($concat, 
-            ['(',')','CONCAT_WS','\'',',',' ', '-', '<', '>']
-        );
-        $sql = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns([
-            'id' => 'userId',
-            'name' => new Expression($concatName),
-        ]);
-        $select->from(['u' => 'users']);
-
-        // autocompleter search query
-        //
-        if (! empty($get['q'])) {  //  && strlen($get['q']) > 2
-            $nest = $select->where->nest();
-            $exp = explode(" ", $get['q']);
-            foreach ($exp as $str) {
-                $nest = $nest->or->nest();
-                    $nest->or->like(new Expression($concatName), '%'.$str.'%');
-                $nest = $nest->unnest();
-            }
-            $nest->unnest();
-        }
-        // filter by userId
-        // 
-        if (! empty($get['userId'])) {
-            $select->where(['u.userId' => $get['userId']]);
-        }
-        if (! empty($get['id'])) {
-            $select->where(['u.userId' => $get['id']]);
-        }
-        $select->limit(50); // default limit for autocompleter
-        
-        // echo $select->getSqlString($this->adapter->getPlatform());
-        // die;
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        return $results;
     }
 
     public function findAllBySelect()
@@ -239,8 +194,7 @@ class UserModel
         }
         $row['userRoles'] = $newUserRoles;
 
-        // $statement->getResource()->closeCursor();
-        // 
+        $statement->getResource()->closeCursor();
         return $row;
     }
 

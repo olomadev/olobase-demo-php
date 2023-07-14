@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Container;
 
 use Laminas\Cache\StorageFactory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
