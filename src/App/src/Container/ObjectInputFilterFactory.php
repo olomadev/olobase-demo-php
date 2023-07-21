@@ -6,7 +6,7 @@ namespace App\Container;
 
 use Laminas\Validator\NotEmpty;
 use App\Filter\ObjectInputFilter;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 

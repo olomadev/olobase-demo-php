@@ -206,13 +206,13 @@ class UserModel
         if (! empty($data['users']['avatarImage'])) {
             $avatarImageBlob = base64_decode($data['users']['avatarImage']);
         }
-        $data['users']['userId'] = $data['userId'];
+        $userId = $data['users']['userId'] = $data['userId'];
         try {
             $this->conn->beginTransaction();
             $this->users->insert($data['users']);
             if (! empty($data['userRoles'])) {
                 foreach ($data['userRoles'] as $val) {
-                    $this->userRoles->insert($val);
+                    $this->userRoles->insert(['userId' => $userId, 'roleId' => $val['id']]);
                 }
             }
             if ($avatarImageBlob) {
@@ -248,7 +248,7 @@ class UserModel
             if (! empty($data['userRoles'])) {
                 $this->userRoles->delete(['userId' => $userId]);
                 foreach ($data['userRoles'] as $val) {
-                    $this->userRoles->insert($val);
+                    $this->userRoles->insert(['userId' => $userId, 'roleId' => $val['id']]);
                 }
             }
             $this->userAvatars->delete(['userId' => $userId]);

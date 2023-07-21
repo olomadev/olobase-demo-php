@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
-use App\Filter\PasswordUpdateFilter;
+use App\Filter\PasswordChangeFilter;
 use Mezzio\Authentication\UserInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -17,7 +17,7 @@ class UpdatePasswordHandler implements RequestHandlerInterface
 {
     public function __construct(
         private UserModel $userModel,        
-        private PasswordUpdateFilter $filter,
+        private PasswordChangeFilter $filter,
         private Error $error,
     ) 
     {
@@ -57,7 +57,10 @@ class UpdatePasswordHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $userId = $user->getId();
-            $this->userModel->updatePasswordById($userId, $this->filter->getValue('newPassword'));
+            $this->userModel->updatePasswordById(
+                $userId, 
+                $this->filter->getValue('newPassword')
+            );
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);
         }

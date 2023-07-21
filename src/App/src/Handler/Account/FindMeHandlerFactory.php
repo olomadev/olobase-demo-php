@@ -13,7 +13,6 @@ class FindMeHandlerFactory
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
         $userModel = $container->get(UserModel::class);
-
         return new FindMeHandler($userModel);
     }
 }

@@ -8,7 +8,6 @@ use App\Model\UserModel;
 use App\Filter\AccountSaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
-use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

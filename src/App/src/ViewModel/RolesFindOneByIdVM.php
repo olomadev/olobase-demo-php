@@ -20,7 +20,7 @@ class RolesFindOneByIdVM
             'roleName' => (string)$row['roleName'],
             'roleLevel' => (string)$row['roleLevel'],
         ];
-        $data['rolePermissions'] = jsonEncode($row['rolePermissions']);
+        $data['rolePermissions'] = $row['rolePermissions'];
         return $data;
     }
 }

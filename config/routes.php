@@ -52,20 +52,21 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/account/updatePassword', [...$auth, ...[App\Handler\Account\UpdatePasswordHandler::class]], ['PUT']);
 
     // Roles
-    // $app->route('/api/roles/create', [...$auth, ...[App\Handler\Roles\CreateHandler::class]], ['POST']);
-    // $app->route('/api/roles/update/:roleId', [...$auth, ...[App\Handler\Roles\UpdateHandler::class]], ['PUT']);
-    // $app->route('/api/roles/delete/:roleId', [...$auth, ...[App\Handler\Roles\DeleteHandler::class]], ['DELETE']);
-    // $app->route('/api/roles/findAllByPaging', [...$auth, ...[App\Handler\Roles\FindAllByPagingHandler::class]], ['GET']);
-    // $app->route('/api/roles/findOneById/:roleId', [...$auth, ...[App\Handler\FindOneByIdHandler::class]], ['GET']);
+    $app->route('/api/roles/create', [...$auth, ...[App\Handler\Roles\CreateHandler::class]], ['POST']);
+    $app->route('/api/roles/update/:roleId', [...$auth, ...[App\Handler\Roles\UpdateHandler::class]], ['PUT']);
+    $app->route('/api/roles/delete/:roleId', [...$auth, ...[App\Handler\Roles\DeleteHandler::class]], ['DELETE']);
+    $app->route('/api/roles/findAll', [App\Handler\Roles\FindAllHandler::class], ['GET']);
+    $app->route('/api/roles/findAllByPaging', [...$auth, ...[App\Handler\Roles\FindAllByPagingHandler::class]], ['GET']);
+    $app->route('/api/roles/findOneById/:roleId', [...$auth, ...[App\Handler\FindOneByIdHandler::class]], ['GET']);
 
     // Users
     $app->route('/api/users/create', [...$auth, [App\Handler\Users\CreateHandler::class]], ['POST']);
-    // $app->route('/api/users/update/:userId', [...$auth, [App\Handler\Users\UpdateHandler::class]], ['PUT']);
-    // $app->route('/api/users/delete/:userId', [...$auth, [App\Handler\Users\DeleteHandler::class]], ['DELETE']);
-    // $app->route('/api/users/updatePassword/:userId', [...$auth, [App\Handler\Users\UpdatePasswordHandler::class]], ['PUT']);
-    // $app->route('/api/users/findAll', [...$auth, [App\Handler\Users\FindAllHandler::class]], ['GET']);
-    // $app->route('/api/users/findAllByPaging', [...$auth, [App\Handler\Users\FindAllByPagingHandler::class]], ['GET']);
-    // $app->route('/api/users/findOneById/:userId', [...$auth, [App\Handler\Users\FindOneByIdHandler::class]], ['GET']);
+    $app->route('/api/users/update/:userId', [...$auth, [App\Handler\Users\UpdateHandler::class]], ['PUT']);
+    $app->route('/api/users/delete/:userId', [...$auth, [App\Handler\Users\DeleteHandler::class]], ['DELETE']);
+    $app->route('/api/users/updatePassword/:userId', [...$auth, [App\Handler\Users\UpdatePasswordHandler::class]], ['PUT']);
+    $app->route('/api/users/findAll', [...$auth, [App\Handler\Users\FindAllHandler::class]], ['GET']);
+    $app->route('/api/users/findAllByPaging', [...$auth, [App\Handler\Users\FindAllByPagingHandler::class]], ['GET']);
+    $app->route('/api/users/findOneById/:userId', [...$auth, [App\Handler\Users\FindOneByIdHandler::class]], ['GET']);
 
     $permissions = [
         JwtAuthenticationMiddleware::class,
@@ -113,7 +114,6 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/notifyModules/findAll', App\Handler\NotifyModulesHandler::class, ['GET']);
     $app->route('/api/files/findOne/:fileId', App\Handler\FileHandler::class, ['GET']);
     $app->route('/api/areaCodes/findAll', App\Handler\AreaCodesHandler::class, ['GET']);
-    $app->route('/api/roles/findAll', App\Handler\RolesHandler::class, ['GET']);
     $app->route('/api/months/findAll', App\Handler\MonthsHandler::class, ['GET']);
     $app->route('/api/countries/findAll', App\Handler\CountriesHandler::class, ['GET']);
     $app->route('/api/cities/findAll', App\Handler\CitiesHandler::class, ['GET']);

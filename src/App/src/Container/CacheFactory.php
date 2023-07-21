@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Container;
 
 use Laminas\Cache\Service\StorageAdapterFactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 /**
  * https://docs.laminas.dev/laminas-cache/storage/adapter/#quick-start

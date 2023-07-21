@@ -33,7 +33,6 @@ class FindAllPermissionsHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $data = $this->authModel->findAllPermissions();
-
         return new JsonResponse(
             [
                 'data' => $data

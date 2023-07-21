@@ -13,7 +13,6 @@ class FindAllPermissionsHandlerFactory
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
         $authModel = $container->get(AuthModel::class);
-
         return new FindAllPermissionsHandler($authModel);
     }
 }

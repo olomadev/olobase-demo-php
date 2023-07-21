@@ -13,7 +13,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindMeHandler implements RequestHandlerInterface
 {
-    public function __construct(private UserModel $userModel) 
+    public function __construct(
+        private UserModel $userModel
+    ) 
     {
         $this->userModel = $userModel;
     }
@@ -28,7 +30,7 @@ class FindMeHandler implements RequestHandlerInterface
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/AccountFindMeResultVM"),
+     *     @OA\JsonContent(ref="#/components/schemas/AccountFindMe),
      *   ),
      *)
      **/

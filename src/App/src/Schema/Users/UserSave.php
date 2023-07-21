@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Schema;
+namespace App\Schema\Users;
 
 /**
  * @OA\Schema()
  */
-class UserListItem
+class UserSave
 {
     /**
      * @var string
@@ -13,7 +13,7 @@ class UserListItem
      *     format="uuid"
      * )
      */
-    public $id;
+    public $userId;
     /**
      * @var string
      * @OA\Property()
@@ -24,6 +24,11 @@ class UserListItem
      * @OA\Property()
      */
     public $lastname;
+    /**
+     * @var string
+     * @OA\Property()
+     */
+    public $password;
     /**
      * @var string
      * @OA\Property()
@@ -46,9 +51,25 @@ class UserListItem
     public $themeColor;
     /**
      * @var string
-     * @OA\Property(
-     *     format="date-time",
-     * )
+     * @OA\Property()
      */
-    public $createdAt;
+    public $avatarImage;
+    /**
+    *  @var array
+    *  @OA\Property(
+    *      type="array",
+    *      @OA\Items(
+    *           @OA\Property(
+    *             property="id",
+    *             type="string",
+    *           ),
+    *           @OA\Property(
+    *             property="name",
+    *             type="string",
+    *           ),
+    *     ),
+    *  )
+    */
+    public $userRoles;
+
 }

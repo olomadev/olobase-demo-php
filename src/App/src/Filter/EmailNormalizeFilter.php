@@ -5,7 +5,7 @@ namespace App\Filter;
 use Laminas\Filter\AbstractFilter;
 
 /**
- * Converts filenames e.g: "sada çsd99.jpg" to "sada çsd99"
+ * Converts "sada çsd99.jpg" to "sada çsd99"
  */
 class EmailNormalizeFilter extends AbstractFilter
 {

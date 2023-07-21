@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
-use function define;
-use function current;
-use function str_pad;
+use function define, current, str_pad;
 
-use App\Middleware\NotFoundResponseGenerator;
-use Mezzio\Cors\Configuration\ConfigurationInterface;
-use App\Exception\BodyContentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Oloma\Php\Exception\BodyDecodeException;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
@@ -36,9 +32,6 @@ class ClientMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {
-        // 
-        // Accept-Language: tr
-        // 
         $headers = $request->getHeaders();
         $server  = $request->getServerParams();
         $method  = $request->getMethod();
@@ -51,7 +44,6 @@ class ClientMiddleware implements MiddlewareInterface
         //     $langId = (string)$headers['accept-language'][0];
         // }
         define('LANG_ID', 'tr');
-
         $contentType = empty($headers['content-type'][0]) ? null : current($headers['content-type']);
         // 
         // Json content type
@@ -66,7 +58,7 @@ class ClientMiddleware implements MiddlewareInterface
             $parsedContent = json_decode($contentBody, true);
             $lastError = json_last_error();
             if (! empty($jsonErrors[$lastError])) {
-                 throw new BodyContentException($jsonErrors[$lastError]);
+                 throw new BodyDecodeException($jsonErrors[$lastError]);
             }
             $request = $request->withParsedBody($parsedContent);
         }

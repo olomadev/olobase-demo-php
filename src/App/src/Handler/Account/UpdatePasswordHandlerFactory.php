@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
-use App\Filter\PasswordUpdateFilter;
+use App\Filter\PasswordChangeFilter;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
-use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
@@ -20,7 +19,7 @@ class UpdatePasswordHandlerFactory
         $error = $container->get(Error::class);
 
         $pluginManager = $container->get(InputFilterPluginManager::class);
-        $inputFilter   = $pluginManager->get(PasswordUpdateFilter::class);
+        $inputFilter   = $pluginManager->get(PasswordChangeFilter::class);
 
         return new UpdatePasswordHandler($userModel, $inputFilter, $error);
     }

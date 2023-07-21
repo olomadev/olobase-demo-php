@@ -8,7 +8,7 @@ use App\Utils\Mailer;
 use App\Utils\ErrorMailer;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Db\Adapter\AdapterInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 

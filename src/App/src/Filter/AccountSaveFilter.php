@@ -10,16 +10,9 @@ use App\Validator\Db\NoRecordExists;
 use Laminas\Validator\Uuid;
 use Laminas\Validator\EmailAddress;
 use Laminas\Validator\StringLength;
-use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\InputFilter\InputFilterPluginManager;
 
 class AccountSaveFilter extends InputFilter
 {
-    public function __construct(AdapterInterface $adapter)
-    {
-        $this->adapter = $adapter;
-    }
-
     public function setInputData(array $data)
     {
         $this->add([
@@ -41,7 +34,7 @@ class AccountSaveFilter extends InputFilter
                             'field' => 'userId',
                             'value' => $this->getUser()->getId(),
                         ],
-                        'adapter' => $this->adapter,
+                        'adapter' => $this->getAdapter(),
                     ]
                 ]
             ],

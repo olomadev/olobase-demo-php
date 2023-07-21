@@ -40,11 +40,17 @@ class ConfigProvider
             'dependencies' => $this->getDependencies(),
             'input_filters' => [
                 'factories' => [
-                    Filter\AuthFilter::class => InvokableFactory::class,
-                    Filter\AccountSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\PasswordUpdateFilter::class => ReflectionBasedAbstractFactory::class,
                     Filter\ObjectInputFilter::class => Container\ObjectInputFilterFactory::class,
                     Filter\CollectionInputFilter::class => Container\CollectionInputFilterFactory::class,
+                    Filter\AuthFilter::class => InvokableFactory::class,
+                    Filter\AccountSaveFilter::class => InvokableFactory::class,
+                    Filter\PasswordChangeFilter::class => InvokableFactory::class,
+                    Filter\PasswordSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    Filter\UserSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    Filter\UserDeleteFilter::class => ReflectionBasedAbstractFactory::class,
+                    Filter\RoleSaveFilter::class => ReflectionBasedAbstractFactory::class,
+                    Filter\RoleDeleteFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Filter\CompanySaveFilter::class => ReflectionBasedAbstractFactory::class,
 
                     // Filter\DepartmentSaveFilter::class => ReflectionBasedAbstractFactory::class,
                     // Filter\CompanySaveFilter::class => ReflectionBasedAbstractFactory::class,
@@ -117,9 +123,25 @@ class ConfigProvider
                 Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
                 Handler\Auth\LogoutHandler::class => Handler\Auth\LogoutHandlerFactory::class,
                 Handler\Auth\FindAllPermissionsHandler::class => Handler\Auth\FindAllPermissionsHandlerFactory::class,
+                // account
                 Handler\Account\FindMeHandler::class => Handler\Account\FindMeHandlerFactory::class,
                 Handler\Account\UpdateHandler::class => Handler\Account\UpdateHandlerFactory::class,
                 Handler\Account\UpdatePasswordHandler::class => Handler\Account\UpdatePasswordHandlerFactory::class,
+                // users
+                Handler\Users\CreateHandler::class => Handler\Users\CreateHandlerFactory::class,
+                Handler\Users\UpdateHandler::class => Handler\Users\UpdateHandlerFactory::class,
+                Handler\Users\DeleteHandler::class => Handler\Users\DeleteHandlerFactory::class,
+                Handler\Users\FindOneByIdHandler::class => Handler\Users\FindOneByIdHandlerFactory::class,
+                Handler\Users\FindAllByPagingHandler::class => Handler\Users\FindAllByPagingHandlerFactory::class,
+                Handler\Users\FindAllHandler::class => Handler\Users\FindAllHandlerFactory::class,
+                // roles
+                Handler\Roles\CreateHandler::class => Handler\Roles\CreateHandlerFactory::class,
+                Handler\Roles\UpdateHandler::class => Handler\Roles\UpdateHandlerFactory::class,
+                Handler\Roles\DeleteHandler::class => Handler\Roles\DeleteHandlerFactory::class,
+                Handler\Roles\FindOneByIdHandler::class => Handler\Roles\FindOneByIdHandlerFactory::class,
+                Handler\Roles\FindAllByPagingHandler::class => Handler\Roles\FindAllByPagingHandlerFactory::class,
+                Handler\Roles\FindAllHandler::class => Handler\Roles\FindAllHandlerFactory::class,
+
                 // Handler\AccountHandler::class => ReflectionBasedAbstractFactory::class,
                 // Handler\AgreementTypesHandler::class => ReflectionBasedAbstractFactory::class,
                 // Handler\AuthHandler::class => ReflectionBasedAbstractFactory::class,

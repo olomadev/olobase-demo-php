@@ -154,34 +154,27 @@ class UserSaveFilter extends InputFilter
             ]
         ]);
 
-        // $this->add([
-        //     'name' => 'themeColor',
-        //     'required' => false,
-        //     'validators' => [
-        //         [
-        //             'name' => StringLength::class,
-        //             'options' => [
-        //                 'encoding' => 'UTF-8',
-        //                 'min' => 7,
-        //                 'max' => 7,
-        //             ],
-        //         ],
-        //     ],
-        // ]);
-
+        $this->add([
+            'name' => 'themeColor',
+            'required' => false,
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 7,
+                        'max' => 7,
+                    ],
+                ],
+            ],
+        ]);
+        
         // User Roles Input filter
         //
         $userRolesCollection = $this->filter->get(CollectionInputFilter::class);
         $userRolesInputFilter = $this->filter->get(InputFilter::class);
         $userRolesInputFilter->add([
-            'name' => 'roleId',
-            'required' => true,
-            'validators' => [
-                ['name' => Uuid::class],
-            ],
-        ]);
-        $userRolesInputFilter->add([
-            'name' => 'userId',
+            'name' => 'id',
             'required' => true,
             'validators' => [
                 ['name' => Uuid::class],
@@ -189,7 +182,7 @@ class UserSaveFilter extends InputFilter
         ]);
         $userRolesCollection->setInputFilter($userRolesInputFilter);
         $this->add($userRolesCollection, 'userRoles');
-
+        
         $this->renderInputData($data);
     }
 }

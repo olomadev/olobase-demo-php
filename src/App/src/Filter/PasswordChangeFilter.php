@@ -8,7 +8,7 @@ use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 
-class PasswordUpdateFilter extends InputFilter
+class PasswordChangeFilter extends InputFilter
 {
     public function __construct(
         AdapterInterface $adapter,
