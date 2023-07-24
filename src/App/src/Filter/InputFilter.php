@@ -44,24 +44,7 @@ class InputFilter extends LaminasInputFilter
     {
         $this->setData($data);
     }
-
-    /**
-     * Set input data
-     * 
-     * @param array $data data
-     */
-    public function renderInputData(array $data)
-    {
-        // if incoming post data is json let's convert it to array
-        // 
-        foreach ($this->collectionNames as $key) {
-            if (array_key_exists($key, $data) && is_string($data[$key])) {
-                $data[$key] = jsonDecode($data[$key]);
-            }
-        }
-        $this->setData($data);
-    }
-
+    
     /**
      * Returns to input data
      *
@@ -83,9 +66,9 @@ class InputFilter extends LaminasInputFilter
     {
         // Ersin: let's store collection data
         // 
-        if ($input instanceof CollectionInputFilter) {
-            $this->collectionNames[$name] = $name; 
-        }
+        // if ($input instanceof CollectionInputFilter) {
+        //     $this->collectionNames[$name] = $name; 
+        // }
         // method override start
         //
         return parent::add($input, $name);

@@ -19,15 +19,15 @@ class FindOneByIdHandler implements RequestHandlerInterface
 
     /**
      * @OA\Get(
-     *   path="/users/findAll",
+     *   path="/users/findOneById",
      *   tags={"Users"},
-     *   summary="Find all users for autocompleters",
-     *   operationId="users_findAll",
+     *   summary="Find one user by id",
+     *   operationId="users_findOneById",
      *   
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/CommonFindAll"),
+     *     @OA\JsonContent(ref="#/components/schemas/UsersFindOneById"),
      *   ),
      *   @OA\Response(
      *      response=404,

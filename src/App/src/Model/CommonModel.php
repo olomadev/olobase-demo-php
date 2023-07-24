@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model;
 
@@ -167,10 +168,10 @@ class CommonModel
 
     public function findCompanies()
     {
-        // $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
+        $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
+        if ($this->cache->hasItem($key)) {
+            return $this->cache->getItem($key);
+        }
         $sql    = new Sql($this->adapter);
         $select = $sql->select();
         $select->columns(
@@ -185,7 +186,7 @@ class CommonModel
         $statement = $sql->prepareStatementForSqlObject($select);
         $resultSet = $statement->execute();
         $results = iterator_to_array($resultSet);
-        // $this->cache->setItem($key, $results);
+        $this->cache->setItem($key, $results);
         return $results;
     }
 
@@ -303,54 +304,6 @@ class CommonModel
         return $results;
     }
 
-    public function findCostCenterNamesByKey()
-    {
-        $rows = $this->findCostCenters();
-        $result = array();
-        foreach ($rows as $val) {
-            $result[$val['name']] = $val['id'];
-        }
-        return $result;
-    }
-
-    public function findCostCenterIds()
-    {
-        $rows = $this->findCostCenters();
-        $results = array_column($rows, 'id');
-        return $results;
-    }
-
-    public function findCostCenterNames()
-    {
-        $rows = $this->findCostCenters();
-        $results = array_column($rows, 'name');
-        return $results;
-    }
-
-    public function findCostCenters()
-    {
-        // $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'id' => 'costCenterId',
-                'name' => 'costCenterName'
-            ]
-        );
-        $select->from(['cc' => 'costCenters']);
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        // echo $select->getSqlString($this->adapter->getPlatform());
-        // die;
-        // $this->cache->setItem($key, $results);
-        return $results;
-    }
-
     public function findEmployeeGradeNamesByKey()
     {
         $rows = $this->findEmployeeGrades();
@@ -377,10 +330,10 @@ class CommonModel
 
     public function findEmployeeGrades()
     {
-        // $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
+        $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
+        if ($this->cache->hasItem($key)) {
+            return $this->cache->getItem($key);
+        }
         $sql    = new Sql($this->adapter);
         $select = $sql->select();
         $select->columns(
@@ -395,7 +348,7 @@ class CommonModel
         $results = iterator_to_array($resultSet);
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;
-        // $this->cache->setItem($key, $results);
+        $this->cache->setItem($key, $results);
         return $results;
     }
 
@@ -438,86 +391,6 @@ class CommonModel
             ]
         );
         $select->from(['ef' => 'employeeProfiles']);
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        // echo $select->getSqlString($this->adapter->getPlatform());
-        // die;
-        // $this->cache->setItem($key, $results);
-        return $results;
-    }
-
-    public function findDisabilityNamesByKey()
-    {
-        $rows = $this->findDisabilities();
-        $result = array();
-        foreach ($rows as $val) {
-            $result[$val['name']] = $val['id'];
-        }
-        return $result;
-    }
-
-    public function findDisabilityIds()
-    {
-        $rows = $this->findDisabilities();
-        $results = array_column($rows, 'id');
-        return $results;
-    }
-
-    public function findDisabilityNames()
-    {
-        $rows = $this->findDisabilities();
-        $results = array_column($rows, 'name');
-        return $results;
-    }
-
-    public function findDisabilities()
-    {
-        // $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'id' => 'disabilityId',
-                'name' => 'description'
-            ]
-        );
-        $select->from(['d' => 'disabilities']);
-        $select->where(['yearId' => date('Y')]);
-        $select->order(['degree ASC']);
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        // $this->cache->setItem($key, $results);
-        return $results;
-    }
-
-    public function findEmployeeGroupIds()
-    {
-        $rows = $this->findEmployeeGroups();
-        $results = array_column($rows, 'id');
-        return $results;
-    }
-
-    public function findEmployeeGroups()
-    {
-        // $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'id' => 'groupId',
-                'name' => 'groupName'
-            ]
-        );
-        $select->from(['g' => 'groups']);
-        $select->where(['clientId' => CLIENT_ID]);
         $statement = $sql->prepareStatementForSqlObject($select);
         $resultSet = $statement->execute();
         $results = iterator_to_array($resultSet);
@@ -741,104 +614,6 @@ class CommonModel
         return $results;
     }
 
-    public function findPaymentTypeParamNamesByKey()
-    {
-        $rows = $this->findPaymentTypeParams();
-        $result = array();
-        foreach ($rows as $val) {
-            $result[$val['name']] = $val['id'];
-        }
-        return $result;
-    }
-
-    public function findPaymentTypeParamIds($yearId = null)
-    {
-        $rows = $this->findPaymentTypeParams($yearId);
-        $results = array_column($rows, 'id');
-        return $results;
-    }
-
-    public function findPaymentTypeParamNames($yearId = null)
-    {
-        $rows = $this->findPaymentTypeParams($yearId);
-        $results = array_column($rows, 'name');
-        return $results;
-    }
-
-    public function findPaymentTypes(array $get)
-    {
-        $yearId = null;
-        if (! empty($get['yearId'])) {
-            $yearId = $get['yearId'];
-        }
-        return $this->findPaymentTypeParams($yearId);
-    }
-
-    public function findPaymentTypeParams($yearId = null)
-    {
-        if ($yearId == null) {
-            return [];
-        }
-        $platform = $this->adapter->getPlatform();
-
-        // $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'id' => 'paymentTypeParamId',
-            ]
-        );
-        $select->from(['pp' => 'paymentTypeParams']);
-
-        $expressionSql = $platform->quoteIdentifierInFragment(
-            'pp.clientId = pl.clientId AND pp.paymentTypeParamId = pl.paymentTypeParamId AND pl.langId = ?',
-            ['AND','=','?']
-        );
-        $expression = new Expression($expressionSql, [LANG_ID]);
-        $select->join(['pl' => 'paymentTypeLang'], 
-            $expression, 
-            [
-                'name' => 'description'
-            ],
-        $select::JOIN_LEFT);
-        $select->where(['yearId' => $yearId]);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        // echo $select->getSqlString($this->adapter->getPlatform());
-        // die;
-        // $this->cache->setItem($key, $results);
-        return $results;
-    }
-
-    public function findSqlOrders()
-    {
-        $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        if ($this->cache->hasItem($key)) {
-            return $this->cache->getItem($key);
-        }
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'id' => 'id',
-                'name' => 'id',
-            ]
-        );
-        $select->from('sqlOrders');
-        $select->order('id ASC');
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        $this->cache->setItem($key, $results);
-        return $results;
-    }
-
     public function findAreaCodeIds()
     {
         $rows = $this->findAreaCodes();
@@ -881,63 +656,5 @@ class CommonModel
         // $this->cache->setItem($key, $results);
         return $results;
     }
-
-    public function findNotificationModules()
-    {
-        // $key = Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
-        $sql    = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'id' => 'moduleId',
-                'name' => 'moduleName'
-            ]
-        );
-        $select->from('notificationModules');
-        $select->order('moduleName ASC');
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        // $this->cache->setItem($key, $results);
-        return $results;
-    }
-
-    public function findNotificationDates(string $moduleId)
-    {
-        $sql = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'tableName'
-            ]
-        );
-        $select->from('notificationModules');
-        $select->where(['moduleId' => $moduleId]);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $row = $resultSet->current();
-        $statement->getResource()->closeCursor();
-        if (empty($row)) {
-            return [];
-        }
-        // echo $select->getSqlString($this->adapter->getPlatform());
-        // die;
-        $databaseName = $this->config['db']['database'];
-        $tableName = $row['tableName'];
-
-        $columnSql = "SELECT COLUMN_NAME as id FROM INFORMATION_SCHEMA.COLUMNS
-          WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? 
-          AND (COLUMN_TYPE = 'date' OR COLUMN_TYPE = 'datetime')";
-
-        $statement = $this->adapter->createStatement($columnSql);
-        $resultSet = $statement->execute([$databaseName, $tableName]);
-        $results = iterator_to_array($resultSet);
-        return $results;
-    }
-
 
 }

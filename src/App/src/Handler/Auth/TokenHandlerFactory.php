@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler\Auth;
 
-use App\Filter\AuthFilter;
+use App\Filter\Auth\AuthFilter;
 use Oloma\Php\Error\ErrorWrapperInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;

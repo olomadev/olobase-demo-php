@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Handler\Roles;
 
-use App\Model\UserModel;
-use App\Filter\AccountSaveFilter;
+use App\Model\RoleModel;
+use App\Filter\RoleSaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -14,18 +14,17 @@ use Laminas\Db\Adapter\AdapterInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 
-class UpdateHandlerFactory
+class CreateHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        $userModel = $container->get(UserModel::class);
+        $roleModel = $container->get(RoleModel::class);
         $error = $container->get(Error::class);
         $dataManager = $container->get(DataManagerInterface::class);
 
         $pluginManager = $container->get(InputFilterPluginManager::class);
-        $inputFilter   = $pluginManager->get(AccountSaveFilter::class);
-        $inputFilter->setAdapter($container->get(AdapterInterface::class));
+        $inputFilter   = $pluginManager->get(RoleSaveFilter::class);
 
-        return new FindMeHandler($userModel, $dataManager, $inputFilter, $error);
+        return new FindMeHandler($roleModel, $dataManager, $inputFilter, $error);
     }
 }

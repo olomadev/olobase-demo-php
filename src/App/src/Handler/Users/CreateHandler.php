@@ -32,15 +32,15 @@ class CreateHandler implements RequestHandlerInterface
     }
     
     /**
-     * @OA\Put(
-     *   path="/account/update",
-     *   tags={"Account"},
-     *   summary="Update account",
-     *   operationId="account_update",
+     * @OA\Post(
+     *   path="/users/create",
+     *   tags={"Users"},
+     *   summary="Create a new user",
+     *   operationId="users_create",
      *
      *   @OA\RequestBody(
-     *     description="Update Cost",
-     *     @OA\JsonContent(ref="#/components/schemas/AccountSave"),
+     *     description="Create a new user",
+     *     @OA\JsonContent(ref="#/components/schemas/UserSave"),
      *   ),
      *   @OA\Response(
      *     response=200,

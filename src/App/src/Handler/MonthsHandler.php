@@ -25,24 +25,6 @@ class MonthsHandler extends AbstractHandler
         $this->error = $error;
     }
 
-    /**
-     * @OA\Get(
-     *   path="/months/findAll",
-     *   tags={"Common"},
-     *   summary="Find all months",
-     *   operationId="months_findAll",
-     *   
-     *   @OA\Response(
-     *     response=200,
-     *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/MonthsFindAllResultVM"),
-     *   ),
-     *   @OA\Response(
-     *      response=404,
-     *      description="No result found"
-     *   )
-     *)
-     **/
     public function onGetFindAll(array $get)
     {
         $data = $this->commonModel->findMonths();

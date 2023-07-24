@@ -8,7 +8,7 @@ use App\Model\RoleModel;
 use App\Entity\RolesEntity;
 use App\Entity\RolePermissionsEntity;
 use App\Schema\Roles\RoleSave;
-use App\Filter\RoleSaveFilter;
+use App\Filter\Roles\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -21,7 +21,7 @@ class UpdateHandler implements RequestHandlerInterface
     public function __construct(
         private RoleModel $roleModel,
         private DataManagerInterface $dataManager,
-        private RoleSaveFilter $filter,
+        private SaveFilter $filter,
         private Error $error,
     ) 
     {
@@ -62,7 +62,11 @@ class UpdateHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->filter->setInputData($request->getParsedBody());
+        $roleId = $request->getAttribute("roleId");
+        $post = $request->getParsedBody();
+        $post['id'] = $roleId;
+
+        $this->filter->setInputData($post);
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Auth;
 
 use Exception;
-use App\Filter\AuthFilter;
+use App\Filter\Auth\AuthFilter;
 use Firebase\JWT\ExpiredException;
 use Mezzio\Authentication\UserInterface;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -36,12 +36,12 @@ class TokenHandler implements RequestHandlerInterface
      *
      *   @OA\RequestBody(
      *     description="Authenticate",
-     *     @OA\JsonContent(ref="#/components/schemas/Auth"),
+     *     @OA\JsonContent(ref="#/components/schemas/AuthRequest"),
      *   ),
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/AuthResultVM"),
+     *     @OA\JsonContent(ref="#/components/schemas/AuthResult"),
      *   ),
      *   @OA\Response(
      *      response=400,

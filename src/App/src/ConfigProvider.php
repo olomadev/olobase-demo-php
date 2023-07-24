@@ -15,6 +15,7 @@ use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\I18n\Translator\TranslatorInterface;
+
 use Laminas\ServiceManager\Factory\InvokableFactory;
 use Laminas\ServiceManager\AbstractFactory\ReflectionBasedAbstractFactory;
 
@@ -33,54 +34,37 @@ class ConfigProvider
      */
     public function __invoke() : array
     {
-        // print_r($this->getDependencies()['factories']);
-        //die;
-
         return [
             'dependencies' => $this->getDependencies(),
             'input_filters' => [
                 'factories' => [
+                    // Core Input Filters
                     Filter\ObjectInputFilter::class => Container\ObjectInputFilterFactory::class,
                     Filter\CollectionInputFilter::class => Container\CollectionInputFilterFactory::class,
-                    Filter\AuthFilter::class => InvokableFactory::class,
-                    Filter\AccountSaveFilter::class => InvokableFactory::class,
-                    Filter\PasswordChangeFilter::class => InvokableFactory::class,
-                    Filter\PasswordSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\UserSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\UserDeleteFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\RoleSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    Filter\RoleDeleteFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\CompanySaveFilter::class => ReflectionBasedAbstractFactory::class,
-
-                    // Filter\DepartmentSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\CompanySaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\DisabilitySaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\EmployeeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\EmployeeListSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\EmployeeGradeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\EmployeeProfileSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\EmployeeListImportFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\ExpenseTypeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\PaymentTypeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\PayrollSchemeSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\JobTitleSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\JobTitleListImportFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\JobTitleListSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\MinWageSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\DisabilityFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\NotificationSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\ExchangeRateSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\PasswordUpdateFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\PasswordSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\PermissionSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\RoleSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\ResetPasswordFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\SalarySaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\SalaryListSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\SendResetPasswordFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\UserSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\WorkplaceSaveFilter::class => ReflectionBasedAbstractFactory::class,
-                    // Filter\FileUploadFilter::class => ReflectionBasedAbstractFactory::class,
+                    // Auth
+                    Filter\Auth\AuthFilter::class => InvokableFactory::class,
+                    // Account
+                    Filter\Account\SaveFilter::class => Filter\Account\SaveFilterFactory::class,
+                    Filter\Account\PasswordChangeFilter::class => Filter\Account\PasswordChangeFilterFactory::class,
+                    // Users
+                    Filter\Users\SaveFilter::class => Filter\Users\SaveFilterFactory::class,
+                    Filter\Users\DeleteFilter::class => Filter\Users\DeleteFilterFactory::class,
+                    Filter\Users\PasswordSaveFilter::class => Filter\Users\PasswordSaveFilterFactory::class,
+                    // Roles
+                    Filter\Roles\SaveFilter::class => Filter\Roles\SaveFilterFactory::class,
+                    Filter\Roles\DeleteFilter::class => Filter\Roles\DeleteFilterFactory::class,
+                    // Permissions
+                    Filter\Permissions\SaveFilter::class => Filter\Permissions\SaveFilterFactory::class,
+                    Filter\Permissions\DeleteFilter::class => Filter\Permissions\DeleteFilterFactory::class,
+                    // Employee Grades
+                    Filter\EmployeeGrades\SaveFilter::class => Filter\EmployeeGrades\SaveFilterFactory::class,
+                    Filter\EmployeeGrades\DeleteFilter::class => Filter\EmployeeGrades\DeleteFilterFactory::class,
+                    // Companies
+                    Filter\Companies\SaveFilter::class => Filter\Companies\SaveFilterFactory::class,
+                    Filter\Companies\DeleteFilter::class => Filter\Companies\DeleteFilterFactory::class,
+                    // Job Titles
+                    Filter\JobTitles\SaveFilter::class => Filter\JobTitles\SaveFilterFactory::class,
+                    Filter\JobTitles\DeleteFilter::class => Filter\JobTitles\DeleteFilterFactory::class,
                 ],
             ],
         ];
@@ -112,13 +96,20 @@ class ConfigProvider
                 Middleware\JwtAuthenticationMiddleware::class => Container\JwtAuthenticationMiddlewareFactory::class,
                 StorageInterface::class => Container\CacheFactory::class,
                 SimpleCacheInterface::class => Container\SimpleCacheFactory::class,   
-                             
+                ClientInterface::class => Container\PredisFactory::class,
                 Mailer::class => Container\MailerFactory::class,
                 ErrorMailer::class => Container\ErrorMailerFactory::class,
-                ClientInterface::class => Container\PredisFactory::class,
 
                 // Handlers
                 //
+                // common
+                Handler\Common\Years\FindAllHandler::class => Handler\Common\Years\FindAllHandlerFactory::class,
+                Handler\Common\Months\FindAllHandler::class => Handler\Common\Months\FindAllHandlerFactory::class,
+                Handler\Common\Cities\FindAllHandler::class => Handler\Common\Cities\FindAllHandlerFactory::class,
+                Handler\Common\Countries\FindAllHandler::class => Handler\Common\Countries\FindAllHandlerFactory::class,
+                Handler\Common\AreaCodes\FindAllHandler::class => Handler\Common\AreaCodes\FindAllHandlerFactory::class,
+                
+                // auth
                 Handler\Auth\TokenHandler::class => Handler\Auth\TokenHandlerFactory::class,
                 Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
                 Handler\Auth\LogoutHandler::class => Handler\Auth\LogoutHandlerFactory::class,
@@ -141,6 +132,32 @@ class ConfigProvider
                 Handler\Roles\FindOneByIdHandler::class => Handler\Roles\FindOneByIdHandlerFactory::class,
                 Handler\Roles\FindAllByPagingHandler::class => Handler\Roles\FindAllByPagingHandlerFactory::class,
                 Handler\Roles\FindAllHandler::class => Handler\Roles\FindAllHandlerFactory::class,
+                // permissions
+                Handler\Permissions\CopyHandler::class => Handler\Permissions\CreateHandlerFactory::class,
+                Handler\Permissions\CreateHandler::class => Handler\Permissions\CreateHandlerFactory::class,
+                Handler\Permissions\UpdateHandler::class => Handler\Permissions\UpdateHandlerFactory::class,
+                Handler\Permissions\DeleteHandler::class => Handler\Permissions\DeleteHandlerFactory::class,
+                Handler\Permissions\FindAllByPagingHandler::class => Handler\Permissions\FindAllByPagingHandlerFactory::class,
+                Handler\Permissions\FindAllHandler::class => Handler\Permissions\FindAllHandlerFactory::class,
+                // employee grades
+                Handler\EmployeeGrades\CreateHandler::class => Handler\EmployeeGrades\CreateHandlerFactory::class,
+                Handler\EmployeeGrades\UpdateHandler::class => Handler\EmployeeGrades\UpdateHandlerFactory::class,
+                Handler\EmployeeGrades\DeleteHandler::class => Handler\EmployeeGrades\DeleteHandlerFactory::class,
+                Handler\EmployeeGrades\FindAllByPagingHandler::class => Handler\EmployeeGrades\FindAllByPagingHandlerFactory::class,
+                Handler\EmployeeGrades\FindAllHandler::class => Handler\EmployeeGrades\FindAllHandlerFactory::class,
+                // companies
+                Handler\Companies\CreateHandler::class => Handler\Companies\CreateHandlerFactory::class,
+                Handler\Companies\UpdateHandler::class => Handler\Companies\UpdateHandlerFactory::class,
+                Handler\Companies\DeleteHandler::class => Handler\Companies\DeleteHandlerFactory::class,
+                Handler\Companies\FindOneByIdHandler::class => Handler\Companies\FindOneByIdHandlerFactory::class,
+                Handler\Companies\FindAllByPagingHandler::class => Handler\Companies\FindAllByPagingHandlerFactory::class,
+                Handler\Companies\FindAllHandler::class => Handler\Companies\FindAllHandlerFactory::class,
+                // job titles
+                Handler\JobTitles\CreateHandler::class => Handler\JobTitles\CreateHandlerFactory::class,
+                Handler\JobTitles\UpdateHandler::class => Handler\JobTitles\UpdateHandlerFactory::class,
+                Handler\JobTitles\DeleteHandler::class => Handler\JobTitles\DeleteHandlerFactory::class,
+                Handler\JobTitles\FindAllByPagingHandler::class => Handler\JobTitles\FindAllByPagingHandlerFactory::class,
+                Handler\JobTitles\FindAllHandler::class => Handler\JobTitles\FindAllHandlerFactory::class,
 
                 // Handler\AccountHandler::class => ReflectionBasedAbstractFactory::class,
                 // Handler\AgreementTypesHandler::class => ReflectionBasedAbstractFactory::class,
