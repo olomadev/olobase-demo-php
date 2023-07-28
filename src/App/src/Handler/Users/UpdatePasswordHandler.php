@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Users;
 
 use App\Model\UserModel;
-use App\Filter\PasswordSaveFilter;
+use App\Filter\Users\PasswordSaveFilter;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

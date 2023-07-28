@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Filter\Users;
 
 use App\Filter\InputFilter;
+use App\Filter\MbUcFirstFilter;
+use App\Filter\EmailNormalizeFilter;
 use App\Filter\CollectionInputFilter;
 use App\Filter\ToFile;
 use App\Validator\Base64FileUpload;
@@ -151,7 +153,7 @@ class SaveFilter extends InputFilter
                         'operation' => HTTP_METHOD == 'POST' ? 'create' : 'update',
                         'max_allowed_upload' => 2097152,  // 2 mega bytes
                         'mime_types' => [
-                            'image/png',
+                            'image/png', 'image/jpg', 'image/jpeg', 'image/gif',
                         ],
                     ],
                 ]

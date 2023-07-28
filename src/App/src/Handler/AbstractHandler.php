@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Api;
-
-use Psr\Http\Server\RequestHandlerInterface;
+namespace App\Handler;
 
 /**
  * @OA\Info(title="Demo API", version="1.0"),
@@ -21,7 +19,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *     type="basic",
  * ),
  */
-class AbstractHandler extends RequestHandlerInterface
+class AbstractHandler
 {
    
 }

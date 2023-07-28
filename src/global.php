@@ -5,8 +5,8 @@ declare(strict_types=1);
 use App\Exception\JsonDecodeException;
 
 define('PROJECT_ROOT', dirname(__DIR__));
-define('PROJECT_DOMAIN', 'butce.pernet.com.tr');
-define('CACHE_ROOT_KEY', 'Pernet_Butce:');
+define('PROJECT_DOMAIN', 'example.com');
+define('CACHE_ROOT_KEY', 'demoApp:');
 define('CACHE_TMP_FILE_KEY', 'tmpFileKey_');
 /**
  * Removes image prefix "data:image/png;base64, ...."

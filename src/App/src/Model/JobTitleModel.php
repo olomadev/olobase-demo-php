@@ -85,7 +85,6 @@ class JobTitleModel
                 'companyShortName'
             ],
         $select::JOIN_LEFT);
-        $select->where(['j.clientId' => CLIENT_ID]);
         return $select;
     }
 

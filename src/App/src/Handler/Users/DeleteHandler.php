@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Users;
 
 use App\Model\UserModel;
-use App\Filter\UserDeleteFilter;
+use App\Filter\Users\DeleteFilter;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -16,7 +16,7 @@ class DeleteHandler implements RequestHandlerInterface
 {
     public function __construct(
         private UserModel $userModel,        
-        private UserDeleteFilter $filter,
+        private DeleteFilter $filter,
         private Error $error,
     ) 
     {

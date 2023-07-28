@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
-use App\Filter\RoleDeleteFilter;
+use App\Filter\Roles\DeleteFilter;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -16,7 +16,7 @@ class DeleteHandler implements RequestHandlerInterface
 {
     public function __construct(
         private RoleModel $roleModel,        
-        private RoleDeleteFilter $filter,
+        private DeleteFilter $filter,
         private Error $error,
     ) 
     {

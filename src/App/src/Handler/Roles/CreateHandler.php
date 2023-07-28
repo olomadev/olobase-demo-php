@@ -8,7 +8,7 @@ use App\Model\RoleModel;
 use App\Entity\RolesEntity;
 use App\Entity\RolePermissionsEntity;
 use App\Schema\Roles\RoleSave;
-use App\Filter\RoleSaveFilter;
+use App\Filter\Roles\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -21,7 +21,7 @@ class CreateHandler implements RequestHandlerInterface
     public function __construct(
         private RoleModel $roleModel,
         private DataManagerInterface $dataManager,
-        private RoleSaveFilter $filter,
+        private SaveFilter $filter,
         private Error $error,
     ) 
     {

@@ -135,7 +135,6 @@ class EmployeeGradeModel
     {
         try {
             $this->conn->beginTransaction();
-            $data['employeeGrades']['clientId'] = CLIENT_ID;
             $data['employeeGrades']['gradeId'] = $data['gradeId'];
             $this->employeeGrades->insert($data['employeeGrades']);
             $this->conn->commit();

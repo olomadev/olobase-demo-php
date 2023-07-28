@@ -6,11 +6,11 @@ namespace App\Middleware;
 
 use function define, current, str_pad;
 
+use Oloma\Php\Exception\BodyDecodeException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Oloma\Php\Exception\BodyDecodeException;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;

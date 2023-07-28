@@ -80,7 +80,6 @@ class JobTitleListModel
         ]);
         $select->from(['jl' => 'jobTitleList']);
         $select->group(['jobTitleListId', 'listName', 'yearId']);
-        $select->where(['jl.clientId' => CLIENT_ID]);
         return $select;
     }
 
@@ -164,7 +163,7 @@ class JobTitleListModel
         $jobTitleListId = $data['jobTitleListId'];
         try {
             $this->conn->beginTransaction();
-            $this->jobTitleList->update($data['jobTitleList'], ['jobTitleListId' => $jobTitleListId, 'clientId' => CLIENT_ID]);
+            $this->jobTitleList->update($data['jobTitleList'], ['jobTitleListId' => $jobTitleListId]);
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();

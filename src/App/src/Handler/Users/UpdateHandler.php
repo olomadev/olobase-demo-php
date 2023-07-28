@@ -7,7 +7,7 @@ namespace App\Handler\Users;
 use App\Model\UserModel;
 use App\Entity\UsersEntity;
 use App\Schema\Users\UserSave;
-use App\Filter\UserSaveFilter;
+use App\Filter\Users\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -20,7 +20,7 @@ class UpdateHandler implements RequestHandlerInterface
     public function __construct(
         private UserModel $userModel,        
         private DataManagerInterface $dataManager,
-        private UserSaveFilter $filter,
+        private SaveFilter $filter,
         private Error $error,
     ) 
     {

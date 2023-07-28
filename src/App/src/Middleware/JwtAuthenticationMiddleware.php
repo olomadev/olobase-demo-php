@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
-use App\Exception\BadClientException;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Firebase\JWT\ExpiredException;

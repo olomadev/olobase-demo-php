@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Users;
 
 use App\Model\UserModel;
-use App\Filter\UserDeleteFilter;
+use App\Filter\Users\DeleteFilter;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -19,7 +19,7 @@ class DeleteHandlerFactory
         $error = $container->get(Error::class);
 
         $pluginManager = $container->get(InputFilterPluginManager::class);
-        $inputFilter   = $pluginManager->get(UserDeleteFilter::class);
+        $inputFilter   = $pluginManager->get(DeleteFilter::class);
 
         return new CreateHandler($userModel, $inputFilter, $error);
     }

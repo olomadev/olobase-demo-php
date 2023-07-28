@@ -46,7 +46,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
         JwtAuthenticationMiddleware::class,
         Mezzio\Authorization\AuthorizationMiddleware::class,
     ];
-    // Accunt
+    // Account
     $app->route('/api/account/findMe', [...$auth, ...[App\Handler\Account\FindMeHandler::class]], ['GET']);
     $app->route('/api/account/update', [...$auth, ...[App\Handler\Account\UpdateHandler::class]], ['PUT']);
     $app->route('/api/account/updatePassword', [...$auth, ...[App\Handler\Account\UpdatePasswordHandler::class]], ['PUT']);
@@ -67,6 +67,10 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/users/findAll', [...$auth, [App\Handler\Users\FindAllHandler::class]], ['GET']);
     $app->route('/api/users/findAllByPaging', [...$auth, [App\Handler\Users\FindAllByPagingHandler::class]], ['GET']);
     $app->route('/api/users/findOneById/:userId', [...$auth, [App\Handler\Users\FindOneByIdHandler::class]], ['GET']);
+
+    // Avatars
+    $app->route('/api/avatars/findOneById/:userId', [...$auth, [App\Handler\Users\FindOneByIdHandler::class]], ['GET']);
+    $app->route('/api/avatars/update/:userId', [...$auth, [App\Handler\Users\UpdateHandler::class]], ['PUT']);
 
     // Permissions
     $app->route('/api/permissions/create', [...$auth, [App\Handler\Permissions\CreateHandler::class]], ['POST']);
@@ -98,60 +102,32 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/jobtitles/findAll', [JwtAuthenticationMiddleware::class, App\Handler\JobTitles\FindAllHandler::class], ['GET']);
     $app->route('/api/jobtitles/findAllByPaging', [...$auth, [App\Handler\JobTitles\FindAllByPagingHandler::class]], ['GET']);
 
-    // Common and public resources *
+    // JobTitleLists
+    //
+    // xlsx import functions
+    // 
+    $app->route('/api/jobtitlelists/upload', [...$auth, [App\Handler\JobTitleLists\UploadHandler::class]], ['POST']);
+    $app->route('/api/jobtitlelists/preview', [...$auth, [App\Handler\JobTitleLists\PreviewHandler::class]], ['GET']);
+    $app->route('/api/jobtitlelists/import', [...$auth, [App\Handler\JobTitleLists\ImportHandler::class]], ['POST']);
+    $app->route('/api/jobtitlelists/importStatus', [...$auth, [App\Handler\JobTitleLists\ImportStatusHandler::class]], ['GET']);
+    $app->route('/api/jobtitlelists/reset', [...$auth, [App\Handler\JobTitleLists\ResetHandler::class]], ['DELETE']);
+    $app->route('/api/jobtitlelists/remove', [...$auth, [App\Handler\JobTitleLists\RemoveHandler::class]], ['DELETE']);
+    //
+    // standart api functions
+    //
+    $app->route('/api/jobtitlelists/update/:listId', [...$auth, [App\Handler\JobTitleLists\UpdateHandler::class]], ['PUT']);
+    $app->route('/api/jobtitlelists/delete/:listId', [...$auth, [App\Handler\JobTitleLists\DeleteHandler::class]], ['DELETE']);
+    $app->route('/api/jobtitlelists/findAll', [...$auth, [App\Handler\JobTitleLists\FindAllHandler::class]], ['GET']);
+    $app->route('/api/jobtitlelists/findAllByPaging', [...$auth, [App\Handler\JobTitleLists\FindAllByPagingHandler::class]], ['GET']);
+
+    // Common (public) resources
     // 
     $app->route('/api/years/findAll', App\Handler\Common\Years\FindAllHandler::class, ['GET']);
     $app->route('/api/months/findAll', App\Handler\Common\Months\FindAllHandler::class, ['GET']);
     $app->route('/api/cities/findAll', App\Handler\Common\Cities\FindAllHandler::class, ['GET']);
     $app->route('/api/countries/findAll', App\Handler\Common\Countries\FindAllHandler::class, ['GET']);
     $app->route('/api/areaCodes/findAll', App\Handler\Common\AreaCode\FindAllHandler::class, ['GET']);
-
-    $app->route('/api/files/findOne/:fileId', App\Handler\FileHandler::class, ['GET']);
-    $app->route('/api/employeeTypes/findAll', App\Handler\EmployeeTypesHandler::class, ['GET']);
-    $app->route('/api/employeeGroups/findAll', App\Handler\EmployeeGroupsHandler::class, ['GET']);
-    $app->route('/api/employeeLists/findAll', App\Handler\EmployeeListsHandler::class, ['GET']);
-    $app->route('/api/salarylists/downloadXls', App\Handler\SalaryListsHandler::class, ['GET']);
-    $app->route('/api/paymenttypes/findAll', App\Handler\PaymentTypesHandler::class, ['GET']);
-    $app->route('/api/costCenters/findAll', App\Handler\CostCentersHandler::class, ['GET']);
-    $app->route('/api/jobTitles/findAll', App\Handler\JobTitlesHandler::class, ['GET']);
-    $app->route('/api/disabilities/findAll', App\Handler\DisabilitiesHandler::class, ['GET']);
-    $app->route('/api/sqlOrders/findAll', App\Handler\SqlOrderHandler::class, ['GET']);
-
-    $customers = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\CustomerHandler::class
-    ];
-    $app->route('/api/customers/create', $customers, ['POST']);
-    $app->route('/api/customers/update/:customerId', $customers, ['PUT']);
-    $app->route('/api/customers/delete/:customerId', $customers, ['DELETE']);
-    $app->route('/api/customers/findAll', $customers, ['GET']);
-    $app->route('/api/customers/findAllByPaging', $customers, ['GET']);
-    $app->route('/api/customers/findOneById/:customerId', $customers, ['GET']);
-
-    $departments = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\DepartmentHandler::class
-    ];
-    $app->route('/api/departments/create', $departments, ['POST']);
-    $app->route('/api/departments/update/:departmentId', $departments, ['PUT']);
-    $app->route('/api/departments/delete/:departmentId', $departments, ['DELETE']);
-    $app->route('/api/departments/findAll', $departments, ['GET']);
-    $app->route('/api/departments/findAllByPaging', $departments, ['GET']);
-    $app->route('/api/departments/findOneById/:departmentId', $departments, ['GET']);
-
-    $workplaces = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\WorkplaceHandler::class
-    ];
-    $app->route('/api/workplaces/create', $workplaces, ['POST']);
-    $app->route('/api/workplaces/update/:workplaceId', $workplaces, ['PUT']);
-    $app->route('/api/workplaces/delete/:workplaceId', $workplaces, ['DELETE']);
-    $app->route('/api/workplaces/findAll', $workplaces, ['GET']);
-    $app->route('/api/workplaces/findAllByPaging', $workplaces, ['GET']);
-    $app->route('/api/workplaces/findOneById/:workplaceId', $workplaces, ['GET']);
+    $app->route('/api/files/findOneById/:fileId', App\Handler\Files\FindOneByIdHandler::class, ['GET']);
 
     $employees = [
         JwtAuthenticationMiddleware::class,
@@ -165,123 +141,5 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/employees/findAllBySearch', $employees, ['GET']);
     $app->route('/api/employees/findAllByPaging', $employees, ['GET']);
     $app->route('/api/employees/findOneById/:employeeId', $employees, ['GET']);
-
-    $employeeLists = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\EmployeeListsHandler::class
-    ];
-    //
-    // xls import functions
-    // 
-    $app->route('/api/employeelists/upload', $employeeLists, ['POST']);
-    $app->route('/api/employeelists/previewResults', $employeeLists, ['GET']);
-    $app->route('/api/employeelists/import', $employeeLists, ['POST']);
-    $app->route('/api/employeelists/importStatus', $employeeLists, ['GET']);
-    $app->route('/api/employeelists/reset', $employeeLists, ['DELETE']);
-    $app->route('/api/employeelists/remove', $employeeLists, ['DELETE']);
-    //
-    // standart api functions
-    //
-    $app->route('/api/employeelists/update/:listId', $employeeLists, ['PUT']);
-    $app->route('/api/employeelists/delete/:listId', $employeeLists, ['DELETE']);
-    $app->route('/api/employeelists/findAll', $employeeLists, ['GET']);
-    $app->route('/api/employeelists/findAllByPaging', $employeeLists, ['GET']);
-
-
-    $employeeProfiles = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\EmployeeProfilesHandler::class
-    ];
-    $app->route('/api/employeeprofiles/create', $employeeProfiles, ['POST']);
-    $app->route('/api/employeeprofiles/update/:profileId', $employeeProfiles, ['PUT']);
-    $app->route('/api/employeeprofiles/delete/:profileId', $employeeProfiles, ['DELETE']);
-    $app->route('/api/employeeprofiles/findAll', $employeeProfiles, ['GET']);
-    $app->route('/api/employeeprofiles/findAllByPaging', $employeeProfiles, ['GET']);
-
-    $jobTitleLists = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\JobTitleListsHandler::class
-    ];
-    //
-    // xlsx import functions
-    // 
-    $app->route('/api/jobtitlelists/upload', $jobTitleLists, ['POST']);
-    $app->route('/api/jobtitlelists/previewResults', $jobTitleLists, ['GET']);
-    $app->route('/api/jobtitlelists/import', $jobTitleLists, ['POST']);
-    $app->route('/api/jobtitlelists/importStatus', $jobTitleLists, ['GET']);
-    $app->route('/api/jobtitlelists/reset', $jobTitleLists, ['DELETE']);
-    $app->route('/api/jobtitlelists/remove', $jobTitleLists, ['DELETE']);
-    //
-    // standart api functions
-    //
-    $app->route('/api/jobtitlelists/update/:listId', $jobTitleLists, ['PUT']);
-    $app->route('/api/jobtitlelists/delete/:listId', $jobTitleLists, ['DELETE']);
-    $app->route('/api/jobtitlelists/findAll', $jobTitleLists, ['GET']);
-    $app->route('/api/jobtitlelists/findAllByPaging', $jobTitleLists, ['GET']);
-
-    $minumumWages = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\MinumumWagesHandler::class
-    ];
-    $app->route('/api/minumumwages/create', $minumumWages, ['POST']);
-    $app->route('/api/minumumwages/update/:wageId', $minumumWages, ['PUT']);
-    $app->route('/api/minumumwages/delete/:wageId', $minumumWages, ['DELETE']);
-    $app->route('/api/minumumwages/findAllByPaging', $minumumWages, ['GET']);
-
-    $disabilities = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\DisabilitiesHandler::class
-    ];
-    $app->route('/api/disabilities/create', $disabilities, ['POST']);
-    $app->route('/api/disabilities/update/:disabilityId', $disabilities, ['PUT']);
-    $app->route('/api/disabilities/delete/:disabilityId', $disabilities, ['DELETE']);
-    $app->route('/api/disabilities/findAllByPaging', $disabilities, ['GET']);
-
-    $salaryLists = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\SalaryListsHandler::class
-    ];
-    //
-    // xls import functions
-    // 
-    $app->route('/api/salarylists/upload', $salaryLists, ['POST']);
-    $app->route('/api/salarylists/previewResults', $salaryLists, ['GET']);
-    $app->route('/api/salarylists/import', $salaryLists, ['POST']);
-    $app->route('/api/salarylists/importStatus', $salaryLists, ['GET']);
-    $app->route('/api/salarylists/reset', $salaryLists, ['DELETE']);
-    $app->route('/api/salarylists/remove', $salaryLists, ['DELETE']);
-    //
-    // standart api functions
-    //
-    $app->route('/api/salarylists/update/:listId', $salaryLists, ['PUT']);
-    $app->route('/api/salarylists/delete/:listId', $salaryLists, ['DELETE']);
-    $app->route('/api/salarylists/findAll', $salaryLists, ['GET']);
-    $app->route('/api/salarylists/findAllByPaging', $salaryLists, ['GET']);
-    
-    $salaries = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\SalariesHandler::class
-    ];
-    $app->route('/api/salaries/create', $salaries, ['POST']);
-    $app->route('/api/salaries/update/:salaryId', $salaries, ['PUT']);
-    $app->route('/api/salaries/delete/:salaryId', $salaries, ['DELETE']);
-    $app->route('/api/salaries/findAllByPaging', $salaries, ['GET']);
-
-    $payrollSchemes = [
-        JwtAuthenticationMiddleware::class,
-        Mezzio\Authorization\AuthorizationMiddleware::class,
-        App\Handler\PayrollSchemeHandler::class
-    ];
-    $app->route('/api/payrollschemes/create', $payrollSchemes, ['POST']);
-    $app->route('/api/payrollschemes/update/:schemeId', $payrollSchemes, ['PUT']);
-    $app->route('/api/payrollschemes/delete/:schemeId', $payrollSchemes, ['DELETE']);
-    $app->route('/api/payrollschemes/findAllByPaging', $payrollSchemes, ['GET']);
 
 };

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Users;
 
 use App\Model\UserModel;
-use App\Filter\UserSaveFilter;
+use App\Filter\Users\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
@@ -21,7 +21,7 @@ class UpdateHandlerFactory
         $dataManager = $container->get(DataManagerInterface::class);
 
         $pluginManager = $container->get(InputFilterPluginManager::class);
-        $inputFilter   = $pluginManager->get(UserSaveFilter::class);
+        $inputFilter   = $pluginManager->get(SaveFilter::class);
 
         return new UpdateHandler($userModel, $dataManager, $inputFilter, $error);
     }
