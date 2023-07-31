@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter\JobTitleLists;
 
+use App\Filter\InputFilter;
 use App\Validator\FileUpload;
 
 class FileUploadFilter extends InputFilter

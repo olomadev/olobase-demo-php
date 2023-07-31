@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter\JobTitleLists;
 
+use App\Filter\InputFilter;
 use App\Model\CommonModel;
 use App\Filter\ObjectInputFilter;
 use App\Validator\Db\RecordExists;
@@ -10,8 +13,6 @@ use Laminas\Filter\StringTrim;
 use Laminas\Validator\Uuid;
 use Laminas\Validator\InArray;
 use Laminas\Validator\StringLength;
-use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\InputFilter\InputFilterPluginManager;
 
 class SaveFilter extends InputFilter
 {

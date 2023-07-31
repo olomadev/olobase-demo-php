@@ -109,7 +109,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/jobtitlelists/upload', [...$auth, [App\Handler\JobTitleLists\UploadHandler::class]], ['POST']);
     $app->route('/api/jobtitlelists/preview', [...$auth, [App\Handler\JobTitleLists\PreviewHandler::class]], ['GET']);
     $app->route('/api/jobtitlelists/import', [...$auth, [App\Handler\JobTitleLists\ImportHandler::class]], ['POST']);
-    $app->route('/api/jobtitlelists/importStatus', [...$auth, [App\Handler\JobTitleLists\ImportStatusHandler::class]], ['GET']);
+    $app->route('/api/jobtitlelists/status', [...$auth, [App\Handler\JobTitleLists\StatusHandler::class]], ['GET']);
     $app->route('/api/jobtitlelists/reset', [...$auth, [App\Handler\JobTitleLists\ResetHandler::class]], ['DELETE']);
     $app->route('/api/jobtitlelists/remove', [...$auth, [App\Handler\JobTitleLists\RemoveHandler::class]], ['DELETE']);
     //

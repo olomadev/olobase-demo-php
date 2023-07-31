@@ -13,6 +13,6 @@ class StatusHandlerFactory
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
         $storage = $container->get(StorageInterface::class);
-        return new ImportStatusHandler($storage);
+        return new StatusHandler($storage);
     }
 }

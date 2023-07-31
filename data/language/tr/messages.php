@@ -1,6 +1,19 @@
 <?php
 
 return [
+    // Php Json parse errors
+    //
+    JSON_ERROR_DEPTH => 'İstemci json hatası: Maksimum yığın derinliği aşıldı',
+    JSON_ERROR_STATE_MISMATCH => 'İstemci json hatası: İstemci tarafından gönderilen ve geçersiz veya hatalı biçimlendirilmiş JSON',
+    JSON_ERROR_CTRL_CHAR => 'İstemci json hatası: Muhtemelen yanlış kodlanmış kontrol karakteri',
+    JSON_ERROR_SYNTAX => 'İstemci json hatası: Sözdizimi hatası',
+    JSON_ERROR_UTF8 => 'İstemci json hatası: Hatalı biçimlendirilmiş UTF-8 karakterleri, muhtemelen yanlış kodlanmış',
+    JSON_ERROR_RECURSION => 'İstemci json hatası: Kodlanacak değerde bir veya daha fazla özyinelemeli başvuru',
+    JSON_ERROR_INF_OR_NAN => 'İstemci json hatası: Kodlanacak değerde bir veya daha fazla NAN veya INF değeri',
+    JSON_ERROR_UNSUPPORTED_TYPE => 'İstemci json hatası: Kodlanamayan bir tür değeri verildi',
+    JSON_ERROR_INVALID_PROPERTY_NAME => 'İstemci json hatası: Kodlanamayan bir özellik adı verildi',
+    JSON_ERROR_UTF16 => 'İstemci json hatası: Hatalı biçimlendirilmiş UTF-16 karakterleri, muhtemelen yanlış kodlanmış',
+
     // Error Upload
     // 
     'File is not provided' => 'Dosya alınamadı',
@@ -16,20 +29,6 @@ return [
     'File upload stopped by extension' => 'Dosya yükleme, uzantı tarafından durduruldu',
     'Unknown upload error' => 'Bilinmeyen yükleme hatası',
     'Only .xls and .xlsx file formats are supported' => 'Sadece .xls ve .xlsx dosya formatları destekleniyor',
-
-    // Employee list
-    'Please first choose at least one employee list' => 'Lütfen önce en az bir çalışan listesi seçin',
-    
-    // Sheet import component
-    'This file has expired, please try uploading it again' => 'Bu dosyanın süresi geçti, lütfen yeniden yüklemeyi deneyin',
-
-    // General errors
-    'Old password is not correct' => 'Geçerli şifre yanlış girildi',
-    'Username or password is incorrect' => 'Kullanıcı adı veya şifre hatalı girildi',
-    'Username and password fields must be given' => 'Kullanıcı ve şifre alanları gönderilmeli',
-    'This account is inactive or awaiting approval' => 'Bu hesap pasif veya onay bekliyor',
-    'There is no role defined for this user' => 'Bu kullanıcı herhangi bir rol tanımlı değil',
-    'Authentication required. Please sign in to your account' => 'Kimlik doğrulama gerekli. Lütfen hesabınıza giriş yapın',
     'Empty file id' => 'Boş dosya id',
     'Empty file content' => 'Boş dosya içeriği',
     'Empty "allowed_extensions" option' => '"allowed_extensions" seçeneği boş gözüküyor',
@@ -39,4 +38,22 @@ return [
     'Invalid file mime type' => 'Geçersiz dosya türü',
     'Max allowed upload size exceed' => 'İzin verilen dosya yükleme sınırı aşıldı',
     'Excel file not approved' => 'Excel dosyası onaylı değil',
+
+    // Employee list
+    // 
+    'Please first choose at least one employee list' => 'Lütfen önce en az bir çalışan listesi seçin',
+    
+    // Sheet import component
+    // 
+    'This file has expired, please try uploading it again' => 'Bu dosyanın süresi geçti, lütfen yeniden yüklemeyi deneyin',
+
+    // General errors
+    // 
+    'Old password is not correct' => 'Geçerli şifre yanlış girildi',
+    'Username or password is incorrect' => 'Kullanıcı adı veya şifre hatalı girildi',
+    'Username and password fields must be given' => 'Kullanıcı ve şifre alanları gönderilmeli',
+    'This account is inactive or awaiting approval' => 'Bu hesap pasif veya onay bekliyor',
+    'There is no role defined for this user' => 'Bu kullanıcı herhangi bir rol tanımlı değil',
+    'Authentication required. Please sign in to your account' => 'Kimlik doğrulama gerekli. Lütfen hesabınıza giriş yapın',
+
 ];

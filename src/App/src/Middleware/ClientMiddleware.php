@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
-use function define, current, str_pad;
-
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\Response\JsonResponse;
 use Oloma\Php\Exception\BodyDecodeException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response;
-use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class ClientMiddleware implements MiddlewareInterface
@@ -34,38 +32,41 @@ class ClientMiddleware implements MiddlewareInterface
     {
         $headers = $request->getHeaders();
         $server  = $request->getServerParams();
+        // print_r($headers);
+        //
+        // Set http method
+        // 
         $method  = $request->getMethod();
-
         define('HTTP_METHOD', $method);
-        define('CLIENT_ID', '00001');
-
-        // $langId = $row['lang_id']; // fallback language 
-        // if (! empty($headers['accept-language'][0]) && in_array((string)$headers['accept-language'][0], $this->acceptedLanguages)) {
-        //     $langId = (string)$headers['accept-language'][0];
-        // }
-        define('LANG_ID', 'tr');
+        // 
+        // Set language (Don't change below the lines: front end 
+        // application sends current language in http accept header)
+        //
+        $langId = "en"; // fallback language
+        if (! empty($headers['accept-language'][0])) {
+            $exp = explode(",", $headers['accept-language'][0]);
+            if (! empty($exp[0]) && in_array((string)$exp[0], $this->acceptedLanguages)) {
+                $langId = (string)$exp[0];
+            }
+        }
+        define('LANG_ID', $langId);
+        $this->translator->setLocale(LANG_ID);
+        //
+        // Parse & set json content to request body
+        //
         $contentType = empty($headers['content-type'][0]) ? null : current($headers['content-type']);
-        // 
-        // Json content type
-        // 
-        if ($contentType && strpos($contentType, 'application/json') === 0) {
-            $jsonErrors = array(
-                JSON_ERROR_DEPTH => 'Azami yığın boyutu aşıldı',
-                JSON_ERROR_CTRL_CHAR => 'Kontrol karakteri hatası, muhtemelen yanlış şifrelenmiş',
-                JSON_ERROR_SYNTAX => 'Sözdizimi hatası',
-            );
+        if ($contentType 
+            && strpos($contentType, 'application/json') === 0) {
             $contentBody = $request->getBody()->getContents();
             $parsedContent = json_decode($contentBody, true);
             $lastError = json_last_error();
-            if (! empty($jsonErrors[$lastError])) {
-                 throw new BodyDecodeException($jsonErrors[$lastError]);
+            if ($lastError != JSON_ERROR_NONE) {
+                throw new BodyDecodeException(
+                    $this->translator->translate($lastError)
+                );
             }
             $request = $request->withParsedBody($parsedContent);
         }
-        // Set system language
-        // 
-        $this->translator->setLocale('tr');
-
         return $handler->handle($request);
     }
 }

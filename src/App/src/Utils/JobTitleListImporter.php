@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Utils;
 
@@ -55,7 +56,6 @@ class JobTitleListImporter
                     // 
                     $this->jobTitleList->insert(
                         [
-                            'clientId' => $data['clientId'],
                             'jobTitleListId' => $jobTitleListId,
                             'yearId' => $data['yearId'],
                             'listName' => trim($data['listName']),
@@ -64,7 +64,6 @@ class JobTitleListImporter
                     // create job titles
                     //
                     foreach ($import['data'] as $row) {
-                        $insertData['clientId'] = $data['clientId'];
                         $insertData['jobTitleListId'] = $jobTitleListId;
                         $insertData['companyId'] = Self::getCompanyId($row['companyId']['value'], $companies);
                         $insertData['jobTitleId'] = createGuid();

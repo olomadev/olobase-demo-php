@@ -22,7 +22,7 @@ return [
     // device reference channels
     // 
     'token' => [
-        'access_token_duration_in_minutes' => 10,
+        'access_token_duration_in_minutes' => 1,
         'refresh_token_max_usage' => 0, // bir token en fazla kaç kere kullanılabilir, 0 = sınırsız
     ],
     'authentication' => [

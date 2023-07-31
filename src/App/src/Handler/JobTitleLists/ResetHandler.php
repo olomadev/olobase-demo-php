@@ -37,7 +37,7 @@ class ResetHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {   
-        $user = $this->request->getAttribute(UserInterface::class);
+        $user = $request->getAttribute(UserInterface::class);
         $fileKey = CACHE_TMP_FILE_KEY.$user->getId();
         $this->cache->removeItem($fileKey);
         $this->cache->removeItem($fileKey.'_status');

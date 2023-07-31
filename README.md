@@ -10,7 +10,6 @@ Vuetify admin php demo application.
 *
 *
 
-
 ## Sharing VMWare Ubuntu Files with Windows
 
 https://opensource.com/article/21/4/share-files-linux-windows

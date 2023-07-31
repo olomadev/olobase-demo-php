@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filter\JobTitleLists;
 
 use App\Model\CommonModel;
+use App\Filter\InputFilter;
 use App\Filter\ObjectInputFilter;
 use Laminas\Validator\InArray;
 use Laminas\Validator\StringLength;
@@ -11,8 +14,7 @@ class ImportFilter extends InputFilter
 {
     public function __construct(CommonModel $commonModel)
     {
-        $this->filter = $filter;
-        $this->adapter = $commonModel->getAdapter();
+        $this->commonModel = $commonModel;
     }
 
     public function setInputData(array $data)

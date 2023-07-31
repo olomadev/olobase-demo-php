@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Utils;
 
@@ -90,13 +91,6 @@ class JobTitleListParser
             }
             $years = $this->commonModel->findYearIds();
             $companyShortNames = $this->commonModel->findCompanyShortNames();
-            //
-            // Array
-            // (
-            //     [0] => 2023
-            //     [1] => İK
-            //     [2] => İşe Alım Uzmanı
-            // )
             $i = 1;
             $errorFound = false;
             foreach ($sheetData as $row) {

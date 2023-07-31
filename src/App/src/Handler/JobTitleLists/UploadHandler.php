@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\JobTitleLists;
 
 use App\Filter\JobTitleLists\FileUploadFilter;
+use Predis\ClientInterface as Predis;
 use Oloma\Php\DataManagerInterface;
 use Mezzio\Authentication\UserInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
@@ -16,11 +17,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 class UploadHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private FileUploadFilter $filter,
-        private Error $error,
-    ) 
+        Predis $predis,
+        FileUploadFilter $filter,
+        Error $error
+    )
     {
         $this->filter = $filter;
+        $this->predis = $predis;
         $this->error = $error;
     }
     
@@ -46,11 +49,11 @@ class UploadHandler implements RequestHandlerInterface
         $this->filter->setInputData($_FILES);
         if ($this->filter->isValid()) {
             $tmpFilename = createGuid();
-            $user = $this->request->getAttribute(UserInterface::class);
+            $user = $request->getAttribute(UserInterface::class);
             $fileKey = CACHE_TMP_FILE_KEY.$user->getId();
 
             // Handle Psr7 upload with Laminas Diactoros
-            $request = $this->request->getUploadedFiles();
+            $request = $request->getUploadedFiles();
             $file = $request['file'];
             $code = $file->getError();
 

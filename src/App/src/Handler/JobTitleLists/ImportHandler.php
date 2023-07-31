@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\JobTitleLists;
 
 use App\Filter\JobTitleLists\ImportFilter;
+use Mezzio\Authentication\UserInterface;
 use Oloma\Php\DataManagerInterface;
 use Predis\ClientInterface as Predis;
 use Laminas\Cache\Storage\StorageInterface;
@@ -55,6 +56,7 @@ class ImportHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(UserInterface::class);
+        $post = $request->getParsedBody();
         $fileKey = CACHE_TMP_FILE_KEY.$user->getId();
         $hasFile = $this->cache->getItem($fileKey);
 

@@ -60,11 +60,11 @@ class ConfigProvider
                     // Companies
                     Filter\Companies\SaveFilter::class => Filter\Companies\SaveFilterFactory::class,
                     Filter\Companies\DeleteFilter::class => Filter\Companies\DeleteFilterFactory::class,
-                    // Job Titles
-                    Filter\JobTitles\SaveFilter::class => Filter\JobTitles\SaveFilterFactory::class,
-                    Filter\JobTitles\DeleteFilter::class => Filter\JobTitles\DeleteFilterFactory::class,
-                    Filter\JobTitles\FileUploadFilter::class => InvokableFactory::class,
-                    Filter\JobTitles\ImportFilter::class => Filter\JobTitles\ImportFilterFactory::class,
+                    // Job Title Lists
+                    Filter\JobTitleLists\SaveFilter::class => Filter\JobTitleLists\SaveFilterFactory::class,
+                    Filter\JobTitleLists\DeleteFilter::class => Filter\JobTitleLists\DeleteFilterFactory::class,
+                    Filter\JobTitleLists\FileUploadFilter::class => InvokableFactory::class,
+                    Filter\JobTitleLists\ImportFilter::class => Filter\JobTitleLists\ImportFilterFactory::class,
                     // Files
                     Filter\Files\DownloadFilter::class => Filter\Files\DownloadFilterFactory::class,
                 ],

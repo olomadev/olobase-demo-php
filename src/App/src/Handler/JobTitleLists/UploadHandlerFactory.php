@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\JobTitleLists;
 
 use App\Filter\JobTitleLists\FileUploadFilter;
+use Predis\ClientInterface as Predis;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
@@ -15,10 +16,11 @@ class UploadHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
+        $predis = $container->get(Predis::class);
         $error = $container->get(Error::class);
         $pluginManager = $container->get(InputFilterPluginManager::class);
         $inputFilter   = $pluginManager->get(FileUploadFilter::class);
 
-        return new UpdateHandler($inputFilter, $error);
+        return new UploadHandler($predis, $inputFilter, $error);
     }
 }

@@ -12,6 +12,9 @@ class ClientMiddlewareFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new ClientMiddleware($container->get('config'), $container->get(Translator::class));
+        return new ClientMiddleware(
+            $container->get('config'), 
+            $container->get(Translator::class)
+        );
     }
 }
