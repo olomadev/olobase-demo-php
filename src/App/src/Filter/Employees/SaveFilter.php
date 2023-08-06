@@ -1,10 +1,15 @@
 <?php
 
-namespace App\Filter;
+declare(strict_types=1);
+
+namespace App\Filter\Employees;
 
 use App\Model\CommonModel;
-use App\Validator\TCKN;
-use App\Filter\PhoneFilter;
+use App\Filter\ToDate;
+use App\Filter\InputFilter;
+use App\Filter\MbUcFirstFilter;
+use App\Filter\ObjectInputFilter;
+use App\Filter\CollectionInputFilter;
 use Laminas\Validator\Db\RecordExists;
 use Laminas\Validator\Db\NoRecordExists;
 use Laminas\Filter\ToInt;
@@ -12,37 +17,26 @@ use Laminas\Filter\StringTrim;
 use Laminas\Validator\Uuid;
 use Laminas\Validator\Date;
 use Laminas\Validator\InArray;
-use Laminas\Validator\Iban;
 use Laminas\Validator\StringLength;
-use Laminas\Validator\EmailAddress;
-use Laminas\I18n\Validator\IsFloat;
-use Laminas\I18n\Validator\PhoneNumber;
-use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
 
-class EmployeeSaveFilter extends InputFilter
+class SaveFilter extends InputFilter
 {
     public function __construct(
-        AdapterInterface $adapter,
-        CommonModel $commonModel,
+        CommonModel $commonModel, 
         InputFilterPluginManager $filter
     )
     {
-        $this->filter = $filter;
-        $this->adapter = $adapter;
         $this->commonModel = $commonModel;
+        $this->filter = $filter;
+        $this->adapter = $commonModel->getAdapter();
     }
 
     public function setInputData(array $data)
     {
-        $years = $this->commonModel->findYearIds();
-        $workplaces = $this->commonModel->findWorkplaceIds();
-        $employeeTypes = $this->commonModel->findEmployeeTypeIds();
-        $employeeGrades = $this->commonModel->findEmployeeGradeIds();
-        $employeeProfiles = $this->commonModel->findEmployeeProfileIds();
-        $disabilities = $this->commonModel->findDisabilityIds();
+        $companies = $this->commonModel->findCompanyIds();
         $jobTitles = $this->commonModel->findJobTitleIds();
-        $costCenters = $this->commonModel->findCostCenterIds();
+        $employeeGrades = $this->commonModel->findEmployeeGradeIds();
 
         $this->add([
             'name' => 'id',
@@ -59,39 +53,6 @@ class EmployeeSaveFilter extends InputFilter
                 ]
             ],
         ]);
-        $yearIdFilter = new ObjectInputFilter();
-        $yearIdFilter->add([
-            'name' => 'id',
-            'required' => true,
-            'validators' => [
-                [
-                    'name' => InArray::class,
-                    'options' => [
-                        'haystack' => $years,
-                    ],
-                ],
-            ],
-        ]);
-        $this->add($yearIdFilter, 'yearId');
-
-        $listIdFilter = new ObjectInputFilter();
-        $listIdFilter->add([
-            'name' => 'id',
-            'required' => true,
-            'validators' => [
-                ['name' => Uuid::class],
-                [
-                    'name' => HTTP_METHOD == 'POST' ? NoRecordExists::class : RecordExists::class,
-                    'options' => [
-                        'table'   => 'employees',
-                        'field'   => 'listId',
-                        'adapter' => $this->adapter,
-                    ]
-                ] 
-            ],
-        ]);
-        $this->add($listIdFilter, 'listId');
-
         $this->add([
             'name' => 'employeeNumber',
             'required' => true,
@@ -109,42 +70,23 @@ class EmployeeSaveFilter extends InputFilter
                 ],           
             ],
         ]);
-
-        $companyIdFilter = new ObjectInputFilter();
-        $companyIdFilter->add([
-            'name' => 'id',
-            'required' => true,
-            'validators' => [
-                ['name' => Uuid::class],
-                [
-                    'name' => RecordExists::class,
-                    'options' => [
-                        'table'   => 'companies',
-                        'field'   => 'companyId',
-                        'adapter' => $this->adapter,
-                    ]
-                ]
-            ],
-        ]);
-        $this->add($companyIdFilter, 'companyId');
-
-        $workplaceIdFilter = new ObjectInputFilter();
-        $workplaceIdFilter->add([
+        $objectFilter = new ObjectInputFilter();
+        $objectFilter->add([
             'name' => 'id',
             'required' => true,
             'validators' => [
                 [
                     'name' => InArray::class,
                     'options' => [
-                        'haystack' => $workplaces,
+                        'haystack' => $companies,
                     ],
                 ],
             ],
         ]);
-        $this->add($workplaceIdFilter, 'workplaceId');
+        $this->add($objectFilter, 'companyId');
 
-        $jobTitleIdFilter = new ObjectInputFilter();
-        $jobTitleIdFilter->add([
+        $objectFilter = new ObjectInputFilter();
+        $objectFilter->add([
             'name' => 'id',
             'required' => false,
             'validators' => [
@@ -156,56 +98,7 @@ class EmployeeSaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $this->add($jobTitleIdFilter, 'jobTitleId');
-
-        $employeeProfileFilter = new ObjectInputFilter();
-        $employeeProfileFilter->add([
-            'name' => 'id',
-            'required' => false,
-            'validators' => [
-                [
-                    'name' => InArray::class,
-                    'options' => [
-                        'haystack' => $employeeProfiles,
-                    ],
-                ],
-            ],
-        ]);
-        $this->add($employeeProfileFilter, 'employeeProfile');
-
-        $constCenterIdFilter = new ObjectInputFilter();
-        $constCenterIdFilter->add([
-            'name' => 'id',
-            'required' => false,
-            'validators' => [
-                [
-                    'name' => InArray::class,
-                    'options' => [
-                        'haystack' => $costCenters,
-                    ],
-                ],
-            ],
-        ]);
-        $this->add($constCenterIdFilter, 'costCenterId');
-
-        $departmentIdFilter = new ObjectInputFilter();
-        $departmentIdFilter->add([
-            'name' => 'id',
-            'required' => false,
-            'validators' => [
-                ['name' => Uuid::class],
-                [
-                    'name' => RecordExists::class,
-                    'options' => [
-                        'table'   => 'departments',
-                        'field'   => 'departmentId',
-                        'adapter' => $this->adapter,
-                    ]
-                ]
-            ],
-        ]);
-        $this->add($departmentIdFilter, 'departmentId');
-
+        $this->add($objectFilter, 'jobTitleId');
         $this->add([
             'name' => 'name',
             'required' => true,
@@ -241,16 +134,6 @@ class EmployeeSaveFilter extends InputFilter
             ],
         ]);
         $this->add([
-            'name' => 'tckn',
-            'required' => false,
-            'filters' => [
-                ['name' => StringTrim::class],
-            ],
-            // 'validators' => [
-            //     ['name' => TCKN::class],
-            // ],
-        ]);
-        $this->add([
             'name' => 'employmentStartDate',
             'required' => false,
             'filters' => [
@@ -282,24 +165,8 @@ class EmployeeSaveFilter extends InputFilter
                 ],
             ],
         ]);
-
-        $employeeTypeIdFilter = new ObjectInputFilter();
-        $employeeTypeIdFilter->add([
-            'name' => 'id',
-            'required' => true,
-            'validators' => [
-                [
-                    'name' => InArray::class,
-                    'options' => [
-                        'haystack' => $employeeTypes,
-                    ],
-                ],
-            ],
-        ]);
-        $this->add($employeeTypeIdFilter, 'employeeTypeId');
-
-        $gradeIdFilter = new ObjectInputFilter();
-        $gradeIdFilter->add([
+        $objectFilter = new ObjectInputFilter();
+        $objectFilter->add([
             'name' => 'id',
             'required' => false,
             'validators' => [
@@ -311,42 +178,54 @@ class EmployeeSaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $this->add($gradeIdFilter, 'gradeId');
+        $this->add($objectFilter, 'gradeId');
 
-        $disabilityIdFilter = new ObjectInputFilter();
-        $disabilityIdFilter->add([
-            'name' => 'id',
-            'required' => false,
-            'validators' => [
-                [
-                    'name' => InArray::class,
-                    'options' => [
-                        'haystack' => $disabilities,
-                    ],
-                ],
-            ],
-        ]);
-        $this->add($disabilityIdFilter, 'disabilityId');
-
-        // Make group data Traversable
-        // 
-        if (! empty($data['groups'][0])) {
-            $data['groups'] = array_map(function($item) { return ['id' => $item['id']]; }, $data['groups']);
-        }
-        $groupsCollection = $this->filter->get(CollectionInputFilter::class);
-        $groupsInputFilter = $this->filter->get(InputFilter::class);
-        $groupsInputFilter->add([
-            'name' => 'id',
-            'required' => false,
+        // Children Input filter
+        //
+        $collection = $this->filter->get(CollectionInputFilter::class);
+        $inputFilter = $this->filter->get(InputFilter::class);
+        $inputFilter->add([
+            'name' => 'childId',
+            'required' => true,
             'validators' => [
                 ['name' => Uuid::class],
             ],
         ]);
-        $groupsCollection->setInputFilter($groupsInputFilter);
-        $this->add($groupsCollection, 'groups');
+        $inputFilter->add([
+            'name' => 'childName',
+            'required' => true,
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 2,
+                        'max' => 120,
+                    ],
+                ],
+            ],
+        ]);
+        $inputFilter->add([
+            'name' => 'childBirthdate',
+            'required' => true,
+            'filters' => [
+                ['name' => ToDate::class],
+            ],
+            'validators' => [
+                [
+                    'name' => Date::class,
+                    'options' => [
+                        'format' => 'Y-m-d',
+                        'strict' => true,
+                    ]
+                ],
+            ],
+        ]);
+        $collection->setInputFilter($inputFilter);
+        $this->add($collection, 'employeeChildren');
 
         // Set input data
         //
-        $this->renderInputData($data);
+        $this->setData($data);
     }
 }

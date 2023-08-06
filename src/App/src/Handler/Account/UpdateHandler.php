@@ -6,8 +6,8 @@ namespace App\Handler\Account;
 
 use App\Model\UserModel;
 use App\Entity\UsersEntity;
-use App\Schema\AccountSave;
-use App\Filter\AccountSaveFilter;
+use App\Schema\Account\AccountSave;
+use App\Filter\Account\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\UserInterface;
@@ -21,7 +21,7 @@ class UpdateHandler implements RequestHandlerInterface
     public function __construct(
         private UserModel $userModel,        
         private DataManagerInterface $dataManager,
-        private AccountSaveFilter $filter,
+        private SaveFilter $filter,
         private Error $error,
     ) 
     {

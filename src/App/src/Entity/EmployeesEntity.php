@@ -8,20 +8,13 @@ namespace App\Entity;
 class EmployeesEntity
 {
     const ENTITY_TYPE = 'null';
-    /**
-     * @var int(5) unsigned zerofill
-     */
-    public $clientId;
-    /**
-     * @var char(36)
-     */
-    public $employeeListId;
+    const TABLE_NAME = 'employees';
     /**
      * @var char(36)
      */
     public $employeeId;
     /**
-     * @var char(20)
+     * @var varchar(20)
      */
     public $employeeNumber;
     /**
@@ -29,29 +22,13 @@ class EmployeesEntity
      */
     public $companyId;
     /**
-     * @var varchar(36)
-     */
-    public $workplaceId;
-    /**
      * @var varchar(60)
      */
     public $name;
     /**
      * @var varchar(60)
      */
-    public $middleName;
-    /**
-     * @var varchar(60)
-     */
     public $surname;
-    /**
-     * @var varchar(60)
-     */
-    public $secondSurname;
-    /**
-     * @var char(11)
-     */
-    public $tckn;
     /**
      * @var char(36)
      */
@@ -61,14 +38,6 @@ class EmployeesEntity
      */
     public $gradeId;
     /**
-     * @var char(36)
-     */
-    public $departmentId;
-    /**
-     * @var char(36)
-     */
-    public $costCenterId;
-    /**
      * @var date
      */
     public $employmentStartDate;
@@ -77,15 +46,7 @@ class EmployeesEntity
      */
     public $employmentEndDate;
     /**
-     * @var char(36)
+     * @var datetime
      */
-    public $disabilityId;
-    /**
-     * @var char(15)
-     */
-    public $employeeTypeId;
-    /**
-     * @var enum('white','blue')
-     */
-    public $employeeProfile;
+    public $createdAt;
 }

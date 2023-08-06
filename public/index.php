@@ -52,13 +52,5 @@ $headers = apache_request_headers();
     (require 'config/pipeline.php')($app, $factory, $container);
     (require 'config/routes.php')($app, $factory, $container);
 
-    // $eventManager = $container->get(\Laminas\EventManager\EventManagerInterface::class);
-
-    // $appListener = $container->get(\App\Listener\AppListener::class);
-    // $appListener->attach($eventManager);
-
-    // $notificationListener = $container->get(\App\Listener\NotificationListener::class);
-    // $notificationListener->attach($eventManager);
-
     $app->run();
 })();

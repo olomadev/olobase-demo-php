@@ -11,16 +11,11 @@ use Laminas\Filter\StringTrim;
 use Laminas\Validator\Uuid;
 use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\InputFilter\InputFilterPluginManager;
 
 class SaveFilter extends InputFilter
 {
-    public function __construct(
-        AdapterInterface $adapter,
-        InputFilterPluginManager $filter
-    )
+    public function __construct(AdapterInterface $adapter)
     {
-        $this->filter = $filter;
         $this->adapter = $adapter;
     }
 

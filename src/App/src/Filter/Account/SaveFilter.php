@@ -10,9 +10,9 @@ use App\Validator\Base64FileUpload;
 use Laminas\Filter\StringTrim;
 use App\Validator\Db\RecordExists;
 use App\Validator\Db\NoRecordExists;
-use Laminas\Validator\Uuid;
 use Laminas\Validator\EmailAddress;
 use Laminas\Validator\StringLength;
+use Laminas\Db\Adapter\AdapterInterface;
 
 class SaveFilter extends InputFilter
 {

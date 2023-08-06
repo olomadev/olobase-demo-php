@@ -8,6 +8,7 @@ use Laminas\Validator\NotEmpty;
 use App\Filter\CollectionInputFilter;
 use Psr\Container\ContainerInterface;
 use Laminas\Validator\ValidatorPluginManager;
+use Laminas\I18n\Translator\TranslatorInterface as Translator;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class CollectionInputFilterFactory implements FactoryInterface

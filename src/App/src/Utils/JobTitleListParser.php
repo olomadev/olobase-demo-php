@@ -20,7 +20,6 @@ class JobTitleListParser
     public function __construct($container)
     {
         $this->translator = $container->get(TranslatorInterface::class);
-        $this->translator->setLocale('tr');
         $this->predis = $container->get(Predis::class);
         $this->commonModel = $container->get(CommonModel::class);
         $this->cache = $container->get(StorageInterface::class);
@@ -32,16 +31,23 @@ class JobTitleListParser
         //
         // Array
         // (
-        //     [userId] => "",
-        //     [fileId] => c8911b8f-dd08-5252-d42c-e06e614e7d57
-        //     [fileName] => Employees.xlsx
+        //     [userId]   => "",
+        //     [fileId]   => c8911b8f-dd08-5252-d42c-e06e614e7d57
+        //     [fileKey]  => 'tmpFile_xxx',
+        //     [fileExt]  => 'xls',
+        //     [fileName] => JobTitles.xlsx
         //     [fileType] => application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
         //     [fileSize] => 4978518
         //     [status]   => false, // parse operation is finished ?
         //     [data]     => null,  // parsed xls array data
         //     [error]    => null,  // has the operation an error ?
-        // )
+        //     [env]      => 'local',
+        //     [locale]   => 'en',
+        // )        
         if (! empty($data['fileName'])) {
+            // set locale
+            $this->translator->setLocale($data['locale']);
+
             $fileKey  = CACHE_TMP_FILE_KEY.$data['userId'];
             $xlsxFile = PROJECT_ROOT."/data/tmp/".$data['fileId'].".xlsx";
             if (file_exists($xlsxFile)) {
@@ -57,7 +63,7 @@ class JobTitleListParser
             }
         }
         if (! empty($sheetData)) {
-          $headers = [];
+            $headers = [];
             $h = 1;
             $headers[0] = [
                 "title" => $this->translator->translate("no", "labels"),
@@ -78,7 +84,10 @@ class JobTitleListParser
             }
             $data['data'][0] = $headers;
             $headersValidationArray = $sheetData[0];
-            $requiredHeaders = ['companyId','jobTitleId'];
+            $requiredHeaders = [
+                'companyId',
+                'jobTitleId'
+            ];
             unset($sheetData[0]);
 
             // validate headers
@@ -86,7 +95,9 @@ class JobTitleListParser
             $arrayIntersect = array_intersect($headersValidationArray, $requiredHeaders);
             if (count($arrayIntersect) != count($requiredHeaders)){
                 throw new Exception(
-                    $this->translator->translate("Please make sure the column headings are spelled correctly")
+                    $this->translator->translate(
+                        "Please make sure the column headings are spelled correctly"
+                    )
                 );
             }
             $years = $this->commonModel->findYearIds();
@@ -105,15 +116,11 @@ class JobTitleListParser
                     // validations
                     // 
                     switch ($headerKey) {
-                        case 'yearId':
-                            if (empty($v) || ! in_array(trim($v), $years)) {
-                                $data['data'][$i][$headerKey]['errors'][] = "Böyle bir yıl tanımlı değil";
-                                $errorFound = true;
-                            }
-                        break;
                         case 'companyId':
                             if (empty($v) || ! in_array(trim($v), $companyShortNames)) {
-                                $data['data'][$i][$headerKey]['errors'][] = "Böyle bir şirket tanımlı değil";
+                                $data['data'][$i][$headerKey]['errors'][] = $this->translator->translate(
+                                    "No such company is defined in the database"
+                                );
                                 $errorFound = true;
                             }
                         break;

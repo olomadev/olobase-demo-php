@@ -46,6 +46,7 @@ return [
     // Sheet import component
     // 
     'This file has expired, please try uploading it again' => 'Bu dosyanın süresi geçti, lütfen yeniden yüklemeyi deneyin',
+    'No such company is defined in the database' => 'Veritabanında böyle bir şirket tanımlı değil',
 
     // General errors
     // 

@@ -8,10 +8,7 @@ namespace App\Entity;
 class CompaniesEntity
 {
     const ENTITY_TYPE = 'null';
-    /**
-     * @var int(5) unsigned zerofill
-     */
-    public $clientId;
+    const TABLE_NAME = 'companies';
     /**
      * @var char(36)
      */

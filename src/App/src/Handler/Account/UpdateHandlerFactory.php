@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
-use App\Filter\AccountSaveFilter;
+use App\Filter\Account\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
@@ -21,8 +21,8 @@ class UpdateHandlerFactory
         $dataManager = $container->get(DataManagerInterface::class);
 
         $pluginManager = $container->get(InputFilterPluginManager::class);
-        $inputFilter   = $pluginManager->get(AccountSaveFilter::class);
+        $inputFilter   = $pluginManager->get(SaveFilter::class);
 
-        return new FindMeHandler($userModel, $dataManager, $inputFilter, $error);
+        return new UpdateHandler($userModel, $dataManager, $inputFilter, $error);
     }
 }

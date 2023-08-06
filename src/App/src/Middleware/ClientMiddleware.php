@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use Mezzio\Router\RouteResult;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\JsonResponse;
 use Oloma\Php\Exception\BodyDecodeException;
@@ -32,40 +33,55 @@ class ClientMiddleware implements MiddlewareInterface
     {
         $headers = $request->getHeaders();
         $server  = $request->getServerParams();
-        // print_r($headers);
+        $routeResult = $request->getAttribute(RouteResult::class, false);
+
+        // Sets primary id if it's exists
+        // 
+        $primaryKey = null;
+        if ($routeResult) {
+            $params = $routeResult->getMatchedParams();
+            if (is_array($params) && ! empty($params)) {
+                unset($params['middleware']);
+                $paramArray = array_keys($params);
+                $primaryKey  = empty($paramArray[0]) ? null : trim((string)$paramArray[0]);
+            }  
+        }
         //
-        // Set http method
+        // Sets http method
         // 
         $method  = $request->getMethod();
         define('HTTP_METHOD', $method);
         // 
-        // Set language (Don't change below the lines: front end 
-        // application sends current language in http accept header)
+        // Sets language (don't change below the lines: front end 
+        // application sends current language in http header)
         //
         $langId = "en"; // fallback language
-        if (! empty($headers['accept-language'][0])) {
-            $exp = explode(",", $headers['accept-language'][0]);
-            if (! empty($exp[0]) && in_array((string)$exp[0], $this->acceptedLanguages)) {
-                $langId = (string)$exp[0];
+        if (! empty($headers['client-locale'][0])) {
+            $currentLocale = $headers['client-locale'][0];
+            if ($currentLocale && in_array($currentLocale, $this->acceptedLanguages)) {
+                $langId = $currentLocale;
             }
         }
         define('LANG_ID', $langId);
         $this->translator->setLocale(LANG_ID);
         //
-        // Parse & set json content to request body
+        // Parses & sets json content to request body
         //
         $contentType = empty($headers['content-type'][0]) ? null : current($headers['content-type']);
         if ($contentType 
             && strpos($contentType, 'application/json') === 0) {
             $contentBody = $request->getBody()->getContents();
-            $parsedContent = json_decode($contentBody, true);
+            $post = json_decode($contentBody, true);
+            if ($primaryId = $request->getAttribute($primaryKey)) {
+                $post['id'] = $primaryId;
+            }
             $lastError = json_last_error();
             if ($lastError != JSON_ERROR_NONE) {
                 throw new BodyDecodeException(
                     $this->translator->translate($lastError)
                 );
             }
-            $request = $request->withParsedBody($parsedContent);
+            $request = $request->withParsedBody($post);
         }
         return $handler->handle($request);
     }

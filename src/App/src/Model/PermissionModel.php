@@ -163,9 +163,9 @@ class PermissionModel implements PermissionModelInterface
     public function findPermissions() : array
     {
         $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
+        if ($this->cache->hasItem($key)) {
+            return $this->cache->getItem($key);
+        }
         $adapter = $this->permissions->getAdapter();
         $select  = $this->permissions->getSql()->select();
         $select->columns([
@@ -183,7 +183,6 @@ class PermissionModel implements PermissionModelInterface
         
         // echo $select->getSqlString($adapter->getPlatform());
         // die;
-
         $resultSet = $this->permissions->selectWith($select);
         $results = array();
         foreach ($resultSet as $row) {
@@ -201,6 +200,7 @@ class PermissionModel implements PermissionModelInterface
             $this->conn->beginTransaction();
             $data['permissions']['permId'] = $data['permId'];
             $this->permissions->insert($data['permissions']);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -213,6 +213,7 @@ class PermissionModel implements PermissionModelInterface
         try {
             $this->conn->beginTransaction();
             $this->permissions->update($data['permissions'], ['permId' => $data['permId']]);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -251,11 +252,17 @@ class PermissionModel implements PermissionModelInterface
         try {
             $this->conn->beginTransaction();
             $this->permissions->delete(['permId' => $permId]);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
         }
+    }
+
+    private function deleteCache()
+    {
+        $this->cache->removeItem(CACHE_ROOT_KEY.Self::class.':findPermissions');
     }
 
 }

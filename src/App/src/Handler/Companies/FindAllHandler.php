@@ -37,8 +37,7 @@ class FindAllHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $get = $request->getQueryParams();
-        $data = $this->companyModel->findOptions($get);
+        $data = $this->companyModel->findCompanies();
         return new JsonResponse([
             'data' => $data,
         ]);

@@ -43,6 +43,7 @@ return [
     // Sheet import component
     // 
     'This file has expired, please try uploading it again' => 'This file has expired, please try uploading it again',
+    'No such company is defined in the database' => 'No such company is defined in the database',
 
     // Employee list
     // 

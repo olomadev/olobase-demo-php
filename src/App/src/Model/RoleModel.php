@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model;
 
@@ -16,8 +17,8 @@ class RoleModel
 {
     private $conn;
     private $roles;
-    private $rolePermissions;
     private $cache;
+    private $rolePermissions;
     private $adapter;
     private $columnFilters;
 
@@ -51,10 +52,10 @@ class RoleModel
      */
     public function findRoles()
     {
-        // $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
-        // if ($this->cache->hasItem($key)) {
-        //     return $this->cache->getItem($key);
-        // }
+        $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
+        if ($this->cache->hasItem($key)) {
+            return $this->cache->getItem($key);
+        }
         $sql    = new Sql($this->adapter);
         $select = $sql->select();
         $select->columns(
@@ -68,7 +69,9 @@ class RoleModel
         $statement = $sql->prepareStatementForSqlObject($select);
         $resultSet = $statement->execute();
         $results = iterator_to_array($resultSet);
-        // $this->cache->setItem($key, $results);
+        if (! empty($results)) {
+            $this->cache->setItem($key, $results);    
+        }
         return $results;
     }
 
@@ -253,6 +256,7 @@ class RoleModel
                     $this->rolePermissions->insert($val);
                 }
             }
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -273,6 +277,7 @@ class RoleModel
                     $this->rolePermissions->insert($val);
                 }
             }
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -285,11 +290,18 @@ class RoleModel
         try {
             $this->conn->beginTransaction();
             $this->roles->delete(['roleId' => $roleId]);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
         }
     }
+
+    private function deleteCache()
+    {
+        $this->cache->removeItem(CACHE_ROOT_KEY.Self::class.':findRoles');
+        $this->cache->removeItem(CACHE_ROOT_KEY.\App\Model\PermissionModel::class.':findPermissions');
+    }    
 
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model;
 
@@ -9,26 +10,25 @@ use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
 use Laminas\Paginator\Adapter\DbSelect;
 use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
 
 class JobTitleListModel
 {
     private $conn;
     private $adapter;
+    private $jobTitles;
     private $jobTitleList;
-    private $cache;
     private $columnFilters;
     private $concatFunction;
 
     public function __construct(
+        TableGatewayInterface $jobTitles,
         TableGatewayInterface $jobTitleList,
-        StorageInterface $cache,
         ColumnFiltersInterface $columnFilters
     ) {
         $this->adapter = $jobTitleList->getAdapter();
+        $this->jobTitles = $jobTitles;
         $this->jobTitleList = $jobTitleList;
-        $this->cache = $cache;
         $this->conn = $this->adapter->getDriver()->getConnection();
         $this->columnFilters = $columnFilters;
     }
@@ -175,6 +175,7 @@ class JobTitleListModel
     {
         try {
             $this->conn->beginTransaction();
+            $this->jobTitles->delete(['jobTitleListId' => $jobTitleListId]);
             $this->jobTitleList->delete(['jobTitleListId' => $jobTitleListId]);
             $this->conn->commit();
         } catch (Exception $e) {

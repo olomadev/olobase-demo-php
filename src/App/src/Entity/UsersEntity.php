@@ -8,10 +8,7 @@ namespace App\Entity;
 class UsersEntity
 {
     const ENTITY_TYPE = 'null';
-    /**
-     * @var int(5) unsigned zerofill
-     */
-    public $clientId;
+    const TABLE_NAME = 'users';
     /**
      * @var varchar(36)
      */
@@ -52,10 +49,6 @@ class UsersEntity
      * @var tinyint(1)
      */
     public $emailActivation;
-    /**
-     * @var string
-     */
-    public $avatarImage;
     /**
      * @var char(7)
      */

@@ -8,6 +8,7 @@ namespace App\Entity;
 class PermissionsEntity
 {
     const ENTITY_TYPE = 'null';
+    const TABLE_NAME = 'permissions';
     /**
      * @var varchar(36)
      */

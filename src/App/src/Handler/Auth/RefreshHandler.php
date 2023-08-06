@@ -19,6 +19,11 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class RefreshHandler implements RequestHandlerInterface
 {
+    /**
+     * This signal is controlled by the frontend, do not change the value
+     */
+    protected const LOGOUT_SIGNAL = 'Logout';
+
     public function __construct(
         private Translator $translator,
         private Auth $auth,
@@ -88,7 +93,7 @@ class RefreshHandler implements RequestHandlerInterface
             if (false == $data) {
                 return new JsonResponse(
                     [
-                        'data' => ['error' => 'Logout']
+                        'data' => ['error' => Self::LOGOUT_SIGNAL] // don't change
                     ],
                     401
                 );

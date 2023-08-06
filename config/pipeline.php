@@ -38,10 +38,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     );
     $app->pipe($errorHandler);
     $app->pipe(ServerUrlMiddleware::class);
-    // Add the cors middleware after the ErrorHandler
-    // 
-    // $app->pipe(CorsMiddleware::class);
-    $app->pipe(ClientMiddleware::class);
 
     // Pipe more middleware here that you want to execute on every request:
     // - bootstrapping
@@ -64,6 +60,11 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
     $app->pipe(RouteMiddleware::class);
+
+    // Add the cors middleware after the ErrorHandler
+    // 
+    // $app->pipe(CorsMiddleware::class);
+    $app->pipe(ClientMiddleware::class);
 
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method

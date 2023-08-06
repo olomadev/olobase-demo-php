@@ -4,10 +4,6 @@ namespace App\Filter;
 
 use Laminas\Filter\AbstractFilter;
 
-/**
- * Nokta ve virgülleri silip sayıyı decimal olarak kaydetmek için
- * sayıyı 100 e bölüp decimal e çeviriyoruz.
- */
 class ToFile extends AbstractFilter
 {
     /**

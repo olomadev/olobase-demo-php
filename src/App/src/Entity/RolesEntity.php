@@ -8,6 +8,7 @@ namespace App\Entity;
 class RolesEntity
 {
     const ENTITY_TYPE = 'null';
+    const TABLE_NAME = 'roles';
     /**
      * @var varchar(36)
      */

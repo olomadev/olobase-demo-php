@@ -54,12 +54,18 @@ class ConfigProvider
                     // Permissions
                     Filter\Permissions\SaveFilter::class => Filter\Permissions\SaveFilterFactory::class,
                     Filter\Permissions\DeleteFilter::class => Filter\Permissions\DeleteFilterFactory::class,
+                    // Employees
+                    Filter\Employees\SaveFilter::class => Filter\Employees\SaveFilterFactory::class,
+                    Filter\Employees\DeleteFilter::class => Filter\Employees\DeleteFilterFactory::class,
                     // Employee Grades
                     Filter\EmployeeGrades\SaveFilter::class => Filter\EmployeeGrades\SaveFilterFactory::class,
                     Filter\EmployeeGrades\DeleteFilter::class => Filter\EmployeeGrades\DeleteFilterFactory::class,
                     // Companies
                     Filter\Companies\SaveFilter::class => Filter\Companies\SaveFilterFactory::class,
                     Filter\Companies\DeleteFilter::class => Filter\Companies\DeleteFilterFactory::class,
+                    // Job Titles
+                    Filter\JobTitles\SaveFilter::class => Filter\JobTitles\SaveFilterFactory::class,
+                    Filter\JobTitles\DeleteFilter::class => Filter\JobTitles\DeleteFilterFactory::class,
                     // Job Title Lists
                     Filter\JobTitleLists\SaveFilter::class => Filter\JobTitleLists\SaveFilterFactory::class,
                     Filter\JobTitleLists\DeleteFilter::class => Filter\JobTitleLists\DeleteFilterFactory::class,
@@ -94,17 +100,16 @@ class ConfigProvider
 
                 // Classes
                 //
+                'MvcTranslator' => Container\ValidatorTranslatorFactory::class,
                 Authentication\JwtAuthentication::class => Container\JwtAuthenticationFactory::class,
                 Middleware\ClientMiddleware::class => Middleware\ClientMiddlewareFactory::class,
                 Middleware\JwtAuthenticationMiddleware::class => Middleware\JwtAuthenticationMiddlewareFactory::class,
                 StorageInterface::class => Container\CacheFactory::class,
                 SimpleCacheInterface::class => Container\SimpleCacheFactory::class,   
                 ClientInterface::class => Container\PredisFactory::class,
-                Mailer::class => Container\MailerFactory::class,
-                ErrorMailer::class => Container\ErrorMailerFactory::class,
 
                 // Handlers
-                //
+                //------------------------------------------
                 // common
                 Handler\Common\Years\FindAllHandler::class => Handler\Common\Years\FindAllHandlerFactory::class,
                 Handler\Common\Months\FindAllHandler::class => Handler\Common\Months\FindAllHandlerFactory::class,
@@ -117,7 +122,6 @@ class ConfigProvider
                 Handler\Auth\TokenHandler::class => Handler\Auth\TokenHandlerFactory::class,
                 Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
                 Handler\Auth\LogoutHandler::class => Handler\Auth\LogoutHandlerFactory::class,
-                Handler\Auth\FindAllPermissionsHandler::class => Handler\Auth\FindAllPermissionsHandlerFactory::class,
                 // account
                 Handler\Account\FindMeHandler::class => Handler\Account\FindMeHandlerFactory::class,
                 Handler\Account\UpdateHandler::class => Handler\Account\UpdateHandlerFactory::class,
@@ -127,41 +131,47 @@ class ConfigProvider
                 Handler\Users\UpdateHandler::class => Handler\Users\UpdateHandlerFactory::class,
                 Handler\Users\DeleteHandler::class => Handler\Users\DeleteHandlerFactory::class,
                 Handler\Users\FindOneByIdHandler::class => Handler\Users\FindOneByIdHandlerFactory::class,
-                Handler\Users\FindAllByPagingHandler::class => Handler\Users\FindAllByPagingHandlerFactory::class,
                 Handler\Users\FindAllHandler::class => Handler\Users\FindAllHandlerFactory::class,
+                Handler\Users\FindAllByPagingHandler::class => Handler\Users\FindAllByPagingHandlerFactory::class,
                 // roles
                 Handler\Roles\CreateHandler::class => Handler\Roles\CreateHandlerFactory::class,
                 Handler\Roles\UpdateHandler::class => Handler\Roles\UpdateHandlerFactory::class,
                 Handler\Roles\DeleteHandler::class => Handler\Roles\DeleteHandlerFactory::class,
                 Handler\Roles\FindOneByIdHandler::class => Handler\Roles\FindOneByIdHandlerFactory::class,
-                Handler\Roles\FindAllByPagingHandler::class => Handler\Roles\FindAllByPagingHandlerFactory::class,
                 Handler\Roles\FindAllHandler::class => Handler\Roles\FindAllHandlerFactory::class,
+                Handler\Roles\FindAllByPagingHandler::class => Handler\Roles\FindAllByPagingHandlerFactory::class,
                 // permissions
                 Handler\Permissions\CopyHandler::class => Handler\Permissions\CopyHandlerFactory::class,
                 Handler\Permissions\CreateHandler::class => Handler\Permissions\CreateHandlerFactory::class,
                 Handler\Permissions\UpdateHandler::class => Handler\Permissions\UpdateHandlerFactory::class,
                 Handler\Permissions\DeleteHandler::class => Handler\Permissions\DeleteHandlerFactory::class,
-                Handler\Permissions\FindAllByPagingHandler::class => Handler\Permissions\FindAllByPagingHandlerFactory::class,
                 Handler\Permissions\FindAllHandler::class => Handler\Permissions\FindAllHandlerFactory::class,
+                Handler\Permissions\FindAllByPagingHandler::class => Handler\Permissions\FindAllByPagingHandlerFactory::class,
+                // employees
+                Handler\Employees\CreateHandler::class => Handler\Employees\CreateHandlerFactory::class,
+                Handler\Employees\UpdateHandler::class => Handler\Employees\UpdateHandlerFactory::class,
+                Handler\Employees\DeleteHandler::class => Handler\Employees\DeleteHandlerFactory::class,
+                Handler\Employees\FindAllHandler::class => Handler\Employees\FindAllHandlerFactory::class,
+                Handler\Employees\FindAllByPagingHandler::class => Handler\Employees\FindAllByPagingHandlerFactory::class,
                 // employee grades
                 Handler\EmployeeGrades\CreateHandler::class => Handler\EmployeeGrades\CreateHandlerFactory::class,
                 Handler\EmployeeGrades\UpdateHandler::class => Handler\EmployeeGrades\UpdateHandlerFactory::class,
                 Handler\EmployeeGrades\DeleteHandler::class => Handler\EmployeeGrades\DeleteHandlerFactory::class,
-                Handler\EmployeeGrades\FindAllByPagingHandler::class => Handler\EmployeeGrades\FindAllByPagingHandlerFactory::class,
                 Handler\EmployeeGrades\FindAllHandler::class => Handler\EmployeeGrades\FindAllHandlerFactory::class,
+                Handler\EmployeeGrades\FindAllByPagingHandler::class => Handler\EmployeeGrades\FindAllByPagingHandlerFactory::class,
                 // companies
                 Handler\Companies\CreateHandler::class => Handler\Companies\CreateHandlerFactory::class,
                 Handler\Companies\UpdateHandler::class => Handler\Companies\UpdateHandlerFactory::class,
                 Handler\Companies\DeleteHandler::class => Handler\Companies\DeleteHandlerFactory::class,
                 Handler\Companies\FindOneByIdHandler::class => Handler\Companies\FindOneByIdHandlerFactory::class,
-                Handler\Companies\FindAllByPagingHandler::class => Handler\Companies\FindAllByPagingHandlerFactory::class,
                 Handler\Companies\FindAllHandler::class => Handler\Companies\FindAllHandlerFactory::class,
+                Handler\Companies\FindAllByPagingHandler::class => Handler\Companies\FindAllByPagingHandlerFactory::class,
                 // job titles
                 Handler\JobTitles\CreateHandler::class => Handler\JobTitles\CreateHandlerFactory::class,
                 Handler\JobTitles\UpdateHandler::class => Handler\JobTitles\UpdateHandlerFactory::class,
                 Handler\JobTitles\DeleteHandler::class => Handler\JobTitles\DeleteHandlerFactory::class,
-                Handler\JobTitles\FindAllByPagingHandler::class => Handler\JobTitles\FindAllByPagingHandlerFactory::class,
                 Handler\JobTitles\FindAllHandler::class => Handler\JobTitles\FindAllHandlerFactory::class,
+                Handler\JobTitles\FindAllByPagingHandler::class => Handler\JobTitles\FindAllByPagingHandlerFactory::class,
                 // job title lists
                 Handler\JobTitleLists\UploadHandler::class => Handler\JobTitleLists\UploadHandlerFactory::class,
                 Handler\JobTitleLists\PreviewHandler::class => Handler\JobTitleLists\PreviewHandlerFactory::class,
@@ -189,8 +199,9 @@ class ConfigProvider
                 Model\CompanyModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $companies = new TableGateway('companies', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    $cacheStorage = $container->get(StorageInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
-                    return new Model\CompanyModel($companies, $columnFilters);
+                    return new Model\CompanyModel($companies, $cacheStorage, $columnFilters);
                 },
                 Model\CommonModel::class => function ($container) {
                     $config = $container->get('config');
@@ -201,35 +212,40 @@ class ConfigProvider
                 Model\EmployeeModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $employees = new TableGateway('employees', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    $employeeChildren = new TableGateway('employeeChildren', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeModel(
                         $employees,
+                        $employeeChildren,
                         $columnFilters
                     );
                 },
                 Model\EmployeeGradeModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $employeeGrades = new TableGateway('employeeGrades', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    $cacheStorage = $container->get(StorageInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
-                    return new Model\EmployeeGradeModel($employeeGrades, $columnFilters);
+                    return new Model\EmployeeGradeModel($employeeGrades, $cacheStorage, $columnFilters);
                 },
                 Model\JobTitleModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $jobtitles = new TableGateway('jobTitles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    $cacheStorage = $container->get(StorageInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\JobTitleModel(
                         $jobtitles,
+                        $cacheStorage,
                         $columnFilters
                     );
                 },
                 Model\JobTitleListModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
+                    $jobTitles = new TableGateway('jobTitles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $jobTitleList = new TableGateway('jobTitleList', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    $cacheStorage = $container->get(StorageInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\JobTitleListModel(
+                        $jobTitles,
                         $jobTitleList,
-                        $cacheStorage,
                         $columnFilters
                     );
                 },

@@ -8,6 +8,7 @@ namespace App\Entity;
 class RolePermissionsEntity
 {
     const ENTITY_TYPE = 'array';
+    const TABLE_NAME = 'rolePermissions';
     /**
      * @var varchar(36)
      */

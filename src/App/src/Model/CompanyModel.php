@@ -16,18 +16,45 @@ use Laminas\Db\TableGateway\TableGatewayInterface;
 class CompanyModel
 {
     private $conn;
+    private $cache;
     private $adapter;
     private $companies;
     private $columnFilters;
 
     public function __construct(
         TableGatewayInterface $companies,
+        StorageInterface $cache,
         ColumnFiltersInterface $columnFilters
     ) {
+        $this->cache = $cache;
         $this->adapter = $companies->getAdapter();
         $this->companies = $companies;
         $this->conn = $this->adapter->getDriver()->getConnection();
         $this->columnFilters = $columnFilters;
+    }
+
+    public function findCompanies()
+    {
+        $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
+        if ($this->cache->hasItem($key)) {
+            return $this->cache->getItem($key);
+        }
+        $sql    = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(
+            [
+                'id' => 'companyId',
+                'name' => 'companyName',
+                'companyShortName'
+            ]
+        );
+        $select->from(['c' => 'companies']);
+        $select->order(['companyName ASC']);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+        $results = iterator_to_array($resultSet);
+        $this->cache->setItem($key, $results);
+        return $results;
     }
 
     public function findOptions(array $get)
@@ -176,10 +203,10 @@ class CompanyModel
     {
         try {
             $this->conn->beginTransaction();
-            $data['companies']['clientId'] = CLIENT_ID;
             $data['companies']['companyId'] = $data['companyId'];
             $data['companies']['createdAt'] = date('Y-m-d H:i:s');
             $this->companies->insert($data['companies']);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -192,6 +219,7 @@ class CompanyModel
         try {
             $this->conn->beginTransaction();
             $this->companies->update($data['companies'], ['companyId' => $data['companyId']]);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -204,11 +232,18 @@ class CompanyModel
         try {
             $this->conn->beginTransaction();
             $this->companies->delete(['companyId' => $companyId]);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
         }
+    }
+
+    private function deleteCache()
+    {
+        $this->cache->removeItem(CACHE_ROOT_KEY.Self::class.':findCompanies');
+        $this->cache->removeItem(CACHE_ROOT_KEY.\App\Model\CommonModel::class.':findCompanies');
     }
 
     public function getAdapter() : AdapterInterface

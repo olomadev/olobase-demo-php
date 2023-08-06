@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler\EmployeeGrades;
 
-use App\Model\PermissionModel;
+use App\Model\EmployeeGradeModel;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,22 +12,22 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindAllHandler implements RequestHandlerInterface
 {
-    public function __construct(PermissionModel $permissionModel)
+    public function __construct(EmployeeGradeModel $employeeGradeModel)
     {
-        $this->permissionModel = $permissionModel;
+        $this->employeeGradeModel = $employeeGradeModel;
     }
 
     /**
      * @OA\Get(
-     *   path="/permissions/findAll",
+     *   path="/employeegrades/findAll",
      *   tags={"Permissions"},
-     *   summary="Find all permissions",
-     *   operationId="permissions_findAll",
+     *   summary="Find all employee grades",
+     *   operationId="employeeGrades_findAll",
      *   
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/PermissionsFindAll"),
+     *     @OA\JsonContent(ref="#/components/schemas/CommonFindAll"),
      *   ),
      *   @OA\Response(
      *      response=404,
@@ -37,8 +37,7 @@ class FindAllHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $get = $request->getQueryParams();
-        $data = $this->permissionModel->findAllPermissions($get);
+        $data = $this->employeeGradeModel->findEmployeeGrades();
         return new JsonResponse([
             'data' => $data,
         ]);

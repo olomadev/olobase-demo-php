@@ -9,16 +9,11 @@ use Laminas\Filter\StringTrim;
 use App\Validator\Db\OldPasswordMatch;
 use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\InputFilter\InputFilterPluginManager;
 
 class PasswordChangeFilter extends InputFilter
 {
-    public function __construct(
-        AdapterInterface $adapter,
-        InputFilterPluginManager $filter
-    )
+    public function __construct(AdapterInterface $adapter)
     {
-        $this->filter = $filter;
         $this->adapter = $adapter;
         $this->user = $this->getUser();
     }

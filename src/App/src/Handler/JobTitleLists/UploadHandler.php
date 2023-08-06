@@ -76,6 +76,7 @@ class UploadHandler implements RequestHandlerInterface
                     'data'     => null,
                     'error'    => null,
                     'env'      => getenv('APP_ENV'),
+                    'locale'   => LANG_ID,
                 ];
                 // send to queue
                 // https://www.vultr.com/docs/implement-redis-queue-and-worker-with-php-on-ubuntu-20-04/

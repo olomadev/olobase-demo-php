@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Utils;
 
 use function createGuid;
+
 use Exception;
 use App\Model\CommonModel;
 use Laminas\Cache\Storage\StorageInterface;
@@ -18,13 +19,10 @@ class JobTitleListImporter
     protected $cache;
     protected $conn;
     protected $predis;
-    protected $translator;
     protected $jobTitles;
 
     public function __construct($container)
     {
-        $this->translator = $container->get(TranslatorInterface::class);
-        $this->translator->setLocale('tr');
         $this->predis = $container->get(Predis::class);
         $this->commonModel = $container->get(CommonModel::class);
         $this->cache = $container->get(StorageInterface::class);

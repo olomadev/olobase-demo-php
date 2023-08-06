@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Model;
 
@@ -15,18 +16,45 @@ use Laminas\Db\TableGateway\TableGatewayInterface;
 class EmployeeGradeModel
 {
     private $conn;
+    private $cache;
     private $adapter;
     private $employeeGrades;
     private $columnFilters;
 
     public function __construct(
         TableGatewayInterface $employeeGrades,
+        StorageInterface $cache,
         ColumnFiltersInterface $columnFilters
     ) {
+        $this->cache = $cache;
         $this->adapter = $employeeGrades->getAdapter();
         $this->employeeGrades = $employeeGrades;
         $this->conn = $this->adapter->getDriver()->getConnection();
         $this->columnFilters = $columnFilters;
+    }
+
+    public function findEmployeeGrades()
+    {
+        $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__;
+        if ($this->cache->hasItem($key)) {
+            return $this->cache->getItem($key);
+        }
+        $sql    = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(
+            [
+                'id' => 'gradeId',
+                'name' => 'gradeName'
+            ]
+        );
+        $select->from(['gr' => 'employeeGrades']);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+        $results = iterator_to_array($resultSet);
+        // echo $select->getSqlString($this->adapter->getPlatform());
+        // die;
+        $this->cache->setItem($key, $results);
+        return $results;
     }
 
     public function findOptions(array $get)
@@ -137,6 +165,7 @@ class EmployeeGradeModel
             $this->conn->beginTransaction();
             $data['employeeGrades']['gradeId'] = $data['gradeId'];
             $this->employeeGrades->insert($data['employeeGrades']);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -149,6 +178,7 @@ class EmployeeGradeModel
         try {
             $this->conn->beginTransaction();
             $this->employeeGrades->update($data['employeeGrades'], ['gradeId' => $data['gradeId']]);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
@@ -161,11 +191,18 @@ class EmployeeGradeModel
         try {
             $this->conn->beginTransaction();
             $this->employeeGrades->delete(['gradeId' => $gradeId]);
+            $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
         }
+    }
+
+    private function deleteCache()
+    {
+        $this->cache->removeItem(CACHE_ROOT_KEY.Self::class.':findEmployeeGrades');
+        $this->cache->removeItem(CACHE_ROOT_KEY.\App\Model\CommonModel::class.':findEmployeeGrades');
     }
 
     public function getAdapter() : AdapterInterface

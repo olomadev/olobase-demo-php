@@ -21,7 +21,7 @@ class JobTitleSave
     *     format="uuid",
     * )
     */
-    public $jobTitleListId;
+    public $companyId;
     /**
      * @var string
      * @OA\Property()
