@@ -66,7 +66,6 @@ class CreateHandler implements RequestHandlerInterface
                     'rolePermissions' => RolePermissionsEntity::class,
                 ]
             );
-            $data['roleId'] = $this->filter->getValue('id');
             $this->roleModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

@@ -62,11 +62,7 @@ class UpdateHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $roleId = $request->getAttribute("roleId");
-        $post = $request->getParsedBody();
-        $post['id'] = $roleId;
-
-        $this->filter->setInputData($post);
+        $this->filter->setInputData($request->getParsedBody());
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -78,7 +74,6 @@ class UpdateHandler implements RequestHandlerInterface
                     'rolePermissions' => RolePermissionsEntity::class,
                 ]
             );
-            $data['roleId'] = $this->filter->getValue('id');
             $this->roleModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

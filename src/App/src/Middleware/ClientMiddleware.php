@@ -16,6 +16,17 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class ClientMiddleware implements MiddlewareInterface
 {
+    const METHOD_POST  = 'POST';
+    const METHOD_PUT   = 'PUT';
+    const METHOD_PATCH = 'PATCH';
+    const METHOD_OPTIONS = 'OPTIONS';
+    const METHOD_HEAD = 'HEAD';
+    const METHOD_GET = 'GET';
+    const METHOD_TRACE = 'TRACE';
+    const METHOD_CONNECT = 'CONNECT';
+    const METHOD_DELETE = 'DELETE';
+    const METHOD_PROPFIND = 'PROPFIND';
+    
     private $config;
     private $translator;
     private $acceptedLanguages = array('tr','en');
@@ -34,7 +45,7 @@ class ClientMiddleware implements MiddlewareInterface
         $headers = $request->getHeaders();
         $server  = $request->getServerParams();
         $routeResult = $request->getAttribute(RouteResult::class, false);
-
+        //
         // Sets primary id if it's exists
         // 
         $primaryKey = null;
@@ -67,21 +78,47 @@ class ClientMiddleware implements MiddlewareInterface
         //
         // Parses & sets json content to request body
         //
+        $get = array();
+        $post = array();
         $contentType = empty($headers['content-type'][0]) ? null : current($headers['content-type']);
         if ($contentType 
             && strpos($contentType, 'application/json') === 0) {
             $contentBody = $request->getBody()->getContents();
             $post = json_decode($contentBody, true);
-            if ($primaryId = $request->getAttribute($primaryKey)) {
-                $post['id'] = $primaryId;
-            }
             $lastError = json_last_error();
             if ($lastError != JSON_ERROR_NONE) {
                 throw new BodyDecodeException(
                     $this->translator->translate($lastError)
                 );
             }
-            $request = $request->withParsedBody($post);
+        }
+        // Set $primaryKey as "id"
+        //
+        switch ($request->getMethod()) {
+            case Self::METHOD_POST:
+            case Self::METHOD_PUT:
+            case Self::METHOD_OPTIONS:
+                $post = empty($post) ? $request->getParsedBody() : $post;
+                if ($primaryId = $request->getAttribute($primaryKey)) {
+                    $post['id'] = $primaryId;
+                }
+                $request = $request->withParsedBody($post);
+                break;
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/HEAD
+            //
+            case Self::METHOD_PATCH:
+            case Self::METHOD_HEAD:
+            case Self::METHOD_GET:
+            case Self::METHOD_TRACE:
+            case Self::METHOD_CONNECT:
+            case Self::METHOD_DELETE:
+            case Self::METHOD_PROPFIND: // PROPFIND — used to retrieve properties, stored as XML, from a web resource.
+                $get = $request->getQueryParams();
+                if ($primaryId = $request->getAttribute($primaryKey)) {
+                    $get['id'] = $primaryId;
+                    $request = $request->withQueryParams($get);
+                }
+                break;
         }
         return $handler->handle($request);
     }

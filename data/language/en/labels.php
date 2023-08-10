@@ -4,6 +4,7 @@ return [
     // login
     'username' => 'E-Mail',
     'password' => 'Password',
+    'email' => 'E-Mail',
 
     // Reset password
     // 

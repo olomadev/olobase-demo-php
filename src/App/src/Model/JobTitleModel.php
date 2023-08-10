@@ -214,7 +214,7 @@ class JobTitleModel
     {
         try {
             $this->conn->beginTransaction();
-            $data['jobTitles']['jobTitleId'] = $data['jobTitleId'];
+            $data['jobTitles']['jobTitleId'] = $data['id'];
             $this->jobtitles->insert($data['jobTitles']);
             $this->deleteCache();
             $this->conn->commit();
@@ -228,7 +228,7 @@ class JobTitleModel
     {
         try {
             $this->conn->beginTransaction();
-            $this->jobtitles->update($data['jobTitles'], ['jobTitleId' => $data['jobTitleId']]);
+            $this->jobtitles->update($data['jobTitles'], ['jobTitleId' => $data['id']]);
             $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {

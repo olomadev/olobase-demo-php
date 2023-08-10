@@ -53,11 +53,7 @@ class UpdateHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $permId = $request->getAttribute("permId");
-        $post = $request->getParsedBody();
-        $post['id'] = $permId;
-
-        $this->filter->setInputData($post);
+        $this->filter->setInputData($request->getParsedBody());
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -68,7 +64,6 @@ class UpdateHandler implements RequestHandlerInterface
                     'permissions' => PermissionsEntity::class,
                 ]
             );
-            $data['permId'] = $this->filter->getValue('id');
             $this->permissionModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

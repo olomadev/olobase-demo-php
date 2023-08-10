@@ -167,6 +167,41 @@ class EmployeeModel
     public function findAll()
     {
         $platform = $this->adapter->getPlatform();
+        $child = "JSON_ARRAYAGG(";
+        $child.= "JSON_OBJECT(";
+        $child.= "'childId' , ec.childId , ";
+        $child.= "'childName' , ec.childName , ";
+        $child.= "'childBirthdate' , ec.childBirthdate  ";
+        $child.= "))";
+        $this->childrenFunction = $platform->quoteIdentifierInFragment(
+            "(SELECT $child FROM employeeChildren ec WHERE ec.employeeId = e.employeeId)",
+            [
+                '(',
+                ')',
+                'childId',
+                'childName',
+                'childBirthdate',
+                'SELECT',
+                'FROM',
+                'AS',
+                'as',
+                'ec',
+                'e',
+                ',',
+                '[',
+                ']',
+                'JSON_ARRAYAGG',
+                'JSON_OBJECT',
+                'WHERE',
+                ';',
+                'CONCAT',
+                'id',
+                'name',
+                '"',
+                '\'',
+                '\"', '=', '?', 'JOIN', 'ON', 'AND', 'LEFT', ','
+            ]
+        );
         $sql = new Sql($this->adapter);
         $select = $sql->select();
         $select->columns([
@@ -176,6 +211,7 @@ class EmployeeModel
             'surname',
             'employmentStartDate',
             'employmentEndDate',
+            'employeeChildren' => new Expression($this->childrenFunction),
             'createdAt',
         ]);
         $select->from(['e' => 'employees']);
@@ -314,7 +350,7 @@ class EmployeeModel
             $this->conn->beginTransaction();
             $this->employees->update($data['employees'], ['employeeId' => $employeeId]);
 
-            // children
+            // delete children
             $this->employeeChildren->delete(['employeeId' => $employeeId]);
             if (! empty($data['employeeChildren'])) {
                 foreach ($data['employeeChildren'] as $val) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filter\Users;
 
+use App\Filter\InputFilter;
 use Laminas\Validator\Uuid;
 use Laminas\Validator\Db\RecordExists;
 use Laminas\Db\Adapter\AdapterInterface;

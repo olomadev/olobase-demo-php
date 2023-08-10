@@ -61,11 +61,7 @@ class UpdateHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $jobTitleListId = $request->getAttribute("listId");
-        $post = $request->getParsedBody();
-        $post['id'] = $jobTitleListId;
-
-        $this->filter->setInputData($post);
+        $this->filter->setInputData($request->getParsedBody());
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -76,7 +72,6 @@ class UpdateHandler implements RequestHandlerInterface
                     'jobTitleList' => JobTitleListEntity::class,
                 ]
             );
-            $data['jobTitleListId'] = $this->filter->getValue('id');
             $this->jobTitleListModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

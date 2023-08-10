@@ -61,11 +61,7 @@ class UpdateHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $companyId = $request->getAttribute("companyId");
-        $post = $request->getParsedBody();
-        $post['id'] = $companyId;
-
-        $this->filter->setInputData($post);
+        $this->filter->setInputData($request->getParsedBody());
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -76,7 +72,6 @@ class UpdateHandler implements RequestHandlerInterface
                     'companies' => CompaniesEntity::class,
                 ]
             );
-            $data['companyId'] = $this->filter->getValue('id');
             $this->companyModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

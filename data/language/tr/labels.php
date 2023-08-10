@@ -4,6 +4,7 @@ return [
     // login
     'username' => 'E-Posta',
     'password' => 'Şifre',
+    'email' => 'E-Posta',
 
     // file
     'file' => 'Dosya',

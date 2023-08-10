@@ -61,11 +61,7 @@ class UpdateHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $gradeId = $request->getAttribute("gradeId");
-        $post = $request->getParsedBody();
-        $post['id'] = $gradeId;
-
-        $this->filter->setInputData($post);
+        $this->filter->setInputData($request->getParsedBody());
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -76,7 +72,6 @@ class UpdateHandler implements RequestHandlerInterface
                     'employeeGrades' => EmployeeGradesEntity::class,
                 ]
             );
-            $data['gradeId'] = $this->filter->getValue('id');
             $this->employeeGradeModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

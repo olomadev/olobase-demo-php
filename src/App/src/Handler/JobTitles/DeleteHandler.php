@@ -50,9 +50,7 @@ class DeleteHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {   
-        $data['id'] = $request->getAttribute('jobTitleId');        
-        $this->filter->setInputData($data);
-
+        $this->filter->setInputData($request->getQueryParams());
         if ($this->filter->isValid()) {
             $this->jobTitleModel->delete(
                 $this->filter->getValue('id')

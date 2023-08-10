@@ -198,7 +198,7 @@ class PermissionModel implements PermissionModelInterface
     {
         try {
             $this->conn->beginTransaction();
-            $data['permissions']['permId'] = $data['permId'];
+            $data['permissions']['permId'] = $data['id'];
             $this->permissions->insert($data['permissions']);
             $this->deleteCache();
             $this->conn->commit();
@@ -212,7 +212,7 @@ class PermissionModel implements PermissionModelInterface
     {
         try {
             $this->conn->beginTransaction();
-            $this->permissions->update($data['permissions'], ['permId' => $data['permId']]);
+            $this->permissions->update($data['permissions'], ['permId' => $data['id']]);
             $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {

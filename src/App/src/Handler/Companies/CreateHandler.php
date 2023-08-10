@@ -64,7 +64,6 @@ class CreateHandler implements RequestHandlerInterface
                     'companies' => CompaniesEntity::class,
                 ]
             );
-            $data['companyId'] = $this->filter->getValue('id');
             $this->companySaveModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

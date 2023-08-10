@@ -56,7 +56,6 @@ class CopyHandler implements RequestHandlerInterface
         $permId = $request->getAttribute("permId");
         $post = $this->permissionModel->copy($permId);
         $this->filter->setInputData($post);
-
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -67,7 +66,6 @@ class CopyHandler implements RequestHandlerInterface
                     'permissions' => PermissionsEntity::class,
                 ]
             );
-            $data['permId'] = $this->filter->getValue('id');
             $this->permissionModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

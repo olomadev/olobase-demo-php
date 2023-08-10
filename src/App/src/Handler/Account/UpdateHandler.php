@@ -57,7 +57,6 @@ class UpdateHandler implements RequestHandlerInterface
         $user = $request->getAttribute(UserInterface::class);
         $this->filter->setUser($user);
         $this->filter->setInputData($request->getParsedBody());
-
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -68,7 +67,7 @@ class UpdateHandler implements RequestHandlerInterface
                     'users' => UsersEntity::class,
                 ]
             );
-            $data['userId'] = $user->getId();
+            $data['id'] = $user->getId();
             $this->userModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

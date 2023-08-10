@@ -160,7 +160,7 @@ class JobTitleListModel
 
     public function update(array $data)
     {
-        $jobTitleListId = $data['jobTitleListId'];
+        $jobTitleListId = $data['id'];
         try {
             $this->conn->beginTransaction();
             $this->jobTitleList->update($data['jobTitleList'], ['jobTitleListId' => $jobTitleListId]);

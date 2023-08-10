@@ -64,7 +64,6 @@ class CreateHandler implements RequestHandlerInterface
                     'jobTitles' => JobTitlesEntity::class,
                 ]
             );
-            $data['jobTitleId'] = $this->filter->getValue('id');
             $this->jobTitleModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

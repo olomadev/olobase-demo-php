@@ -56,10 +56,7 @@ class UpdatePasswordHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $post = $request->getParsedBody();
-        $post['id'] = $request->getAttribute('userId');
-        $this->filter->setInputData($post);
-
+        $this->filter->setInputData($request->getParsedBody());
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {

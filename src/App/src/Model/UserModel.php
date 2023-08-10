@@ -201,13 +201,15 @@ class UserModel
 
     public function create(array $data)
     {
+        $userId = $data['id'];
+        $data['users']['userId'] = $userId;
+        
         // decode base64 image if exists
         //
         $avatarImageBlob = null;
         if (! empty($data['users']['avatarImage'])) {
             $avatarImageBlob = base64_decode($data['users']['avatarImage']);
         }
-        $userId = $data['users']['userId'] = $data['userId'];
         try {
             $this->conn->beginTransaction();
             $this->users->insert($data['users']);
@@ -228,6 +230,8 @@ class UserModel
 
     public function update(array $data)
     {
+        $userId = $data['id'];
+
         // decode base64 image if exists
         //
         $avatarImageBlob = null;
@@ -235,8 +239,6 @@ class UserModel
             $avatarImageBlob = base64_decode($data['users']['avatarImage']);
         }
         unset($data['users']['avatarImage']); // remove it from insert array
-
-        $userId = $data['userId'];
         try {
             $this->conn->beginTransaction();
             if (! empty($data['users']['password'])) {

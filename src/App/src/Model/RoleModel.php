@@ -243,10 +243,10 @@ class RoleModel
 
     public function create(array $data)
     {
+        $roleId = $data['id'];
         try {
             $this->conn->beginTransaction();
-            $roleId = $data['roleId'];
-            $data['roles']['roleId'] = $data['roleId'];
+            $data['roles']['roleId'] = $roleId;
             $this->roles->insert($data['roles']);
 
             $this->rolePermissions->delete(['roleId' => $roleId]);
@@ -266,9 +266,9 @@ class RoleModel
 
     public function update(array $data)
     {
+        $roleId = $data['id'];
         try {
             $this->conn->beginTransaction();
-            $roleId = $data['roleId'];
             $this->roles->update($data['roles'], ['roleId' => $roleId]);
             $this->rolePermissions->delete(['roleId' => $roleId]);
             if (! empty($data['rolePermissions'])) {

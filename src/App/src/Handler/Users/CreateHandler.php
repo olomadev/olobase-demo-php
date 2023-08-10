@@ -10,7 +10,6 @@ use App\Schema\Users\UserSave;
 use App\Filter\Users\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
-use Mezzio\Authentication\UserInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -54,10 +53,7 @@ class CreateHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $request->getAttribute(UserInterface::class);
-        $this->filter->setUser($user);
         $this->filter->setInputData($request->getParsedBody());
-
         $data = array();
         $response = array();
         if ($this->filter->isValid()) {
@@ -68,8 +64,7 @@ class CreateHandler implements RequestHandlerInterface
                     'users' => UsersEntity::class,
                 ]
             );
-            $data['userId'] = $user->getId();
-            $this->userModel->update($data);
+            $this->userModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);
         }

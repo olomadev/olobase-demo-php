@@ -82,7 +82,6 @@ class TokenModel
         $data = array(
             'tokenId' => $tokenId,
             'userId' => $user->getId(),
-            // 'ref_channel' => 'web', // $user->getDetail('ref_channel'),
             'issuer' => $issuer,
             'ip' => $user->getDetail('ip'),
             'userAgent' => substr($userAgent, 0, 255),

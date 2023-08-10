@@ -203,7 +203,7 @@ class CompanyModel
     {
         try {
             $this->conn->beginTransaction();
-            $data['companies']['companyId'] = $data['companyId'];
+            $data['companies']['companyId'] = $data['id'];
             $data['companies']['createdAt'] = date('Y-m-d H:i:s');
             $this->companies->insert($data['companies']);
             $this->deleteCache();
@@ -218,7 +218,7 @@ class CompanyModel
     {
         try {
             $this->conn->beginTransaction();
-            $this->companies->update($data['companies'], ['companyId' => $data['companyId']]);
+            $this->companies->update($data['companies'], ['companyId' => $data['id']]);
             $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {

@@ -163,7 +163,7 @@ class EmployeeGradeModel
     {
         try {
             $this->conn->beginTransaction();
-            $data['employeeGrades']['gradeId'] = $data['gradeId'];
+            $data['employeeGrades']['gradeId'] = $data['id'];
             $this->employeeGrades->insert($data['employeeGrades']);
             $this->deleteCache();
             $this->conn->commit();
@@ -177,7 +177,7 @@ class EmployeeGradeModel
     {
         try {
             $this->conn->beginTransaction();
-            $this->employeeGrades->update($data['employeeGrades'], ['gradeId' => $data['gradeId']]);
+            $this->employeeGrades->update($data['employeeGrades'], ['gradeId' => $data['id']]);
             $this->deleteCache();
             $this->conn->commit();
         } catch (Exception $e) {

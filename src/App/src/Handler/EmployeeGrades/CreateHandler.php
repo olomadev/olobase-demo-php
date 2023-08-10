@@ -64,7 +64,6 @@ class CreateHandler implements RequestHandlerInterface
                     'employeeGrades' => EmployeeGradesEntity::class,
                 ]
             );
-            $data['gradeId'] = $this->filter->getValue('id');
             $this->employeeGradeModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

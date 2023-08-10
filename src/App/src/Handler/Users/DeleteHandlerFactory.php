@@ -21,6 +21,6 @@ class DeleteHandlerFactory
         $pluginManager = $container->get(InputFilterPluginManager::class);
         $inputFilter   = $pluginManager->get(DeleteFilter::class);
 
-        return new CreateHandler($userModel, $inputFilter, $error);
+        return new DeleteHandler($userModel, $inputFilter, $error);
     }
 }
