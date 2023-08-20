@@ -33,18 +33,7 @@ class EmployeeModel
         $this->columnFilters = $columnFilters;
     }
 
-    public function findOptionsById(array $get)
-    {
-        if (! empty($get['id'])) {
-            return $this->findOptions($get);    
-        }
-        if (empty($get['employeeListId'])) {
-            return false;
-        }
-        return $this->findOptions($get);
-    }
-
-    public function findOptions(array $get)
+    public function findAllBySearch(array $get)
     {
         $platform = $this->adapter->getPlatform();
         $concat = "CONCAT_WS(' ', ";
@@ -61,11 +50,6 @@ class EmployeeModel
             'name' => new Expression($concatFunction),
         ]);
         $select->from(['e' => 'employees']);
-        $select->join(['el' => 'employeeList'], 'el.employeeListId = e.employeeListId', 
-            [
-                'employeeListId' => new Expression("JSON_OBJECT('id', el.employeeListId, 'name', el.listName)"),
-            ],
-        $select::JOIN_LEFT);
 
         // autocompleter search query
         //
@@ -85,9 +69,6 @@ class EmployeeModel
         if (! empty($get['employeeNumber'])) {
             $select->where(['e.employeeNumber' => $get['employeeNumber']]);
         }
-        if (! empty($get['employeeListId'])) {
-            $select->where(['e.employeeListId' => $get['employeeListId']]);    
-        }
         if (! empty($get['id'])) {
             if (is_array($get['id'])) {
                 $values = array();
@@ -101,7 +82,7 @@ class EmployeeModel
                 $select->where(['e.employeeId' => $get['id']]);    
             }
         }
-        $select->limit(50); // default limit for auto completer
+        $select->limit(100); // default limit for auto completer
 
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;
@@ -111,57 +92,67 @@ class EmployeeModel
         return $results;
     }
 
-    public function findAllBySearch(array $get)
+    public function findOneById(string $employeeId)
     {
-        $platform = $this->adapter->getPlatform();
-        $concat = "CONCAT_WS(' - ' , ";
-            $concat.= " NULLIF( e.name , '' ) ,";
-            $concat.= " NULLIF( e.middleName , '' ) ,";
-            $concat.= " NULLIF( e.surname , '' ) ,";
-            $concat.= " NULLIF( e.secondSurname , '' )";
-        $concat.= ")";
-        $concatFunction = $platform->quoteIdentifierInFragment($concat, 
-            ['(',')','CONCAT_WS','\'',',','NULLIF','-']
-        );
         $sql = new Sql($this->adapter);
         $select = $sql->select();
-        $select->columns([
-            'id' => 'employeeId',
-            'employeeId',
-            'name' => new Expression($concatFunction),
-            'tckn',
-            'pernetNumber',
-        ]);
-        $select->from(['e' => 'employees']);
-        $select->join(['c' => 'companies'], 'e.companyId = c.companyId', 
+        $select->columns(
             [
-                'companyShortName',
+                'id' => 'employeeId',
+                'name',
+                'surname',
+                'employeeNumber',
+                'employmentStartDate',
+                'employmentEndDate',
+                'createdAt'
+            ]
+        );
+        $select->from(['e' => 'employees']);
+        $select->join(['c' => 'companies'], 'c.companyId = e.companyId', 
+            [
+                'companyId' => new Expression("JSON_OBJECT('id', c.companyId, 'name', c.companyShortName)"),
             ],
         $select::JOIN_LEFT);
-
-        // autocompleter search query
-        //
-        if (! empty($get['q'])) {
-            $nest = $select->where->nest();
-            $exp = explode(" ", $get['q']);
-            foreach ($exp as $str) {
-                $nest = $nest->or->nest();
-                    $nest->or->like('employeeNumber', '%'.$str.'%');
-                    $nest->or->like('companyShortName', '%'.$str.'%');
-                    $nest->or->like(new Expression($concatFunction), '%'.$str.'%');
-                $nest = $nest->unnest();
-            }
-            $nest->unnest();
-        }
-        // set a limit to not show all records
-        $select->limit(100);
+        $select->join(['j' => 'jobTitles'], 'j.jobTitleId = e.jobTitleId', 
+            [
+                'jobTitleId' => new Expression("JSON_OBJECT('id', j.jobTitleId, 'name', j.jobTitleName)"),
+            ],
+        $select::JOIN_LEFT);
+        $select->join(['eg' => 'employeeGrades'], 'eg.gradeId = e.gradeId', 
+            [
+                'gradeId' => new Expression("JSON_OBJECT('id', eg.gradeId, 'name', eg.gradeName)"),
+            ],
+        $select::JOIN_LEFT);
+        $select->where(['e.employeeId' => $employeeId]);
 
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;
         $statement = $sql->prepareStatementForSqlObject($select);
         $resultSet = $statement->execute();
-        $results = iterator_to_array($resultSet);
-        return $results;
+        $row = $resultSet->current();
+        $statement->getResource()->closeCursor();
+
+        // children
+        // 
+        $sql    = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(
+            [
+                'childId',
+                'childName',
+                'childBirthdate',
+            ]
+        );
+        $select->from('employeeChildren');
+        $select->where(['employeeId' => $employeeId]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+        $employeeChildren = iterator_to_array($resultSet);
+        $statement->getResource()->closeCursor();
+
+        $row['employeeChildren'] = $employeeChildren;
+        return $row;
     }
 
     public function findAll()

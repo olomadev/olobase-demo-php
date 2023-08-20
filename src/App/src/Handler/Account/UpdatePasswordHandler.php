@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
-use App\Filter\PasswordChangeFilter;
+use App\Filter\Account\PasswordChangeFilter;
 use Mezzio\Authentication\UserInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;

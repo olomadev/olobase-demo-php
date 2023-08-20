@@ -48,6 +48,7 @@ class EmployeeGradeModel
             ]
         );
         $select->from(['gr' => 'employeeGrades']);
+        $select->order(['gradeName ASC']);
         $statement = $sql->prepareStatementForSqlObject($select);
         $resultSet = $statement->execute();
         $results = iterator_to_array($resultSet);

@@ -3,7 +3,7 @@
 namespace App\Filter\Companies;
 
 use App\Filter\InputFilter;
-use App\Filter\ToDate;
+use App\Filter\Utils\ToDate;
 use App\Validator\Db\RecordExists;
 use App\Validator\Db\NoRecordExists;
 use Laminas\Validator\Date;

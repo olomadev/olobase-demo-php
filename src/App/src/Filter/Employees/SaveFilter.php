@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Filter\Employees;
 
 use App\Model\CommonModel;
-use App\Filter\ToDate;
 use App\Filter\InputFilter;
-use App\Filter\MbUcFirstFilter;
 use App\Filter\ObjectInputFilter;
 use App\Filter\CollectionInputFilter;
+use App\Filter\Utils\ToDate;
+use App\Filter\Utils\MbUcFirstFilter;
 use Laminas\Validator\Db\RecordExists;
 use Laminas\Validator\Db\NoRecordExists;
 use Laminas\Filter\ToInt;
@@ -99,6 +99,7 @@ class SaveFilter extends InputFilter
             ],
         ]);
         $this->add($objectFilter, 'jobTitleId');
+
         $this->add([
             'name' => 'name',
             'required' => true,
@@ -165,6 +166,10 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
+
+        // print_r($employeeGrades);
+        // die;
+
         $objectFilter = new ObjectInputFilter();
         $objectFilter->add([
             'name' => 'id',

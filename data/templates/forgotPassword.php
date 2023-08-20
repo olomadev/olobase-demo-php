@@ -18,7 +18,7 @@ th, td {
 <table align="center" width="60%" style="border-collapse: collapse;border: 1px solid #e8e8e8;">
 	<tr>
 		<td style="padding:40px;">
-			<h2 style="color: <?php echo $themeColor ?>;">Pernet CRM</h2>
+			<h2 style="color: <?php echo $themeColor ?>;">Demp App</h2>
 			<hr color="<?php echo $themeColor ?>" size="2" style="border-top: 2px solid <?php echo $themeColor ?>;" />
 			<table border="0" width="100%">
 				<tr>
@@ -41,7 +41,7 @@ th, td {
 			<hr color="<?php echo $themeColor ?>" size="2" style="border-top: 2px solid <?php echo $themeColor ?>;" />
 			<br />
 			<p style="text-align: center;font-size:12px;color:gray;line-height: 1.4"><?php
-			$footer = $translator->translate('This e-mail was sent to {EMAIL} following your Pernet CRM membership', 'templates').'. ';
+			$footer = $translator->translate('This e-mail was sent to {EMAIL} following your Demo App membership', 'templates').'. ';
 			$footer.= $translator->translate('Please do not reply to this e-mail', 'templates').'. ';
 			echo str_replace('{EMAIL}', '<a href="mailto:'.$email.'" style="color:'.$themeColor.';text-decoration:underline;">'.$email.'</a>', $footer); ?></p>
 		</td>

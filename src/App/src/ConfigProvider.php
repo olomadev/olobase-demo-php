@@ -41,6 +41,7 @@ class ConfigProvider
                     Filter\CollectionInputFilter::class => Container\CollectionInputFilterFactory::class,
                     // Auth
                     Filter\Auth\AuthFilter::class => InvokableFactory::class,
+                    Filter\Auth\ResetPasswordFilter::class => Filter\Auth\ResetPasswordFilterFactory::class,
                     // Account
                     Filter\Account\SaveFilter::class => Filter\Account\SaveFilterFactory::class,
                     Filter\Account\PasswordChangeFilter::class => Filter\Account\PasswordChangeFilterFactory::class,
@@ -115,6 +116,7 @@ class ConfigProvider
                 Handler\Common\Months\FindAllHandler::class => Handler\Common\Months\FindAllHandlerFactory::class,
                 Handler\Common\Cities\FindAllHandler::class => Handler\Common\Cities\FindAllHandlerFactory::class,
                 Handler\Common\Countries\FindAllHandler::class => Handler\Common\Countries\FindAllHandlerFactory::class,
+                Handler\Common\Currencies\FindAllHandler::class => Handler\Common\Currencies\FindAllHandlerFactory::class,
                 Handler\Common\AreaCodes\FindAllHandler::class => Handler\Common\AreaCodes\FindAllHandlerFactory::class,
                 Handler\Common\Files\FindOneByIdHandler::class => Handler\Common\Files\FindOneByIdHandlerFactory::class,
                 
@@ -122,6 +124,7 @@ class ConfigProvider
                 Handler\Auth\TokenHandler::class => Handler\Auth\TokenHandlerFactory::class,
                 Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
                 Handler\Auth\LogoutHandler::class => Handler\Auth\LogoutHandlerFactory::class,
+                Handler\Auth\ResetPasswordHandler::class => Handler\Auth\ResetPasswordHandlerFactory::class,
                 // account
                 Handler\Account\FindMeHandler::class => Handler\Account\FindMeHandlerFactory::class,
                 Handler\Account\UpdateHandler::class => Handler\Account\UpdateHandlerFactory::class,
@@ -151,6 +154,7 @@ class ConfigProvider
                 Handler\Employees\CreateHandler::class => Handler\Employees\CreateHandlerFactory::class,
                 Handler\Employees\UpdateHandler::class => Handler\Employees\UpdateHandlerFactory::class,
                 Handler\Employees\DeleteHandler::class => Handler\Employees\DeleteHandlerFactory::class,
+                Handler\Employees\FindOneByIdHandler::class => Handler\Employees\FindOneByIdHandlerFactory::class,
                 Handler\Employees\FindAllHandler::class => Handler\Employees\FindAllHandlerFactory::class,
                 Handler\Employees\FindAllByPagingHandler::class => Handler\Employees\FindAllByPagingHandlerFactory::class,
                 // employee grades

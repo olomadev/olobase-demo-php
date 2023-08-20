@@ -7,13 +7,20 @@ namespace App\Filter\Auth;
 use App\Filter\InputFilter;
 use Laminas\Filter\StringTrim;
 use Laminas\Validator\EmailAddress;
+use Laminas\Validator\Db\RecordExists;
+use Laminas\Db\Adapter\AdapterInterface;
 
-class AuthFilter extends InputFilter
+class ResetPasswordFilter extends InputFilter
 {
+    public function __construct(AdapterInterface $adapter)
+    {
+        $this->adapter  = $adapter;
+    }
+
     public function setInputData(array $data)
     {
         $this->add([
-            'name' => 'username',
+            'name' => 'email',
             'required' => true,
             'filters' => [
                 ['name' => StringTrim::class],
@@ -25,13 +32,14 @@ class AuthFilter extends InputFilter
                         'useMxCheck' => false,
                     ],
                 ],
-            ],
-        ]);
-        $this->add([
-            'name' => 'password',
-            'required' => true,
-            'filters' => [
-                ['name' => StringTrim::class],
+                [
+                    'name' => RecordExists::class,
+                    'options' => [
+                        'table'   => 'users',
+                        'field'   => 'email',
+                        'adapter' => $this->adapter,
+                    ]
+                ]
             ],
         ]);
         $this->setData($data);

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Filter\Users;
 
 use App\Filter\InputFilter;
-use App\Filter\MbUcFirstFilter;
-use App\Filter\EmailNormalizeFilter;
 use App\Filter\CollectionInputFilter;
-use App\Filter\ToFile;
+use App\Filter\Utils\MbUcFirstFilter;
+use App\Filter\Utils\EmailNormalizeFilter;
+use App\Filter\Utils\ToFile;
 use App\Validator\Base64FileUpload;
 use Laminas\Filter\ToInt;
 use Laminas\Filter\StringTrim;

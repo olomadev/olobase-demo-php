@@ -90,6 +90,12 @@ class AuthModel
         return $roles;
     }
 
+    /**
+     * Generate reset password code
+     * 
+     * @param  string $username email
+     * @return string
+     */
     public function generateResetPassword(string $username) : string
     {
         $resetPasswordCode = generateRandomNumber(6);
@@ -97,6 +103,12 @@ class AuthModel
         return $resetPasswordCode;
     }
 
+    /**
+     * Find one user by username to create reset password template
+     * 
+     * @param  string $username email
+     * @return array
+     */
     public function findOneByUsername(string $username)
     {
         $sql = new Sql($this->adapter);
@@ -121,6 +133,13 @@ class AuthModel
         return $row;
     }
 
+    /**
+     * Reset user password with reset code
+     * 
+     * @param  string $resetCode   the reset code emailed to user
+     * @param  string $newPassword new user password
+     * @return void
+     */
     public function resetPassword(string $resetCode, string $newPassword)
     {
         $username = $this->simpleCache->get($resetCode);

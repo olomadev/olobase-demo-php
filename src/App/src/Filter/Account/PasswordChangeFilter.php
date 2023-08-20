@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Filter\Account;
 
 use App\Filter\InputFilter;
-use Laminas\Filter\StringTrim;
 use App\Validator\Db\OldPasswordMatch;
+use Laminas\Filter\StringTrim;
 use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
 

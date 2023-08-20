@@ -40,6 +40,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/auth/token', App\Handler\Auth\TokenHandler::class, ['POST']);
     $app->route('/api/auth/refresh', [App\Handler\Auth\RefreshHandler::class], ['POST']);
     $app->route('/api/auth/logout', [App\Handler\Auth\LogoutHandler::class], ['GET']);
+    $app->route('/api/auth/resetPassword', [App\Handler\Auth\ResetPasswordHandler::class], ['POST']);
     
     $auth = [
         JwtAuthenticationMiddleware::class,
@@ -92,7 +93,6 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/employees/update/:employeeId', [...$auth, [App\Handler\Employees\UpdateHandler::class]], ['PUT']);
     $app->route('/api/employees/delete/:employeeId', [...$auth, [App\Handler\Employees\DeleteHandler::class]], ['DELETE']);
     $app->route('/api/employees/findAll', [...$auth, [App\Handler\Employees\FindAllHandler::class]], ['GET']);
-    $app->route('/api/employees/findAllBySearch', [...$auth, [App\Handler\Employees\FindAllBySearchHandler::class]], ['GET']);
     $app->route('/api/employees/findAllByPaging', [...$auth, [App\Handler\Employees\FindAllByPagingHandler::class]], ['GET']);
     $app->route('/api/employees/findOneById/:employeeId', [...$auth, [App\Handler\Employees\FindOneByIdHandler::class]], ['GET']);
 
@@ -132,7 +132,8 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/months/findAll', App\Handler\Common\Months\FindAllHandler::class, ['GET']);
     $app->route('/api/cities/findAll', App\Handler\Common\Cities\FindAllHandler::class, ['GET']);
     $app->route('/api/countries/findAll', App\Handler\Common\Countries\FindAllHandler::class, ['GET']);
-    $app->route('/api/areacodes/findAll', App\Handler\Common\AreaCode\FindAllHandler::class, ['GET']);
+    $app->route('/api/currencies/findAll', App\Handler\Common\Currencies\FindAllHandler::class, ['GET']);
+    $app->route('/api/areacodes/findAll', App\Handler\Common\AreaCodes\FindAllHandler::class, ['GET']);
     $app->route('/api/files/findOneById/:fileId', App\Handler\Common\Files\FindOneByIdHandler::class, ['GET']);
 
 };

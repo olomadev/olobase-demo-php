@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filter;
+namespace App\Filter\Utils;
 
 use Laminas\Filter\AbstractFilter;
 
 /**
- * Create column name
+ * Converts "sada çsd99.jpg" to "sada çsd99"
  */
-class MbColumnNameFilter extends AbstractFilter
+class EmailNormalizeFilter extends AbstractFilter
 {
     /**
      * Defined by Laminas\Filter\FilterInterface
@@ -21,10 +21,16 @@ class MbColumnNameFilter extends AbstractFilter
      */
     public function filter($value)
     {
-        $value = str_replace(" ", '', $value);
-        $str = str_replace(['I','İ'], ['ı','i'], $value);
+        if (empty($value)) {
+            return $value;
+        }
+        $str = str_replace(['I','İ','ı'], ['i','i','i'], $value);
         $str = mb_strtolower($str);
-        $str = str_replace(['ğ','ü','ç','ş','ı','ö'], ['g','u','c','s','i','o'], $str);
+        $str = str_replace(
+            ["ğ", "Ğ", "ç", "Ç", "ş", "Ş", "ü", "Ü", "ö", "Ö", "ı", "İ"],
+            ['g',"g",'c','c','s','s','u','u','ö','Ö','i','i'],
+            $str
+        );
         return $str;
     }
 }

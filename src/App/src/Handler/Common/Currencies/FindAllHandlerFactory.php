@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Employees;
+namespace App\Handler\Common\Currencies;
 
-use App\Model\EmployeeModel;
+use App\Model\CommonModel;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class FindAllBySearchHandlerFactory
+class FindAllHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        $employeeModel = $container->get(EmployeeModel::class);
-        return new FindAllHandler($employeeModel);
+        $commonModel = $container->get(CommonModel::class);
+        return new FindAllHandler($commonModel);
     }
 }

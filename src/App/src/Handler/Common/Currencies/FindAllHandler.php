@@ -2,32 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Employees;
+namespace App\Handler\Common\Currencies;
 
-use App\Model\EmployeeModel;
+use App\Model\CommonModel;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class FindAllBySearchHandler implements RequestHandlerInterface
+class FindAllHandler implements RequestHandlerInterface
 {
-    public function __construct(EmployeeModel $employeeModel)
+    public function __construct(CommonModel $commonModel)
     {
-        $this->employeeModel = $employeeModel;
+        $this->commonModel = $commonModel;
     }
-    
+
     /**
      * @OA\Get(
-     *   path="/employees/findAllBySearch",
-     *   tags={"Employees"},
-     *   summary="Search for all employees",
-     *   operationId="employees_findAllBySearch",
+     *   path="/currencies/findAll",
+     *   tags={"Common"},
+     *   summary="Find all currencies",
+     *   operationId="countries_findAll",
      *   
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/EmployeeFindAllBySearch"),
+     *     @OA\JsonContent(ref="#/components/schemas/CommonFindAll"),
      *   ),
      *   @OA\Response(
      *      response=404,
@@ -37,10 +37,9 @@ class FindAllBySearchHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $get = $request->getQueryParams();
-        $data = $this->employeeModel->findAllBySearch($get);
+        $data = $this->commonModel->findCurrencies();
         return new JsonResponse([
-            'data' => $data,
+            'data' => $data
         ]);
     }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filter\Account;
 
 use App\Filter\InputFilter;
-use App\Filter\ToFile;
+use App\Filter\Utils\ToFile;
 use App\Validator\Base64FileUpload;
 use Laminas\Filter\StringTrim;
 use App\Validator\Db\RecordExists;

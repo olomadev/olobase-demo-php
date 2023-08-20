@@ -43,15 +43,7 @@ class FindAllHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $get = $request->getQueryParams();
-        $data = $this->employeeModel->findOptionsById($get);
-        if ($data === false) {
-            return new JsonResponse(
-                [
-                    'data' => [],
-                    'error' => $this->translator->translate('Please first choose at least one employee list'),
-                ],
-            );    
-        }
+        $data = $this->employeeModel->findAllBySearch($get);
         return new JsonResponse([
             'data' => $data,
         ]);
