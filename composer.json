@@ -1,6 +1,4 @@
 {
-    "name": "va-demo-php",
-    "description": "Laminas mezzio skeleton. Begin developing PSR-15 middleware applications in seconds!",
     "type": "project",
     "license": "BSD-3-Clause",
     "keywords": [

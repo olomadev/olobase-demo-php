@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Filter\Roles;
 
+use Laminas\Filter\ToInt;
+use Laminas\Validator\Uuid;
 use App\Filter\InputFilter;
 use App\Filter\CollectionInputFilter;
-use Laminas\Filter\ToInt;
 use App\Validator\Db\RecordExists;
 use App\Validator\Db\NoRecordExists;
-use Laminas\Validator\Uuid;
 use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

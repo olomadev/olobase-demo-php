@@ -17,6 +17,11 @@ return [
     'password' => 'Şifre',
     'newPassword' => 'Yeni Şifre',
 
+    // Account
+    // 
+    'firstname' => 'Ad',
+    'lastname' => 'Soyad',
+
     // Employees
     // 
     'no' => 'Sıra No',

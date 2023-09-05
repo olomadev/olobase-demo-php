@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Handler\Roles;
 
-use App\Model\UserModel;
-use App\Filter\Users\DeleteFilter;
+use App\Model\RoleModel;
+use App\Filter\Roles\DeleteFilter;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -15,12 +15,12 @@ class DeleteHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        $userModel = $container->get(UserModel::class);
+        $roleModel = $container->get(RoleModel::class);
         $error = $container->get(Error::class);
 
         $pluginManager = $container->get(InputFilterPluginManager::class);
         $inputFilter   = $pluginManager->get(DeleteFilter::class);
 
-        return new DeleteHandler($userModel, $inputFilter, $error);
+        return new DeleteHandler($roleModel, $inputFilter, $error);
     }
 }

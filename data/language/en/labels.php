@@ -17,6 +17,11 @@ return [
     'file' => 'File',
     'files' => 'Files',
 
+    // Account
+    // 
+    'firstname' => 'Firstname',
+    'lastname' => 'Lastname',
+
     // Employees
     // 
     'no' => 'No',
@@ -35,5 +40,4 @@ return [
     'disabilityId' => 'Disability',
     'employeeTypeId' => 'Type',
     'employeeProfile' => 'Profile',
-
 ];

@@ -8,18 +8,18 @@ use Laminas\Validator\AbstractValidator;
 /**
  * Confirms a record matched in a table.
  */
-class OldPasswordMatch extends AbstractValidator
+class CurrentPasswordMatch extends AbstractValidator
 {
     /**
      * Error constants
      */
-    const ERROR_NO_OLD_PASSWORD_MATCHED = 'noOldPasswordMatched';
+    const ERROR_NO_CURRENT_PASSWORD_MATCHED = 'noCurrentPasswordMatched';
 
     /**
      * @var array Message templates
      */
     protected $messageTemplates = [
-        self::ERROR_NO_OLD_PASSWORD_MATCHED => 'Old password is not correct',
+        self::ERROR_NO_CURRENT_PASSWORD_MATCHED => 'Current password is not correct',
     ];
 
     /**
@@ -56,13 +56,13 @@ class OldPasswordMatch extends AbstractValidator
 
         if (empty($row)) {
             $valid = false;
-            $this->error(self::ERROR_NO_OLD_PASSWORD_MATCHED);
+            $this->error(self::ERROR_NO_CURRENT_PASSWORD_MATCHED);
         }
         $hash = $row['password'];
         $verify = password_verify($value, $hash);
         if (false == $verify) {
             $valid = false;
-            $this->error(self::ERROR_NO_OLD_PASSWORD_MATCHED);
+            $this->error(self::ERROR_NO_CURRENT_PASSWORD_MATCHED);
         }
         return $valid;
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Filter\Account;
 
 use App\Filter\InputFilter;
-use App\Validator\Db\OldPasswordMatch;
+use App\Validator\Db\CurrentPasswordMatch;
 use Laminas\Filter\StringTrim;
 use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
@@ -21,7 +21,7 @@ class PasswordChangeFilter extends InputFilter
     public function setInputData(array $data)
     {
         $this->add([
-            'name' => 'oldPassword',
+            'name' => 'currentPassword',
             'required' => true,
             'filters' => [
                 ['name' => StringTrim::class],
@@ -36,7 +36,7 @@ class PasswordChangeFilter extends InputFilter
                     ],
                 ],
                 [
-                    'name' => OldPasswordMatch::class,
+                    'name' => CurrentPasswordMatch::class,
                     'options' => [
                         'userId' => $this->user->getId(),
                         'adapter' => $this->adapter,

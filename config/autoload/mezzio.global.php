@@ -16,15 +16,7 @@ return [
 
     // Enable debugging; typically used to provide debugging information within templates.
     'debug' => false,
-
     'license_key' => '',
-
-    // device reference channels
-    // 
-    'token' => [
-        'access_token_duration_in_minutes' => 1,
-        'refresh_token_max_usage' => 0, // bir token en fazla kaç kere kullanılabilir, 0 = sınırsız
-    ],
     'authentication' => [
         'tablename' => 'users',
         'username' => 'email',
@@ -55,7 +47,6 @@ return [
             ],
         ],
     ],
-
 
     // 'mezzio' => [
     //     // Provide templates for the error handling middleware to use when

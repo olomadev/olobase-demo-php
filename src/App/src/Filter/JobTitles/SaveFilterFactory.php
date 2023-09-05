@@ -7,6 +7,7 @@ namespace App\Filter\JobTitles;
 use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class SaveFilterFactory implements FactoryInterface
 {

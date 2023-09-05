@@ -247,33 +247,24 @@ sudo crontab -e
 https://crontab.guru/every-1-minutes
 
 ```
-* * * * * php /var/www/pernet-backend/bin/notifications.php test > /dev/null 2>&1
+* * * * * php /var/www/va-demo-php/bin/notifications.php test > /dev/null 2>&1
 ```
 
 Every 5 seconds
 
 ```
-* * * * * sleep  0 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep  5 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 10 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 15 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 20 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 25 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 30 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 35 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 40 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 45 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 50 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
-* * * * * sleep 55 ; php /var/www/butce-backend/bin/xls-parser.php local > /dev/null 2>&1
+* * * * * sleep  0 ; php /var/www/project/bin/xls-parser.php local > /dev/null 2>&1
+* * * * * sleep  5 ; php /var/www/project/bin/xls-parser.php local > /dev/null 2>&1
+* * * * * sleep 10 ; php /var/www/project/bin/xls-parser.php local > /dev/null 2>&1
 ```
 
-Dosyaların kök yol belirtilerek dahil edilmesi gerekli
+Files must be included by specifying the root path
 
 ```
 require dirname(__DIR__).'/vendor/autoload.php';
 ```
 
-cron job logları
+cron job logs
 
 ```
 grep -i cron /var/log/syslog|tail -2
