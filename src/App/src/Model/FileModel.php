@@ -36,19 +36,19 @@ class FileModel
         $select = $sql->select();
         $select->columns(
             [
-                'fileData',
+                'data',
             ]
         );
         $select->from(['f' => 'files']);
         $select->join(
-            ['t' => $tableName], 't.fileId = f.fileId',
+            ['x' => $tableName], 'x.fileId = f.fileId',
             [
-                'fileId',
-                'fileName',
-                'fileSize',
-                'fileType',
+                'id' => 'fileId',
+                'name' => 'fileName',
+                'size' => 'fileSize',
+                'type' => 'fileType',
             ],
-            $select::JOIN_LEFT
+            $select::JOIN_INNER
         );
         $select->where(['f.fileId' => $fileId]);
         $statement = $sql->prepareStatementForSqlObject($select);

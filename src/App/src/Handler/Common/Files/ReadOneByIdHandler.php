@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
-class FindOneByIdHandler implements RequestHandlerInterface
+class ReadOneByIdHandler implements RequestHandlerInterface
 {
     public function __construct(
         Translator $translator,
@@ -32,10 +32,10 @@ class FindOneByIdHandler implements RequestHandlerInterface
 
     /**
      * @OA\Get(
-     *   path="/files/findOneById/{fileId}",
+     *   path="/files/readOneById/{fileId}",
      *   tags={"Common"},
      *   summary="Find ",
-     *   operationId="files_findOne",
+     *   operationId="files_readOne",
      *
      *   @OA\Parameter(
      *       in="path",
@@ -80,14 +80,7 @@ class FindOneByIdHandler implements RequestHandlerInterface
             }
             $response = new Response('php://temp', 200);
             $response->getBody()->write($row['data']);
-            $response = $response->withHeader('Pragma', 'public');
-            $response = $response->withHeader('Expires', 0);
-            $response = $response->withHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
-            $response = $response->withHeader('Content-Type', 'application/force-download');
-            $response = $response->withHeader('Content-Type', 'application/octet-stream');
-            $response = $response->withHeader('Content-Type', 'application/download');
-            $response = $response->withHeader('Content-Disposition', 'attachment; filename="'.$row['name'].'"');
-            $response = $response->withHeader('Content-Transfer-Encoding', 'binary');
+            $response = $response->withHeader('Content-Type', (string)$row['type']);
             return $response;
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

@@ -11,7 +11,7 @@ use Laminas\Filter\StringTrim;
 use Laminas\Validator\Db\RecordExists;
 use Laminas\Db\Adapter\AdapterInterface;
 
-class DownloadFilter extends InputFilter
+class ReadFileFilter extends InputFilter
 {
     public function __construct(AdapterInterface $adapter)
     {

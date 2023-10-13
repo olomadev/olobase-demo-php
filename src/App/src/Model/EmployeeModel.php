@@ -18,17 +18,23 @@ class EmployeeModel
     private $adapter;
     private $employees;
     private $employeeChildren;
+    private $employeeFiles;
+    private $files;
     private $columnFilters;
     private $concatFunction;
 
     public function __construct(
         TableGatewayInterface $employees,
         TableGatewayInterface $employeeChildren,
+        TableGatewayInterface $employeeFiles,
+        TableGatewayInterface $files,
         ColumnFiltersInterface $columnFilters
     ) {
         $this->adapter = $employees->getAdapter();
         $this->employees = $employees;
         $this->employeeChildren = $employeeChildren;
+        $this->employeeFiles = $employeeFiles;
+        $this->files = $files;
         $this->conn = $this->adapter->getDriver()->getConnection();
         $this->columnFilters = $columnFilters;
     }
@@ -150,8 +156,32 @@ class EmployeeModel
         $resultSet = $statement->execute();
         $employeeChildren = iterator_to_array($resultSet);
         $statement->getResource()->closeCursor();
-
         $row['employeeChildren'] = $employeeChildren;
+
+        // files
+        // 
+        $sql    = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(
+            [
+                'id' => 'fileId',
+                'name' => 'fileName',
+                'size' => 'fileSize',
+                'type' => 'fileType',
+            ]
+        );
+        $select->from(['ef' => 'employeeFiles']);
+        $select->join(['f' => 'files'], 'f.fileId = ef.fileId', 
+            [
+                'data' => new Expression("CONCAT('data:', ef.fileType, ';base64,', TO_BASE64(data))")
+            ],
+        $select::JOIN_LEFT);
+        $select->where(['employeeId' => $employeeId]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+        $row['files'] = iterator_to_array($resultSet);
+        $statement->getResource()->closeCursor();
         return $row;
     }
 
@@ -321,11 +351,27 @@ class EmployeeModel
             $data['employees']['createdAt'] = date('Y-m-d H:i:s');
             $this->employees->insert($data['employees']);
 
+            // children
             if (! empty($data['employeeChildren'])) {
                 foreach ($data['employeeChildren'] as $val) {
                     $val['employeeId'] = $employeeId;
                     $this->employeeChildren->insert($val);
                 }
+            }
+            // files 
+            foreach ($data['files'] as $row) {
+                $fileId = $row['id'];
+                $blobData = $row['data'];
+                $this->files->insert(['fileId' => $fileId, 'data' => $blobData]);
+                $this->employeeFiles->insert(
+                    [
+                        'employeeId' => $employeeId,
+                        'fileId' => $fileId,
+                        'fileName' => $row['name'],
+                        'fileSize' => $row['size'],
+                        'fileType' => $row['type'],
+                    ]
+                );
             }
             $this->conn->commit();
         } catch (Exception $e) {
@@ -342,12 +388,33 @@ class EmployeeModel
             $this->employees->update($data['employees'], ['employeeId' => $employeeId]);
 
             // delete children
+            // 
             $this->employeeChildren->delete(['employeeId' => $employeeId]);
             if (! empty($data['employeeChildren'])) {
                 foreach ($data['employeeChildren'] as $val) {
                     $val['employeeId'] = $employeeId;
                     $this->employeeChildren->insert($val);
                 }
+            }
+            // delete files
+            // 
+            $this->deleteFiles($employeeId);
+            //
+            // update employee files 
+            // 
+            foreach ($data['files'] as $row) {
+                $fileId = $row['id'];
+                $blobData = $row['data'];
+                $this->files->insert(['fileId' => $fileId, 'data' => $blobData]);
+                $this->employeeFiles->insert(
+                    [
+                        'employeeId' => $employeeId,
+                        'fileId' => $fileId,
+                        'fileName' => $row['name'],
+                        'fileSize' => $row['size'],
+                        'fileType' => $row['type'],
+                    ]
+                );
             }
             $this->conn->commit();
         } catch (Exception $e) {
@@ -362,11 +429,34 @@ class EmployeeModel
             $this->conn->beginTransaction();
             $this->employees->delete(['employeeId' => $employeeId]);
             $this->employeeChildren->delete(['employeeId' => $employeeId]);
+            $this->deleteFiles($employeeId);
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
         }
+    }
+
+    public function deleteFiles($employeeId)
+    {
+        // select delete files
+        //
+        $sql = new Sql($this->adapter);
+        $select = $sql->select()
+            ->from('employeeFiles')
+            ->where(['employeeId' => $employeeId]);
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+        $files = iterator_to_array($resultSet);
+        $statement->getResource()->closeCursor();
+        //
+        // delete files & employee files
+        // 
+        foreach ($files as $file) {
+            $this->files->delete(['fileId' => $file['fileId']]);
+        }
+        $this->employeeFiles->delete(['employeeId' => $employeeId]);
     }
 
     public function getAdapter() : AdapterInterface

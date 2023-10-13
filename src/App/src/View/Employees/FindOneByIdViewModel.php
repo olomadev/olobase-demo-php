@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Employees;
+namespace App\View\Employees;
 
 class FindOneByIdViewModel
 {
@@ -25,6 +25,7 @@ class FindOneByIdViewModel
             'employmentStartDate' => $row['employmentStartDate'],
             'employmentEndDate' => $row['employmentEndDate'],
             'employeeChildren' => $row['employeeChildren'],
+            'files' => (array)$row['files'],
             'createdAt' => (string)$row['createdAt'],
         ];
         return $data;

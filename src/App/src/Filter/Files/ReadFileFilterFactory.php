@@ -8,10 +8,10 @@ use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
-class DownloadFilterFactory implements FactoryInterface
+class ReadFileFilterFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new DownloadFilter($container->get(AdapterInterface::class));
+        return new ReadFileFilter($container->get(AdapterInterface::class));
     }
 }

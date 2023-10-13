@@ -9,7 +9,9 @@ use App\Filter\InputFilter;
 use App\Filter\ObjectInputFilter;
 use App\Filter\CollectionInputFilter;
 use App\Filter\Utils\ToDate;
+use App\Filter\Utils\ToBlob;
 use App\Filter\Utils\MbUcFirstFilter;
+use App\Validator\BlobFileUploadMultiple;
 use Laminas\Validator\Db\RecordExists;
 use Laminas\Validator\Db\NoRecordExists;
 use Laminas\Filter\ToInt;
@@ -163,6 +165,25 @@ class SaveFilter extends InputFilter
                         'format' => 'Y-m-d',
                         'strict' => true,
                     ]
+                ],
+            ],
+        ]);
+        $this->add([
+            'name' => 'files',
+            'required' => false,
+            'filters' => [
+                ['name' => ToBlob::class],
+            ],
+            'validators' => [
+                [
+                    'name' => BlobFileUploadMultiple::class,
+                    'options' => [
+                        'operation' => HTTP_METHOD == 'POST' ? 'create' : 'update',
+                        'max_allowed_upload' => 2097152,  // 2 mega bytes
+                        'mime_types' => [
+                            'image/png', 'image/jpeg', 'image/gif',
+                        ],
+                    ],
                 ],
             ],
         ]);

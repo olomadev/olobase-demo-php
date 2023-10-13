@@ -84,4 +84,34 @@ class EmployeeSave
     *  );
     */
     public $employeeChildren;
+    /**
+    *  @var array
+    *  @OA\Property(
+    *      type="array",
+    *      @OA\Items(
+    *           @OA\Property(
+    *             property="id",
+    *             type="string",
+    *           ),
+    *           @OA\Property(
+    *             property="size",
+    *             type="number",
+    *           ),
+    *           @OA\Property(
+    *             property="name",
+    *             type="string",
+    *           ),
+    *           @OA\Property(
+    *             property="data",
+    *             type="string",
+    *           ),
+    *           @OA\Property(
+    *             property="type",
+    *             type="string",
+    *           ),
+    *     ),
+    *  );
+    */
+    public $files;
+
 }

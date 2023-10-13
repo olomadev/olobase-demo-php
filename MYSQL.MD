@@ -15,6 +15,14 @@ sudo systemctl enable mysql
 sudo mysql_secure_installation
 ```
 
+### Enable/Disable Full Group By Mode
+
+https://stackoverflow.com/questions/23921117/disable-only-full-group-by
+
+```sql
+SET PERSIST sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+```
+
 ### For local development
  
 ```sh
@@ -111,7 +119,3 @@ DROP USER 'demo'@'188.166.34.93';
 
 https://www.configserverfirewall.com/ubuntu-linux/enable-mysql-remote-access-ubuntu/
 
-
-### Activating Group by
-
-SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));

@@ -17,7 +17,7 @@ define('CACHE_TMP_FILE_KEY', 'tmpFileKey_');
 function cleanBase64Image($value) {
     if (strpos($value, ",") > 0) {
         $exp = explode(",", $value);
-        return $exp[1];
+        return trim($exp[1]);
     }
     return $value;
 }

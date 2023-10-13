@@ -135,5 +135,6 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/currencies/findAll', App\Handler\Common\Currencies\FindAllHandler::class, ['GET']);
     $app->route('/api/areacodes/findAll', App\Handler\Common\AreaCodes\FindAllHandler::class, ['GET']);
     $app->route('/api/files/findOneById/:fileId', App\Handler\Common\Files\FindOneByIdHandler::class, ['GET']);
+    $app->route('/api/files/readOneById/:fileId', App\Handler\Common\Files\ReadOneByIdHandler::class, ['GET']);
 
 };

@@ -73,7 +73,7 @@ class ConfigProvider
                     Filter\JobTitleLists\FileUploadFilter::class => InvokableFactory::class,
                     Filter\JobTitleLists\ImportFilter::class => Filter\JobTitleLists\ImportFilterFactory::class,
                     // Files
-                    Filter\Files\DownloadFilter::class => Filter\Files\DownloadFilterFactory::class,
+                    Filter\Files\ReadFileFilter::class => Filter\Files\ReadFileFilterFactory::class,
                 ],
             ],
         ];
@@ -119,6 +119,7 @@ class ConfigProvider
                 Handler\Common\Currencies\FindAllHandler::class => Handler\Common\Currencies\FindAllHandlerFactory::class,
                 Handler\Common\AreaCodes\FindAllHandler::class => Handler\Common\AreaCodes\FindAllHandlerFactory::class,
                 Handler\Common\Files\FindOneByIdHandler::class => Handler\Common\Files\FindOneByIdHandlerFactory::class,
+                Handler\Common\Files\ReadOneByIdHandler::class => Handler\Common\Files\ReadOneByIdHandlerFactory::class,
                 
                 // auth
                 Handler\Auth\TokenHandler::class => Handler\Auth\TokenHandlerFactory::class,
@@ -217,10 +218,14 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $employees = new TableGateway('employees', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $employeeChildren = new TableGateway('employeeChildren', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    $employeeFiles = new TableGateway('employeeFiles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    $files = new TableGateway('files', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeModel(
                         $employees,
                         $employeeChildren,
+                        $employeeFiles,
+                        $files,
                         $columnFilters
                     );
                 },
@@ -230,6 +235,11 @@ class ConfigProvider
                     $cacheStorage = $container->get(StorageInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeGradeModel($employeeGrades, $cacheStorage, $columnFilters);
+                },
+                Model\FileModel::class => function ($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $employeeFiles = new TableGateway('employeeFiles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    return new Model\FileModel($dbAdapter, $employeeFiles);
                 },
                 Model\JobTitleModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);

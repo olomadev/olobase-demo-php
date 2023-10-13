@@ -5,12 +5,12 @@ namespace App\Validator;
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Laminas\Validator\Exception\InvalidArgumentException;
 use Laminas\Validator\AbstractValidator;
-
 /**
- * Validate specifications array when we create the consultants
+ * Validate file input array
  */
-class Base64FileUpload extends AbstractValidator
+class BlobFileUploadMultiple extends AbstractValidator
 {
+    const EMPTY_FILE_ID = 'emptyFileId';
     const EMPTY_FILE_CONTENT = 'emptyFileContent';
     const EMPTY_MIME_TYPES_OPTION = 'emptyFileMimeTypesOption';
     const EMPTY_MAX_ALLOWED_UPLOAD_OPTION = 'emptyMaxAllowedUploadOption';
@@ -22,6 +22,7 @@ class Base64FileUpload extends AbstractValidator
      * @var array
      */
     protected $messageTemplates = [
+        Self::EMPTY_FILE_ID => 'Empty file id',
         Self::EMPTY_FILE_CONTENT => 'Empty file content',
         Self::EMPTY_MAX_ALLOWED_UPLOAD_OPTION => 'Empty "max_allowed_upload" option',
         Self::EMPTY_MIME_TYPES_OPTION => 'Empty file "mime_types" option',
@@ -67,45 +68,40 @@ class Base64FileUpload extends AbstractValidator
         $maxAllowedUpload = (int)$this->options['max_allowed_upload'];
         $allowedFileMimeTypes = (array)$this->options['mime_types'];
 
-        // pass binary content control for update and empty data
+        // Parse & validate files
         // 
-        if ($operation == 'update' && empty($value)) { // allow to empty file, for delete delete operations
-            return true;
-        }
-        if (empty($value)) {
-            $this->error(Self::EMPTY_FILE_CONTENT);
-            return false;
-        }
-        $value = Self::cleanBase64Data($value);
-        $binaryContent = base64_decode($value);
-        if (false == $binaryContent) {
-            $this->error(Self::INVALID_FILE_CONTENT);
-            return false;
-        }
-        if (strlen($binaryContent) > $maxAllowedUpload) {
-            $this->error(Self::MAX_ALLOWED_UPLOAD_SIZE_EXCEED);
-            return false;
-        }
-        // https://packagist.org/packages/league/mime-type-detection
-        //
-        $detector = new FinfoMimeTypeDetector;
-        $realMimeType = $detector->detectMimeTypeFromBuffer($binaryContent);
-        if (false == in_array($realMimeType, $allowedFileMimeTypes)) {
-            $this->error(Self::INVALID_FILE_MIME_TYPE);
-            return false;
-        }
+        foreach ($value as $k => $v) {
+            if (empty($v['id'])) {
+                $this->error(Self::EMPTY_FILE_ID);
+                return false;
+            }
+            // pass binary content control for empty data
+            // 
+            if (empty($v['data']) && $operation == 'update') {
+                return true;
+            }
+            if (false == $v['data'] || $v['data'] === "false") {
+                $this->error(Self::INVALID_FILE_CONTENT);
+                return false;
+            }
+            if (empty($v['data'])) {
+                $this->error(Self::EMPTY_FILE_CONTENT);
+                return false;
+            }
+            $binaryContent = $v['data'];
+            if (strlen($binaryContent) > $maxAllowedUpload) {
+                $this->error(Self::MAX_ALLOWED_UPLOAD_SIZE_EXCEED);
+                return false;
+            }
+            // https://packagist.org/packages/league/mime-type-detection
+            //
+            $detector = new FinfoMimeTypeDetector;
+            $realMimeType = $detector->detectMimeTypeFromBuffer($binaryContent);
+            if (false == in_array($realMimeType, $allowedFileMimeTypes)) {
+                $this->error(Self::INVALID_FILE_MIME_TYPE);
+                return false;
+            }
+        };
         return true;
     }
-
-    // strip "data:image/jpeg;base64," base64 code mime type
-    // 
-    static function cleanBase64Data($value)
-    {
-        if (strpos($value, ",") > 0) {
-            $exp = explode(",", $value);
-            return $exp[1];
-        }
-        return $value;
-    }
-
 }

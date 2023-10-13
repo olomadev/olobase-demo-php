@@ -12,7 +12,7 @@ use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
-class FindOneByIdHandlerFactory
+class ReadOneByIdHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
@@ -23,6 +23,6 @@ class FindOneByIdHandlerFactory
         $pluginManager = $container->get(InputFilterPluginManager::class);
         $inputFilter   = $pluginManager->get(ReadFileFilter::class);
 
-        return new FindOneByIdHandler($translator, $fileModel, $inputFilter, $error);
+        return new ReadOneByIdHandler($translator, $fileModel, $inputFilter, $error);
     }
 }
