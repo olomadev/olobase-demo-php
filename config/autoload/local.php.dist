@@ -1,13 +1,65 @@
 <?php
 
 /**
- * Local configuration.
+ * Development-only configuration.
  *
- * Copy this file to `local.php` and change its settings as required.
- * `local.php` is ignored by git and safe to use for local and sensitive data like usernames and passwords.
+ * Put settings you want enabled when under development mode in this file, and
+ * check it into your repository.
+ *
+ * Developers on your team will then automatically enable them by calling on
+ * `composer development-enable`.
  */
 
 declare(strict_types=1);
 
+use Laminas\ConfigAggregator\ConfigAggregator;
+
 return [
+    // Toggle the configuration cache. Set this to boolean false, or remove the
+    // directive, to disable configuration caching. Toggling development mode
+    // will also disable it by default; clear the configuration cache using
+    // `composer clear-config-cache`.
+    ConfigAggregator::ENABLE_CACHE => false,
+
+    // Enable debugging; typically used to provide debugging information within templates.
+    'debug' => true,
+    'jwt_encoder' => [
+        //  use below the code to create secret key:
+        //  php -r "echo base64_encode(openssl_random_pseudo_bytes(32)).PHP_EOL;"
+        //  
+        'secret_key' => '',
+    ],
+    'token' => [
+        'access_token_duration_in_minutes' => 5, // in minutes for how long the token will be valid in the app, you can reduce the time for high security
+        'refresh_token_max_usage' => 0, // maximum number of times a token can be used, 0 = unlimited
+    ],
+	'db' => [
+	 	'driver'   => 'Pdo_Mysql',
+	    'driver_options' => [
+	        // PDO::ATTR_PERSISTENT => true,
+	        // https://www.php.net/manual/tr/mysqlinfo.concepts.buffering.php
+	        // 
+	        PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,  // should be false
+
+			// https://stackoverflow.com/questions/20079320/php-pdo-mysql-how-do-i-return-integer-and-numeric-columns-from-mysql-as-int
+			// 
+	        PDO::ATTR_EMULATE_PREPARES => false,
+	        PDO::ATTR_STRINGIFY_FETCHES => false,
+	        
+	        // Enable exceptions
+	        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    	],
+        'database' => '',
+        'hostname' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'platform' => 'Mysql',
+
+	],
+	'redis' => [
+        'host' => '127.0.0.1',
+		'port' => '6379',
+		'timeout' => 60,
+		'password' => '',
+	]
 ];

@@ -85,6 +85,12 @@ sudo systemctl enable redis-server
 sudo apt install php-redis
 ```
 
+```sh
+vim /etc/redis/redis.conf
+bind 0.0.0.0
+protected-mode no
+```
+
 Remove all keys
 
 ```
