@@ -98,7 +98,6 @@ class ConfigProvider
                 \App\Model\PermissionModel::class => PermissionModelInterface::class,
             ],
             'factories' => [
-
                 // Classes
                 //
                 'MvcTranslator' => Container\ValidatorTranslatorFactory::class,
@@ -112,6 +111,7 @@ class ConfigProvider
                 // Handlers
                 //------------------------------------------
                 // common
+                Handler\Common\Stream\EventsHandler::class => Handler\Common\Stream\EventsHandlerFactory::class,
                 Handler\Common\Years\FindAllHandler::class => Handler\Common\Years\FindAllHandlerFactory::class,
                 Handler\Common\Months\FindAllHandler::class => Handler\Common\Months\FindAllHandlerFactory::class,
                 Handler\Common\Cities\FindAllHandler::class => Handler\Common\Cities\FindAllHandlerFactory::class,
@@ -120,7 +120,7 @@ class ConfigProvider
                 Handler\Common\AreaCodes\FindAllHandler::class => Handler\Common\AreaCodes\FindAllHandlerFactory::class,
                 Handler\Common\Files\FindOneByIdHandler::class => Handler\Common\Files\FindOneByIdHandlerFactory::class,
                 Handler\Common\Files\ReadOneByIdHandler::class => Handler\Common\Files\ReadOneByIdHandlerFactory::class,
-                
+
                 // auth
                 Handler\Auth\TokenHandler::class => Handler\Auth\TokenHandlerFactory::class,
                 Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
@@ -181,7 +181,6 @@ class ConfigProvider
                 Handler\JobTitleLists\UploadHandler::class => Handler\JobTitleLists\UploadHandlerFactory::class,
                 Handler\JobTitleLists\PreviewHandler::class => Handler\JobTitleLists\PreviewHandlerFactory::class,
                 Handler\JobTitleLists\ImportHandler::class => Handler\JobTitleLists\ImportHandlerFactory::class,
-                Handler\JobTitleLists\StatusHandler::class => Handler\JobTitleLists\StatusHandlerFactory::class,
                 Handler\JobTitleLists\ResetHandler::class => Handler\JobTitleLists\ResetHandlerFactory::class,
                 Handler\JobTitleLists\RemoveHandler::class => Handler\JobTitleLists\RemoveHandlerFactory::class,
                 Handler\JobTitleLists\UpdateHandler::class => Handler\JobTitleLists\UpdateHandlerFactory::class,
