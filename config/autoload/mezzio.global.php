@@ -13,10 +13,9 @@ return [
     // will also disable it by default; clear the configuration cache using
     // `composer clear-config-cache`.
     ConfigAggregator::ENABLE_CACHE => false,
-
     // Enable debugging; typically used to provide debugging information within templates.
     'debug' => false,
-    'license_key' => '',
+    // authentication configuration
     'authentication' => [
         'tablename' => 'users',
         'username' => 'email',
