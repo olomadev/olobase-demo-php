@@ -6,6 +6,7 @@ namespace App\Handler\Employees;
 
 use App\Model\EmployeeModel;
 use App\Entity\EmployeesEntity;
+use App\Entity\EmployeeChildrenEntity;
 use App\Schema\Employees\EmployeeSave;
 use App\Filter\Employees\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -69,7 +70,8 @@ class UpdateHandler implements RequestHandlerInterface
             $data = $this->dataManager->getEntityData(
                 EmployeeSave::class,
                 [
-                    EmployeesEntity::TABLE_NAME => EmployeesEntity::class,
+                    'employees' => EmployeesEntity::class,
+                    'employeeChildren' => EmployeeChildrenEntity::class,
                 ]
             );
             $this->employeeModel->update($data);

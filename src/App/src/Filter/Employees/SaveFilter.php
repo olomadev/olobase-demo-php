@@ -187,10 +187,6 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-
-        // print_r($employeeGrades);
-        // die;
-
         $objectFilter = new ObjectInputFilter();
         $objectFilter->add([
             'name' => 'id',

@@ -31,7 +31,7 @@ class JwtAuthenticationMiddleware implements MiddlewareInterface
      * {@inheritDoc}
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
-    {
+    {        
         try {
             $user = $this->auth->authenticate($request);
             if (null !== $user) {

@@ -238,17 +238,23 @@ class EmployeeModel
         $select->from(['e' => 'employees']);
         $select->join(['c' => 'companies'], 'c.companyId = e.companyId', 
             [
-                'companyId' => new Expression("JSON_OBJECT('id', c.companyId, 'name', c.companyShortName)"),
+                'companyId' => new Expression(
+                    "if(c.companyId IS NULL, null, JSON_OBJECT('id', c.companyId, 'name', c.companyShortName))"
+                ),
             ],
         $select::JOIN_LEFT);
         $select->join(['j' => 'jobTitles'], 'j.jobTitleId = e.jobTitleId', 
             [
-                'jobTitleId' => new Expression("JSON_OBJECT('id', j.jobTitleId, 'name', j.jobTitleName)"),
+                'jobTitleId' => new Expression(
+                    "if(j.jobTitleId IS NULL, null, JSON_OBJECT('id', j.jobTitleId, 'name', j.jobTitleName))"
+                ),
             ],
         $select::JOIN_LEFT);
         $select->join(['g' => 'employeeGrades'], 'g.gradeId = e.gradeId', 
             [
-                'gradeId' => new Expression("JSON_OBJECT('id', g.gradeId, 'name', g.gradeName)"),
+                'gradeId' => new Expression(
+                    "if(g.gradeId IS NULL, null, JSON_OBJECT('id', g.gradeId, 'name', g.gradeName))"
+                ),
             ],
         $select::JOIN_LEFT);
 
