@@ -6,7 +6,7 @@ namespace App\Filter\Account;
 
 use App\Filter\InputFilter;
 use App\Filter\Utils\ToFile;
-use App\Validator\Base64FileUpload;
+use App\Validator\BlobFileUpload;
 use Laminas\Filter\StringTrim;
 use App\Validator\Db\RecordExists;
 use App\Validator\Db\NoRecordExists;
@@ -107,12 +107,12 @@ class SaveFilter extends InputFilter
             ],
             'validators' => [
                 [
-                    'name' => Base64FileUpload::class,
+                    'name' => BlobFileUpload::class,
                     'options' => [
                         'operation' => HTTP_METHOD == 'POST' ? 'create' : 'update',
                         'max_allowed_upload' => 2097152,  // 2 mega bytes
                         'mime_types' => [
-                            'image/png', 'image/jpeg', 'image/gif',
+                            'image/png', 'image/jpeg', 'image/jpg', 'image/gif',
                         ],
                     ],
                 ]

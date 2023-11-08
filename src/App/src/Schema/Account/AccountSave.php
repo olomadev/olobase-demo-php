@@ -38,8 +38,8 @@ class AccountSave
      */
     public $emailActivation;
     /**
-     * @var string
-     * @OA\Property()
-     */
+    * @var string
+    * @OA\Property()
+    */
     public $avatarImage;
 }

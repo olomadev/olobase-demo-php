@@ -61,7 +61,7 @@
         "laminas/laminas-servicemanager": "^3.13",
         "laminas/laminas-stdlib": "^3.10",
         "laminas/laminas-zendframework-bridge": "^1.5",
-        "league/mime-type-detection": "^1.11",
+        "league/mime-type-detection": "*",
         "mezzio/mezzio": "^3.11",
         "mezzio/mezzio-authentication": "^1.4",
         "mezzio/mezzio-authentication-laminasauthentication": "^1.3",

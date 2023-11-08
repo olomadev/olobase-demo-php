@@ -203,13 +203,6 @@ class UserModel
     {
         $userId = $data['id'];
         $data['users']['userId'] = $userId;
-        
-        // decode base64 image if exists
-        //
-        $avatarImageBlob = null;
-        if (! empty($data['users']['avatarImage'])) {
-            $avatarImageBlob = base64_decode($data['users']['avatarImage']);
-        }
         try {
             $this->conn->beginTransaction();
             $this->users->insert($data['users']);
@@ -218,7 +211,7 @@ class UserModel
                     $this->userRoles->insert(['userId' => $userId, 'roleId' => $val['id']]);
                 }
             }
-            if ($avatarImageBlob) {
+            if (! empty($data['avatarImage'])) {
                 $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $avatarImageBlob]);
             }
             $this->conn->commit();
@@ -231,14 +224,6 @@ class UserModel
     public function update(array $data)
     {
         $userId = $data['id'];
-
-        // decode base64 image if exists
-        //
-        $avatarImageBlob = null;
-        if (! empty($data['users']['avatarImage'])) {
-            $avatarImageBlob = base64_decode($data['users']['avatarImage']);
-        }
-        unset($data['users']['avatarImage']); // remove it from insert array
         try {
             $this->conn->beginTransaction();
             if (! empty($data['users']['password'])) {
@@ -255,8 +240,8 @@ class UserModel
                 }
             }
             $this->userAvatars->delete(['userId' => $userId]);
-            if ($avatarImageBlob) {
-                $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $avatarImageBlob]);
+            if (! empty($data['avatarImage'])) {
+                $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $data['avatarImage']]);
             }
             $this->conn->commit();
         } catch (Exception $e) {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\View\Employees;
+namespace App\Handler\Employees;
 
 class FindOneByIdViewModel
 {

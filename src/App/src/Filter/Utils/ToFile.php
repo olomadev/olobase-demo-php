@@ -21,6 +21,8 @@ class ToFile extends AbstractFilter
         if (empty($value)) {
             return $value;
         }
+        // put your supported file mime types here
+        // 
         // strip "data:image/jpeg;base64," base64 code mime type
         // 
         $patterns = [
@@ -34,6 +36,6 @@ class ToFile extends AbstractFilter
             'data:application/vnd.oasis.opendocument.text;base64,',
         ];
         $value = str_replace($patterns, '', $value);
-        return $value;
+        return base64_decode($value);
     }
 }
