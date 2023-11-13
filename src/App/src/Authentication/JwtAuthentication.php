@@ -22,6 +22,22 @@ use function strtoupper;
 class JwtAuthentication implements AuthenticationInterface
 {
     private const HEADER_VALUE_PATTERN = "/Bearer\s+(.*)$/i";
+    private const AUTHENTICATIN_REQUIRED = 'authenticationRequired';
+    private const USERNAME_OR_PASSWORD_INCORRECT = 'usernameOrPasswordIncorrect';
+    private const ACCOUNT_IS_INACTIVE_OR_SUSPENDED = 'accountIsInactiveOrSuspended';
+    private const USERNAME_OR_PASSWORD_FIELDS_NOT_GIVEN = 'usernameOrPasswordNotGiven';
+    private const NO_ROLE_DEFINED_ON_THE_ACCOUNT = 'noRoleDefinedOnAccount';
+
+    /**
+     * @var array
+     */
+    protected static $messageTemplates = [
+        Self::AUTHENTICATIN_REQUIRED => 'Authentication required. Please sign in to your account',
+        Self::USERNAME_OR_PASSWORD_INCORRECT => 'Username or password is incorrect',
+        Self::ACCOUNT_IS_INACTIVE_OR_SUSPENDED => 'This account is awaiting approval or suspended',
+        Self::USERNAME_OR_PASSWORD_FIELDS_NOT_GIVEN => 'Username and password fields must be given',
+        Self::NO_ROLE_DEFINED_ON_THE_ACCOUNT => 'There is no role defined for this user',
+    ];
 
     /**
      * @var Laminas auth adapter
@@ -98,7 +114,7 @@ class JwtAuthentication implements AuthenticationInterface
     public function authenticate(ServerRequestInterface $request) : ?UserInterface
     {
         if (! $this->validate($request)) {
-            $this->error = 'Authentication required. Please sign in to your account';
+            $this->error(Self::AUTHENTICATIN_REQUIRED);
             return null;
         }
         $payload = $this->getPayload()['data'];
@@ -106,38 +122,26 @@ class JwtAuthentication implements AuthenticationInterface
         return ($this->userFactory)($data['userId'], $data['identity'], $data['roles'], (array)$data['details']);
     }
 
-    public function unauthorizedResponse(ServerRequestInterface $request) : ResponseInterface
-    {
-        $errorMessage = $this->getError();
-        return new JsonResponse(
-            ['data' => ['error' => $this->translator->translate($errorMessage)]],
-            401,
-            ['WWW-Authenticate' => 'Bearer realm="Jwt token"']
-        );
-    }
-
     public function initAuthentication(ServerRequestInterface $request) : ?UserInterface
     {
-        $params = $request->getParsedBody();
-        if (isset($params['username']) && isset($params['email'])) { // signup sayfasında her ikisi birden var
-            $username = 'username';
-        } else if (isset($params['email'])) { // sadece email geliyorsa request de
-            $username = 'email';
-        } else if (isset($params['username'])) { // sadece username geliyorsa request de
-            $username = 'username';
-        }
-        $password = $this->config['password'] ?? 'password';
-
-        if (! isset($params[$username]) || ! isset($params[$password])) {
-            $this->error = 'Username and password fields must be given';
+        $post = $request->getParsedBody();
+        $usernameField = $this->config['form']['username'];
+        $passwordField = $this->config['form']['password'];
+        
+        // credentials are given ? 
+        //
+        if (! isset($post[$usernameField]) || ! isset($post[$passwordField])) {
+            $this->error(Self::USERNAME_OR_PASSWORD_FIELDS_NOT_GIVEN);
             return null;
         }
-        $this->authAdapter->setIdentity($params[$username]);
-        $this->authAdapter->setCredential($params[$password]);
+        $this->authAdapter->setIdentity($post[$usernameField]);
+        $this->authAdapter->setCredential($post[$passwordField]);
 
+        // credentials are correct ? 
+        //
         $result = $this->authAdapter->authenticate();
         if (! $result->isValid()) {
-            $this->error = 'Username or password is incorrect';
+            $this->error(Self::USERNAME_OR_PASSWORD_INCORRECT); 
             return null;
         }
         $remoteAddress = new RemoteAddress;
@@ -150,15 +154,14 @@ class JwtAuthentication implements AuthenticationInterface
         // user is active ? 
         //
         if (empty($rowObject->active)) {
-            $this->error = 'This account is inactive or awaiting approval';
+            $this->error(Self::ACCOUNT_IS_INACTIVE_OR_SUSPENDED);
             return null;
         }
         // is the role exists ?
         // 
         $roles = $this->authModel->findRolesById($rowObject->userId);
-
         if (empty($roles)) {
-            $this->error = 'There is no role defined for this user';
+            $this->error(Self::NO_ROLE_DEFINED_ON_THE_ACCOUNT);
             return null;
         }
         $details = [
@@ -187,11 +190,6 @@ class JwtAuthentication implements AuthenticationInterface
         return $this->payload !== null;
     }
 
-    public function getError()
-    {
-        return $this->error;
-    }
-
     private function getToken() : string
     {
         return $this->token;
@@ -208,7 +206,7 @@ class JwtAuthentication implements AuthenticationInterface
         if (empty($authHeader)) {
             return null;
         }
-        if (preg_match(self::HEADER_VALUE_PATTERN, $authHeader[0], $matches)) {
+        if (preg_match(Self::HEADER_VALUE_PATTERN, $authHeader[0], $matches)) {
             return $matches[1];
         }
         return null;
@@ -217,6 +215,28 @@ class JwtAuthentication implements AuthenticationInterface
     public function getTokenModel()
     {
         return $this->tokenModel;
+    }
+
+    public function getError()
+    {
+        return $this->error;
+    }
+
+    public function unauthorizedResponse(ServerRequestInterface $request) : ResponseInterface
+    {
+        return new JsonResponse(
+            ['data' => ['error' => $this->getError()]],
+            401,
+            ['WWW-Authenticate' => 'Bearer realm="Jwt token"']
+        );
+    }
+
+    protected function error(string $errorKey)
+    {
+        if (empty(Self::$messageTemplates[$errorKey])) {
+            $this->error = $errorKey;
+        }
+        $this->error = $this->translator->translate(Self::$messageTemplates[$errorKey]);
     }
     
 }

@@ -34,6 +34,7 @@ class AuthenticationAdapter extends CallbackCheckAdapter
 
         // ->where(['client_id' => CLIENT_ID]);
 
+        // Debug SQL Output:
         // echo $dbSelect->getSqlString($this->laminasDb->getPlatform());
         // die;
 

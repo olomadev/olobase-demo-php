@@ -15,6 +15,7 @@ $aggregator = new ConfigAggregator([
     \Mezzio\Authentication\LaminasAuthentication\ConfigProvider::class,
     \Mezzio\Authentication\ConfigProvider::class,
     \Laminas\I18n\ConfigProvider::class,
+    \Laminas\Mvc\I18n\ConfigProvider::class,
     \Laminas\Cache\Storage\Adapter\Redis\ConfigProvider::class,
     \Mezzio\Tooling\ConfigProvider::class,
     \Mezzio\Cors\ConfigProvider::class,

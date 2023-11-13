@@ -100,7 +100,6 @@ class ConfigProvider
             'factories' => [
                 // Classes
                 //
-                'MvcTranslator' => Container\ValidatorTranslatorFactory::class,
                 Authentication\JwtAuthentication::class => Container\JwtAuthenticationFactory::class,
                 Middleware\ClientMiddleware::class => Middleware\ClientMiddlewareFactory::class,
                 Middleware\JwtAuthenticationMiddleware::class => Middleware\JwtAuthenticationMiddlewareFactory::class,

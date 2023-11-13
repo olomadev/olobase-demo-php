@@ -57,27 +57,4 @@ class ObjectInputFilter extends OptionalInputFilter
         return parent::setData($data ?: []);
     }
 
-    /**
-     * Run validation, or return true if the data was empty
-     *
-     * {@inheritDoc}
-     */
-    // public function isValid($context = null)
-    // {
-    //     $valid = true;
-    //     if (! empty($this->data)) {
-    //         $this->objectMessages = $this->prepareRequiredValidationFailureMessage();
-    //         $valid = false;
-    //     }
-    //     if (! $this->data) {
-    //         return $valid;
-    //     }
-    //     if ($this->data) {
-    //         return parent::isValid($context);
-    //     }
-
-    //     return true;
-    // }
-
-
 }

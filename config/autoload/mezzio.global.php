@@ -20,6 +20,10 @@ return [
         'tablename' => 'users',
         'username' => 'email',
         'password' => 'password',
+        'form' => [
+            'username' => 'username',
+            'password' => 'password',
+        ]
     ],
     'translator' => [
         'locale' => [
