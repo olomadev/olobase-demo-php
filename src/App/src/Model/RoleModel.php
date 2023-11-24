@@ -177,7 +177,9 @@ class RoleModel
             $nest->unnest();
         }
         if ($this->columnFilters->orderDataIsNotEmpty()) {
-            $select->order($this->columnFilters->getOrderData());
+            foreach ($this->columnFilters->getOrderData() as $order) {
+                $select->order(new Expression($order));
+            }
         }
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;

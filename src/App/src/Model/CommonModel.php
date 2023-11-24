@@ -26,8 +26,8 @@ class CommonModel
     )
     {
         $this->cache = $cache;
-        $this->adapter = $adapter;
         $this->config = $config;
+        $this->adapter = $adapter;
     }
     
     public function getAdapter() : AdapterInterface

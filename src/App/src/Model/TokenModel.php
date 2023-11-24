@@ -12,6 +12,7 @@ use Laminas\Db\TableGateway\TableGatewayInterface;
 class TokenModel
 {
     private $users;
+    private $config;
     private $encoder;
     private $refreshToken;
 

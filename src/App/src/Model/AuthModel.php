@@ -17,7 +17,6 @@ class AuthModel
     private $conn;
     private $users;
     private $adapter;
-    private $resources;
     private $simpleCache;
 
     public function __construct(

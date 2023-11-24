@@ -18,6 +18,7 @@ class UserModel
     private $conn;
     private $adapter;
     private $users;
+    private $cache;
     private $userRoles;
     private $userAvatars;
     private $columnFilters;
@@ -116,13 +117,15 @@ class UserModel
                 }
             }
         }
-        // start date filters
+        // date filters
         // 
         $this->columnFilters->setDateFilter('createdAt');
-        // end date filters
+        // orders
         // 
         if ($this->columnFilters->orderDataIsNotEmpty()) {
-            $select->order($this->columnFilters->getOrderData());
+            foreach ($this->columnFilters->getOrderData() as $order) {
+                $select->order(new Expression($order));
+            }
         }
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;

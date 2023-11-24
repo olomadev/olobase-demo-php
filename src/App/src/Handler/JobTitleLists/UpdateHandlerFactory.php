@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\JobTitles;
+namespace App\Handler\JobTitleLists;
 
 use App\Model\JobTitleListModel;
-use App\Filter\JobTitleList\SaveFilter;
+use App\Filter\JobTitleLists\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;

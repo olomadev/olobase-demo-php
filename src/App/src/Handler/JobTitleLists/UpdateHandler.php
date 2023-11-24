@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\JobTitleList;
+namespace App\Handler\JobTitleLists;
 
 use App\Model\JobTitleListModel;
 use App\Entity\JobTitleListEntity;
-use App\Schema\JobTitleList\JobTitleListSave;
-use App\Filter\JobTitleList\SaveFilter;
+use App\Schema\JobTitleLists\JobTitleListSave;
+use App\Filter\JobTitleLists\SaveFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -18,13 +18,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 class UpdateHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private JobTitleListModel $jobTitleModel,
+        private JobTitleListModel $jobTitleListModel,
         private DataManagerInterface $dataManager,
         private SaveFilter $filter,
         private Error $error,
     ) 
     {
-        $this->jobTitleModel = $jobTitleModel;
+        $this->jobTitleListModel = $jobTitleListModel;
         $this->dataManager = $dataManager;
         $this->error = $error;
         $this->filter = $filter;

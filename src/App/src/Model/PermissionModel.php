@@ -98,7 +98,9 @@ class PermissionModel implements PermissionModelInterface
             $nest->unnest();
         }
         if ($this->columnFilters->orderDataIsNotEmpty()) {
-            $select->order($this->columnFilters->getOrderData());
+            foreach ($this->columnFilters->getOrderData() as $order) {
+                $select->order(new Expression($order));
+            }
         } else {
             $select->order(['moduleName ASC', 'route ASC']);
         }

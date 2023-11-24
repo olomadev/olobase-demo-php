@@ -19,7 +19,6 @@ class JobTitleListModel
     private $jobTitles;
     private $jobTitleList;
     private $columnFilters;
-    private $concatFunction;
 
     public function __construct(
         TableGatewayInterface $jobTitles,
@@ -146,7 +145,9 @@ class JobTitleListModel
             }
         }
         if ($this->columnFilters->orderDataIsNotEmpty()) {
-            $select->order($this->columnFilters->getOrderData());
+            foreach ($this->columnFilters->getOrderData() as $order) {
+                $select->order(new Expression($order));
+            }
         }
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;

@@ -21,7 +21,7 @@ class EmployeeModel
     private $employeeFiles;
     private $files;
     private $columnFilters;
-    private $concatFunction;
+    private $childrenFunction;
 
     public function __construct(
         TableGatewayInterface $employees,
@@ -336,7 +336,9 @@ class EmployeeModel
             }
         }
         if ($this->columnFilters->orderDataIsNotEmpty()) {
-            $select->order($this->columnFilters->getOrderData());
+            foreach ($this->columnFilters->getOrderData() as $order) {
+                $select->order(new Expression($order));
+            }
         }
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;
