@@ -27,7 +27,7 @@ class FindAllHandler implements RequestHandlerInterface
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/CommonFindAll),
+     *     @OA\JsonContent(ref="#/components/schemas/CommonFindAll"),
      *   ),
      *   @OA\Response(
      *      response=404,

@@ -54,7 +54,7 @@ class RefreshHandler implements RequestHandlerInterface
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/AuthResultVM"),
+     *     @OA\JsonContent(ref="#/components/schemas/AuthResult"),
      *   ),
      *   @OA\Response(
      *      response=401,

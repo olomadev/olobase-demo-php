@@ -5,7 +5,7 @@ namespace App\Schema\Users;
 /**
  * @OA\Schema()
  */
-class UserFindAllByPagingObject
+class UsersFindAllByPagingObject
 {
     /**
      * @var string

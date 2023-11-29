@@ -1,6 +1,10 @@
 <?php
 
 declare(strict_types=1);
+/**
+ * License activation key
+ */
+define("OLOMA_LICENSE_KEY", "NEL3TF-4BSAMG-XSRFPL-9A941UIDJT");
 
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
@@ -51,6 +55,10 @@ $headers = apache_request_headers();
     // configuration statements
     (require 'config/pipeline.php')($app, $factory, $container);
     (require 'config/routes.php')($app, $factory, $container);
+
+    $eventManager = $container->get(\Laminas\EventManager\EventManagerInterface::class);
+    $loginListener = $container->get(\App\Listener\LoginListener::class);
+    $loginListener->attach($eventManager);
 
     $app->run();
 })();

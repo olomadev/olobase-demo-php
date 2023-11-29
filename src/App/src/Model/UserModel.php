@@ -208,6 +208,9 @@ class UserModel
         $data['users']['userId'] = $userId;
         try {
             $this->conn->beginTransaction();
+            if (! empty($data['users']['password'])) {
+                $data['users']['password'] = password_hash($data['users']['password'], PASSWORD_DEFAULT, ['cost' => 10]);
+            }
             $this->users->insert($data['users']);
             if (! empty($data['userRoles'])) {
                 foreach ($data['userRoles'] as $val) {

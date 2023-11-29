@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App;
 
-use Predis\ClientInterface;
 use Oloma\Php\ColumnFiltersInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface;
 use Oloma\Php\Authorization\PermissionModelInterface;
 
+use Predis\ClientInterface as PredisInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Laminas\EventManager\EventManagerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
@@ -103,9 +104,11 @@ class ConfigProvider
                 Authentication\JwtAuthentication::class => Container\JwtAuthenticationFactory::class,
                 Middleware\ClientMiddleware::class => Middleware\ClientMiddlewareFactory::class,
                 Middleware\JwtAuthenticationMiddleware::class => Middleware\JwtAuthenticationMiddlewareFactory::class,
+                Listener\LoginListener::class => Listener\LoginListenerFactory::class,
                 StorageInterface::class => Container\CacheFactory::class,
                 SimpleCacheInterface::class => Container\SimpleCacheFactory::class,   
-                ClientInterface::class => Container\PredisFactory::class,
+                PredisInterface::class => Container\PredisFactory::class,
+                EventManagerInterface::class => Container\EventManagerFactory::class,
 
                 // Handlers
                 //------------------------------------------
@@ -186,6 +189,10 @@ class ConfigProvider
                 Handler\JobTitleLists\DeleteHandler::class => Handler\JobTitleLists\DeleteHandlerFactory::class,
                 Handler\JobTitleLists\FindAllHandler::class => Handler\JobTitleLists\FindAllHandlerFactory::class,
                 Handler\JobTitleLists\FindAllByPagingHandler::class => Handler\JobTitleLists\FindAllByPagingHandlerFactory::class,
+                // failed logins
+                Handler\FailedLogins\FindAllByPagingHandler::class => Handler\FailedLogins\FindAllByPagingHandlerFactory::class,
+                Handler\FailedLogins\FindAllIpAdressesHandler::class => Handler\FailedLogins\FindAllIpAdressesHandlerFactory::class,
+                Handler\FailedLogins\FindAllUsernamesHandler::class => Handler\FailedLogins\FindAllUsernamesHandlerFactory::class,
 
                 // Models
                 //
@@ -233,6 +240,13 @@ class ConfigProvider
                     $cacheStorage = $container->get(StorageInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
                     return new Model\EmployeeGradeModel($employeeGrades, $cacheStorage, $columnFilters);
+                },
+                Model\FailedLoginModel::class => function ($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $predis = $container->get(PredisInterface::class);
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
+                    $failedLogins = new TableGateway('failedLogins', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    return new Model\FailedLoginModel($failedLogins, $predis, $columnFilters);
                 },
                 Model\FileModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);

@@ -19,19 +19,19 @@ class FindMeHandler implements RequestHandlerInterface
     {
         $this->userModel = $userModel;
     }
-    
+
     /**
      * @OA\Get(
      *   path="/account/findMe",
      *   tags={"Account"},
      *   summary="Find my account data",
      *   operationId="account_findOneById",
-     *  
+     *
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/AccountFindMe),
-     *   ),
+     *     @OA\JsonContent(ref="#/components/schemas/AccountFindMe"),
+     *   )
      *)
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface

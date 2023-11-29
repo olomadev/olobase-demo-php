@@ -34,7 +34,6 @@ return [
     'jobTitleId' => 'Job Title',
     'gradeId' => 'Grade',
     'departmentId' => 'Department',
-    'costCenterId' => 'Cost Center',
     'employementStartDate' => 'Start Date',
     'employementEndDate' => 'End Date',
     'disabilityId' => 'Disability',

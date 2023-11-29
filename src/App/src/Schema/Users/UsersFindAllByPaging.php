@@ -5,7 +5,7 @@ namespace App\Schema\Users;
 /**
  * @OA\Schema()
  */
-class UserFindAllByPaging
+class UsersFindAllByPaging
 {
     /**
      * @var array
@@ -13,7 +13,7 @@ class UserFindAllByPaging
      *      type="array",
      *      @OA\Items(
      *          type="object",
-     *          ref="#/components/schemas/UserFindAllByPagingObject",
+     *          ref="#/components/schemas/UsersFindAllByPagingObject",
      *      ),
      * )
      */

@@ -57,4 +57,11 @@ return [
     'There is no role defined for this user' => 'Bu kullanıcı herhangi bir rol tanımlı değil',
     'Authentication required. Please sign in to your account' => 'Kimlik doğrulama gerekli. Lütfen hesabınıza giriş yapın',
 
+    // Failed Logins
+    // 
+    'BLOCK_30_SECONDS' => 'Çok fazla yanlış giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 30 saniye süreyle durduruldu.',
+    'BLOCK_60_SECONDS' => 'Çok fazla yanlış giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 60 saniye süreyle durduruldu.',
+    'BLOCK_300_SECONDS' => 'Çok fazla hatalı giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 5 dakika süreyle durduruldu.Lütfen şifrenizi sıfırlamayı deneyin.',
+    'BLOCK_1800_SECONDS' => 'Çok fazla yanlış giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 30 dakika süreyle durduruldu.Lütfen şifrenizi sıfırlamayı deneyin.',
+    'BLOCK_86400_SECONDS' => 'Çok fazla hatalı giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 1 gün süreyle durduruldu.Lütfen şifrenizi sıfırlamayı deneyin.',
 ];

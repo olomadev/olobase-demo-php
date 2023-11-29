@@ -64,7 +64,7 @@ class FindAllByPagingHandler implements RequestHandlerInterface
      *   @OA\Response(
      *     response=200,
      *     description="Successful operation",
-     *     @OA\JsonContent(ref="#/components/schemas/EmployeeFindAllByPaging"),
+     *     @OA\JsonContent(ref="#/components/schemas/EmployeesFindAllByPaging"),
      *   ),
      *   @OA\Response(
      *      response=404,

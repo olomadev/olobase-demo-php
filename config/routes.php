@@ -125,6 +125,11 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/jobtitlelists/findAll', [...$auth, [App\Handler\JobTitleLists\FindAllHandler::class]], ['GET']);
     $app->route('/api/jobtitlelists/findAllByPaging', [...$auth, [App\Handler\JobTitleLists\FindAllByPagingHandler::class]], ['GET']);
 
+    // FailedLogins
+    $app->route('/api/failedlogins/findAllByPaging', [...$auth, [App\Handler\FailedLogins\FindAllByPagingHandler::class]], ['GET']);
+    $app->route('/api/failedloginips/findAll', [...$auth, [App\Handler\FailedLogins\FindAllIpAdressesHandler::class]], ['GET']);
+    $app->route('/api/failedloginusernames/findAll', [...$auth, [App\Handler\FailedLogins\FindAllUsernamesHandler::class]], ['GET']);
+
     // Common (public) resources
     // 
     $app->route('/api/stream/events', App\Handler\Common\Stream\EventsHandler::class, ['GET']);

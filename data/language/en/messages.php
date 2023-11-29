@@ -57,4 +57,13 @@ return [
     'This account is inactive or awaiting approval' => 'This account is inactive or awaiting approval',
     'There is no role defined for this user' => 'There is no role defined for this user',
     'Authentication required. Please sign in to your account' => 'Authentication required. Please sign in to your account',
+
+    // Failed Logins
+    // 
+    'BLOCK_30_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 30 seconds for security reasons.',
+    'BLOCK_60_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 60 seconds for security reasons.',
+    'BLOCK_300_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 5 minute for security reasons.Try to reset your password.',
+    'BLOCK_1800_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 30 minute for security reasons.Try to reset your password.',
+    'BLOCK_86400_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 1 day for security reasons.Try to reset your password.',
+
 ];

@@ -6,6 +6,8 @@ namespace App\Authentication;
 
 use App\Model\AuthModel;
 use App\Model\TokenModel;
+use App\Listener\LoginListener;
+use Laminas\EventManager\EventManagerInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
 use Oloma\Php\Exception\BadTokenException;
 use Laminas\I18n\Translator\TranslatorInterface;
@@ -40,24 +42,19 @@ class JwtAuthentication implements AuthenticationInterface
     ];
 
     /**
-     * @var Laminas auth adapter
-     */
-    protected $authAdapter;
-
-    /**
      * @var array
      */
     protected $config;
 
     /**
-     * @var TokenModel
+     * @var Laminas auth adapter
      */
-    protected $tokenModel;
+    protected $authAdapter;
 
     /**
-     * @var callable
+     * @var Translator
      */
-    protected $userFactory;
+    protected $translator;
 
     /**
      * @var Jwt encoder
@@ -65,14 +62,24 @@ class JwtAuthentication implements AuthenticationInterface
     protected $encoder;
 
     /**
+     * @var TokenModel
+     */
+    protected $tokenModel;
+
+    /**
      * @var AuthModel
      */
     protected $authModel;
 
     /**
-     * @var Translator
+     * @var EventManager
      */
-    protected $translator;
+    protected $events;
+
+    /**
+     * @var callable
+     */
+    protected $userFactory;
 
     /**
      * @var Jwt payload
@@ -91,6 +98,7 @@ class JwtAuthentication implements AuthenticationInterface
         JwtEncoder $encoder,
         TokenModel $tokenModel,
         AuthModel $authModel,
+        EventManagerInterface $events,
         callable $userFactory
     ) {
         $this->config = $config;
@@ -99,6 +107,7 @@ class JwtAuthentication implements AuthenticationInterface
         $this->encoder = $encoder;
         $this->tokenModel = $tokenModel;
         $this->authModel = $authModel;
+        $this->events = $events;
         $this->userFactory = function (
             string $id,
             string $identity,
@@ -137,11 +146,27 @@ class JwtAuthentication implements AuthenticationInterface
         $this->authAdapter->setIdentity($post[$usernameField]);
         $this->authAdapter->setCredential($post[$passwordField]);
 
+        $eventParams = [
+            'request' => $request,
+            'username' => $post[$usernameField],
+        ];
         // credentials are correct ? 
         //
         $result = $this->authAdapter->authenticate();
         if (! $result->isValid()) {
-            $this->error(Self::USERNAME_OR_PASSWORD_INCORRECT); 
+            //
+            // failed attempts event start
+            //
+            $results = $this->events->trigger(LoginListener::onFailedLogin, null, $eventParams);
+            $failedResponse = $results->last();
+            if ($failedResponse['banned']) {
+                $this->error($failedResponse['message']);
+                return null;
+            }
+            //
+            // default behaviour
+            //
+            $this->error(Self::USERNAME_OR_PASSWORD_INCORRECT);
             return null;
         }
         $remoteAddress = new RemoteAddress;
@@ -150,13 +175,18 @@ class JwtAuthentication implements AuthenticationInterface
         $userAgent = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
         $deviceKey = md5($userAgent);
         $rowObject = $this->authAdapter->getResultRowObject();
-
+        //
+        // successful login event
+        //
+        $this->events->trigger(LoginListener::onSuccessfullLogin, null, $eventParams);
+        //
         // user is active ? 
         //
         if (empty($rowObject->active)) {
             $this->error(Self::ACCOUNT_IS_INACTIVE_OR_SUSPENDED);
             return null;
         }
+        //
         // is the role exists ?
         // 
         $roles = $this->authModel->findRolesById($rowObject->userId);
@@ -234,7 +264,8 @@ class JwtAuthentication implements AuthenticationInterface
     protected function error(string $errorKey)
     {
         if (empty(Self::$messageTemplates[$errorKey])) {
-            $this->error = $errorKey;
+            $this->error = $this->translator->translate($errorKey);
+            return;
         }
         $this->error = $this->translator->translate(Self::$messageTemplates[$errorKey]);
     }

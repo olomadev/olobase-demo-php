@@ -4,7 +4,7 @@ namespace App\Validator;
 
 use Laminas\Validator\AbstractValidator;
 
-class Price extends AbstractValidator
+class Decimal extends AbstractValidator
 {
     const INVALID_TIME_FORMAT = 'invalidMoneyFormat';
 

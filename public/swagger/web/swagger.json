@@ -1,5 +1,9 @@
 {
     "openapi": "3.0.0",
+    "info": {
+        "title": "Demo API",
+        "version": "1.0"
+    },
     "paths": {
         "/account/findMe": {
             "get": {
@@ -14,7 +18,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AccountFindMeResultVM"
+                                    "$ref": "#/components/schemas/AccountFindMe"
                                 }
                             }
                         }
@@ -57,11 +61,11 @@
                 "summary": "Update password",
                 "operationId": "account_updatePassword",
                 "requestBody": {
-                    "description": "Update Cost",
+                    "description": "Update Password",
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/ChangePassword"
+                                "$ref": "#/components/schemas/UpdatePassword"
                             }
                         }
                     }
@@ -72,20 +76,6 @@
                     },
                     "400": {
                         "description": "Bad request, returns to validation errors"
-                    }
-                }
-            }
-        },
-        "/auth/findAllPermissions": {
-            "get": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Get all permissions before the login",
-                "operationId": "auth_findAllPermissions",
-                "responses": {
-                    "200": {
-                        "description": "Successful operation"
                     }
                 }
             }
@@ -127,13 +117,37 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthResultVM"
+                                    "$ref": "#/components/schemas/AuthResult"
                                 }
                             }
                         }
                     },
                     "401": {
                         "description": "Unauthorized Response: token is expired"
+                    }
+                }
+            }
+        },
+        "/auth/resetPassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send reset password code to user",
+                "operationId": "auth_resetPassword",
+                "requestBody": {
+                    "description": "Send reset password request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPassword"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
                     }
                 }
             }
@@ -150,7 +164,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Auth"
+                                "$ref": "#/components/schemas/AuthRequest"
                             }
                         }
                     }
@@ -161,13 +175,1644 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/AuthResultVM"
+                                    "$ref": "#/components/schemas/AuthResult"
                                 }
                             }
                         }
                     },
                     "400": {
                         "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/areaCodes/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all area codes",
+                "operationId": "areaCodes_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AreaCodesFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/cities/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all cities",
+                "operationId": "cities_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/countries/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all countries",
+                "operationId": "countries_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/currencies/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all currencies",
+                "operationId": "currencies_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/files/findOneById/{fileId}": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find ",
+                "operationId": "files_findOne",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "File id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tableName",
+                        "in": "query",
+                        "description": "File tableName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation (File content returns to Base64 string)"
+                    }
+                }
+            }
+        },
+        "/files/readOneById/{fileId}": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find ",
+                "operationId": "files_readOne",
+                "parameters": [
+                    {
+                        "name": "fileId",
+                        "in": "path",
+                        "description": "File id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "tableName",
+                        "in": "query",
+                        "description": "File tableName",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation (File content returns to Base64 string)"
+                    }
+                }
+            }
+        },
+        "/months/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all months",
+                "operationId": "months_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/stream/events": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Server-Sent Events",
+                "operationId": "stream_events",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/years/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all years",
+                "operationId": "years_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/companies/create": {
+            "post": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Create a new company",
+                "operationId": "companies_create",
+                "requestBody": {
+                    "description": "Create new Company",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CompanySave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/companies/delete/{companyId}": {
+            "delete": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Delete company",
+                "operationId": "companyies_delete",
+                "parameters": [
+                    {
+                        "name": "companyId",
+                        "in": "path",
+                        "description": "Company uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/companies/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Find all companies by pagination",
+                "operationId": "companies_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CompaniesFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/companies/findAll": {
+            "get": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Find all companies",
+                "operationId": "companies_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/companies/findOneById/{companyId}": {
+            "get": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Find company data",
+                "operationId": "companies_findOneById",
+                "parameters": [
+                    {
+                        "name": "companyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CompaniesFindOneById"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/companies/update/{companyId}": {
+            "put": {
+                "tags": [
+                    "Companies"
+                ],
+                "summary": "Update company",
+                "operationId": "companies_update",
+                "parameters": [
+                    {
+                        "name": "companyId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update Company",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CompanySave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/employeegrades/create": {
+            "post": {
+                "tags": [
+                    "Employee Grades"
+                ],
+                "summary": "Create a new employee grade",
+                "operationId": "employeeGrades_create",
+                "requestBody": {
+                    "description": "Create new Company",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeGradeSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/employeegrades/delete/{gradeId}": {
+            "delete": {
+                "tags": [
+                    "Employee Grades"
+                ],
+                "summary": "Delete employee grade",
+                "operationId": "employeeGrades_delete",
+                "parameters": [
+                    {
+                        "name": "gradeId",
+                        "in": "path",
+                        "description": "Grade uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/employeegrades/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Employee Grades"
+                ],
+                "summary": "Find all employee grades by pagination",
+                "operationId": "employeeGrades_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeeGradesFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/employeegrades/findAll": {
+            "get": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Find all employee grades",
+                "operationId": "employeeGrades_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/employeegrades/update/{gradeId}": {
+            "put": {
+                "tags": [
+                    "Employee Grades"
+                ],
+                "summary": "Update employee grade",
+                "operationId": "employeeGrades_update",
+                "parameters": [
+                    {
+                        "name": "gradeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update Company",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeGradeSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/employees/create": {
+            "post": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Create a new employee",
+                "operationId": "employees_create",
+                "requestBody": {
+                    "description": "Create new employee",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/employees/delete/{employeeId}": {
+            "delete": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Delete employee",
+                "operationId": "employees_delete",
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "description": "Employee uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/employees/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Find all employees by pagination",
+                "operationId": "employees_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeesFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/employees/findAll": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Find all employees",
+                "operationId": "employees_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/employees/findOneById/{employeeId}": {
+            "get": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Find employee data",
+                "operationId": "employees_findOneById",
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeesFindOneById"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/employees/update/{employeeId}": {
+            "put": {
+                "tags": [
+                    "Employees"
+                ],
+                "summary": "Update employee",
+                "operationId": "employees_update",
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update employee",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeeSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/failedlogins/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Failed Logins"
+                ],
+                "summary": "Find all failed logins by pagination",
+                "operationId": "failedlogins_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FailedLoginsFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/failedloginips/findAll": {
+            "get": {
+                "tags": [
+                    "Failed Logins"
+                ],
+                "summary": "Find all ips for failed logins",
+                "operationId": "failedloginips_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/failedloginusernames/findAll": {
+            "get": {
+                "tags": [
+                    "Failed Logins"
+                ],
+                "summary": "Find all usernames for failed logins",
+                "operationId": "failedloginusernames_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/delete/{listId}": {
+            "delete": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Delete jobtitle list",
+                "operationId": "jobTitleLists_delete",
+                "parameters": [
+                    {
+                        "name": "listId",
+                        "in": "path",
+                        "description": "Jobtitle list uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Find all jobtitle lists by pagination",
+                "operationId": "jobTitleLists_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JobTitleListFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/findAll": {
+            "get": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Find all jobTitles",
+                "operationId": "jobTitleLists_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/import": {
+            "post": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Import a new excel list",
+                "operationId": "jobTitleLists_import",
+                "requestBody": {
+                    "description": "Import new job title list",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JobTitleListImport"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/preview": {
+            "get": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Get excel file to preview results",
+                "operationId": "jobTitleLists_previewResults",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/remove": {
+            "delete": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Remove cached data",
+                "operationId": "jobTitleLists_remove",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/reset": {
+            "delete": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Reset all statuses",
+                "operationId": "jobTitleLists_reset",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/update/{listId}": {
+            "put": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Update jobtitle list",
+                "operationId": "jobTitleLists_update",
+                "parameters": [
+                    {
+                        "name": "listId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update jobtitle list",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JobTitleListSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/jobtitlelists/upload": {
+            "post": {
+                "tags": [
+                    "JobTitle Lists"
+                ],
+                "summary": "Upload excel file",
+                "operationId": "jobTitleLists_upload",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/jobtitles/create": {
+            "post": {
+                "tags": [
+                    "Job Titles"
+                ],
+                "summary": "Create a new job title",
+                "operationId": "jobTitles_create",
+                "requestBody": {
+                    "description": "Create new job title",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JobTitleSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/jobtitles/delete/{jobTitleId}": {
+            "delete": {
+                "tags": [
+                    "Job Titles"
+                ],
+                "summary": "Delete job title",
+                "operationId": "jobTitles_delete",
+                "parameters": [
+                    {
+                        "name": "jobTitleId",
+                        "in": "path",
+                        "description": "JobTitle uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/jobtitles/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Job Titles"
+                ],
+                "summary": "Find all job titles by pagination",
+                "operationId": "jobTitles_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JobTitlesFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/jobTitles/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all job titles",
+                "operationId": "jobTitles_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/jobtitles/update/{jobTitleId}": {
+            "put": {
+                "tags": [
+                    "Job Titles"
+                ],
+                "summary": "Update job title",
+                "operationId": "jobTitles_update",
+                "parameters": [
+                    {
+                        "name": "jobTitleId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update customer",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/JobTitleSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/permissions/copy/{permId}": {
+            "post": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Copy a permission",
+                "operationId": "permissions_copy",
+                "requestBody": {
+                    "description": "Create a new permission",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PermissionSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/permissions/create": {
+            "post": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Create a new permission",
+                "operationId": "permissions_create",
+                "requestBody": {
+                    "description": "Create a new permission",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PermissionSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/permissions/delete/{permId}": {
+            "delete": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Delete permission",
+                "operationId": "permissions_delete",
+                "parameters": [
+                    {
+                        "name": "permId",
+                        "in": "path",
+                        "description": "Permission uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/permissions/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Find all permissions",
+                "operationId": "permissions_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "$filters",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PermissionsFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/permissions/findAll": {
+            "get": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Find all permissions",
+                "operationId": "permissions_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PermissionsFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/permissions/update/{permId}": {
+            "put": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Update a permission",
+                "operationId": "permissions_update",
+                "requestBody": {
+                    "description": "Update a permission",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PermissionSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/roles/create": {
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Create a new role",
+                "operationId": "roles_create",
+                "requestBody": {
+                    "description": "Create a new role",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoleSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/roles/delete/{permId}": {
+            "delete": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Delete role",
+                "operationId": "roles_delete",
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "description": "Role uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/roles/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Find all roles by pagination",
+                "operationId": "roles_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RolesFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
                     }
                 }
             }
@@ -192,6 +1837,127 @@
                     },
                     "404": {
                         "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/roles/findOneById/{roleId}": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Find item data",
+                "operationId": "roles_findOneById",
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RolesFindOneById"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/roles/update/{roleId}": {
+            "put": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Update role",
+                "operationId": "roles_update",
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update role",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoleSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/users/create": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a new user",
+                "operationId": "users_create",
+                "requestBody": {
+                    "description": "Create a new user",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/users/delete/{userId}": {
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete user",
+                "operationId": "users_delete",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "user uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
                     }
                 }
             }
@@ -283,6 +2049,30 @@
                 }
             }
         },
+        "/users/findOneById": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Find one user by id",
+                "operationId": "users_findOneById",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UsersFindOneById"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
         "/users/update/{userId}": {
             "put": {
                 "tags": [
@@ -319,11 +2109,56 @@
                     }
                 }
             }
+        },
+        "/users/updatePassword/{userId}": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user passwors",
+                "operationId": "users_updatePassword",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update user",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
             "AccountFindMe": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/AccountFindMeObject"
+                    }
+                },
+                "type": "object"
+            },
+            "AccountFindMeObject": {
                 "properties": {
                     "email": {
                         "type": "string"
@@ -334,41 +2169,17 @@
                     "lastname": {
                         "type": "string"
                     },
+                    "themeColor": {
+                        "type": "string"
+                    },
                     "active": {
                         "type": "integer"
                     },
                     "emailActivation": {
                         "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "AccountFindMeResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/AccountFindMe"
-                    }
-                },
-                "type": "object"
-            },
-            "AccountFindMySettings": {
-                "properties": {
-                    "resource": {
-                        "type": "string"
                     },
-                    "filters": {
+                    "avatarImage": {
                         "type": "string"
-                    },
-                    "columns": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "AccountFindMySettingsResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/AccountFindMySettings"
                     }
                 },
                 "type": "object"
@@ -387,43 +2198,96 @@
                     "themeColor": {
                         "type": "string"
                     },
+                    "active": {
+                        "type": "integer"
+                    },
+                    "emailActivation": {
+                        "type": "integer"
+                    },
                     "avatarImage": {
                         "type": "string"
                     }
                 },
                 "type": "object"
             },
-            "AgreementTypeItem": {
+            "UpdatePassword": {
+                "properties": {
+                    "oldPassword": {
+                        "type": "string"
+                    },
+                    "newPassword": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthRequest": {
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResult": {
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserObject"
+                    },
+                    "expiresAt": {
+                        "description": "Expiration date of token",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "RefreshToken": {
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ResetPassword": {
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserObject": {
                 "properties": {
                     "id": {
                         "type": "string"
                     },
-                    "name": {
+                    "firstname": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "email": {
                         "type": "string"
                     }
                 },
                 "type": "object"
             },
-            "AgreementsFindAllResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "AreaCodesFindAllResultVM": {
+            "AreaCodesFindAll": {
                 "properties": {
                     "data": {
                         "type": "array",
@@ -448,62 +2312,6 @@
                 },
                 "type": "object"
             },
-            "Auth": {
-                "properties": {
-                    "username": {
-                        "type": "string"
-                    },
-                    "password": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "AuthChangePassword": {
-                "properties": {
-                    "oldPassword": {
-                        "type": "string"
-                    },
-                    "newPassword": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "AuthUser": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "firstname": {
-                        "type": "string"
-                    },
-                    "lastname": {
-                        "type": "string"
-                    },
-                    "roles": {
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    "email": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "ChangePassword": {
-                "properties": {
-                    "oldPassword": {
-                        "type": "string"
-                    },
-                    "newPassword": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
             "CommonFindAll": {
                 "properties": {
                     "data": {
@@ -523,72 +2331,12 @@
                 },
                 "type": "object"
             },
-            "CommonFindAccountTypesResultVM": {
+            "CompaniesFindAllByPaging": {
                 "properties": {
                     "data": {
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "account_type_id": {
-                                    "type": "string"
-                                },
-                                "account_type_name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "CommonFindRolesResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "level": {
-                                    "type": "number"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "CompaniesFindAllResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "CompanyFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/CompanyListItem"
+                            "$ref": "#/components/schemas/CompaniesFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -606,7 +2354,7 @@
                 },
                 "type": "object"
             },
-            "CompanyFindOneById": {
+            "CompaniesFindAllByPagingObject": {
                 "properties": {
                     "id": {
                         "type": "string",
@@ -634,26 +2382,15 @@
                 },
                 "type": "object"
             },
-            "CompanyFindOneByIdResultVM": {
+            "CompaniesFindOneById": {
                 "properties": {
                     "data": {
-                        "$ref": "#/components/schemas/CompanyFindOneById"
+                        "$ref": "#/components/schemas/CompaniesFindOneByIdObject"
                     }
                 },
                 "type": "object"
             },
-            "CompanyItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "CompanyListItem": {
+            "CompaniesFindOneByIdObject": {
                 "properties": {
                     "id": {
                         "type": "string",
@@ -708,94 +2445,24 @@
                 },
                 "type": "object"
             },
-            "ConfirmedDepartmentItem": {
+            "EmployeeGradeSave": {
                 "properties": {
-                    "id": {
-                        "type": "string"
+                    "gradeId": {
+                        "type": "string",
+                        "format": "uuid"
                     },
-                    "name": {
+                    "gradeName": {
                         "type": "string"
                     }
                 },
                 "type": "object"
             },
-            "ConfirmedPurchaserItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "CostCentersFindAllResultVM": {
+            "EmployeeGradesFindAllByPaging": {
                 "properties": {
                     "data": {
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "CountriesFindAllResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "CountryItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "CurrencyItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "DepartmentFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/DepartmentListItem"
+                            "$ref": "#/components/schemas/EmployeeGradesFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -813,152 +2480,82 @@
                 },
                 "type": "object"
             },
-            "DepartmentFindOneById": {
+            "EmployeeGradesFindAllByPagingObject": {
                 "properties": {
                     "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "gradeName": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "EmployeeSave": {
+                "properties": {
+                    "employeeId": {
                         "type": "string",
                         "format": "uuid"
                     },
                     "companyId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
-                    "yearId": {
-                        "type": "string"
-                    },
-                    "departmentName": {
-                        "type": "string"
-                    },
-                    "subDepartmentName": {
-                        "type": "string"
-                    },
-                    "managerName": {
-                        "type": "string"
-                    },
-                    "managerSurname": {
-                        "type": "string"
-                    },
-                    "managerPhoneAreaCodeId": {
-                        "type": "string"
-                    },
-                    "managerPhone": {
-                        "type": "string"
-                    },
-                    "managerMobileAreaCodeId": {
-                        "type": "string"
-                    },
-                    "managerMobile": {
-                        "type": "string"
-                    },
-                    "managerEmail": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "DepartmentFindOneByIdResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/DepartmentFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "DepartmentItem": {
-                "properties": {
-                    "id": {
+                    "employeeNumber": {
                         "type": "string"
                     },
                     "name": {
                         "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "DepartmentListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
                     },
-                    "companyId": {
+                    "surname": {
+                        "type": "string"
+                    },
+                    "jobTitleId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
-                    "yearId": {
-                        "type": "string"
-                    },
-                    "departmentName": {
-                        "type": "string"
-                    },
-                    "managerName": {
-                        "type": "string"
-                    },
-                    "managerSurname": {
-                        "type": "string"
-                    },
-                    "managerPhone": {
-                        "type": "string"
-                    },
-                    "managerMobile": {
-                        "type": "string"
-                    },
-                    "managerEmail": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "DepartmentSave": {
-                "properties": {
-                    "departmentId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "companyId": {
+                    "gradeId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
-                    "yearId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "departmentName": {
+                    "employmentStartDate": {
                         "type": "string"
                     },
-                    "subDepartmentName": {
+                    "employmentEndDate": {
                         "type": "string"
                     },
-                    "managerName": {
-                        "type": "string"
+                    "employeeChildren": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "childId": {
+                                    "type": "string"
+                                },
+                                "childName": {
+                                    "type": "string"
+                                },
+                                "childBirthdate": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
                     },
-                    "managerSurname": {
-                        "type": "string"
-                    },
-                    "managerPhoneAreaCodeId": {
-                        "type": "string"
-                    },
-                    "managerPhone": {
-                        "type": "string"
-                    },
-                    "managerMobileAreaCodeId": {
-                        "type": "string"
-                    },
-                    "managerMobile": {
-                        "type": "string"
-                    },
-                    "managerEmail": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "DisabilitiesFindAllResultVM": {
-                "properties": {
-                    "data": {
+                    "files": {
                         "type": "array",
                         "items": {
                             "properties": {
                                 "id": {
                                     "type": "string"
                                 },
+                                "size": {
+                                    "type": "number"
+                                },
                                 "name": {
+                                    "type": "string"
+                                },
+                                "data": {
+                                    "type": "string"
+                                },
+                                "type": {
                                     "type": "string"
                                 }
                             },
@@ -968,12 +2565,12 @@
                 },
                 "type": "object"
             },
-            "DisabilityFindAllByPageResultVM": {
+            "EmployeesFindAllByPaging": {
                 "properties": {
                     "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/DisabilityListItem"
+                            "$ref": "#/components/schemas/EmployeesFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -991,72 +2588,38 @@
                 },
                 "type": "object"
             },
-            "DisabilityListItem": {
+            "EmployeesFindAllByPagingObject": {
                 "properties": {
                     "id": {
                         "type": "string",
                         "format": "uuid"
                     },
-                    "yearId": {
+                    "companyId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
-                    "degree": {
+                    "employeeNumber": {
                         "type": "string"
                     },
-                    "description": {
+                    "name": {
                         "type": "string"
                     },
-                    "discountAmount": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "DisabilitySave": {
-                "properties": {
-                    "disabilityId": {
+                    "surname": {
+                        "type": "string"
+                    },
+                    "jobTitleId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "gradeId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "createdAt": {
                         "type": "string",
-                        "format": "uuid"
-                    },
-                    "yearId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "degree": {
-                        "type": "string"
-                    },
-                    "description": {
-                        "type": "string"
-                    },
-                    "discountAmount": {
-                        "type": "number"
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
             },
-            "EmployeeFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/EmployeeListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeFindAllBySearchResultVM": {
+            "EmployeesFindAllBySearch": {
                 "properties": {
                     "data": {
                         "type": "array",
@@ -1074,10 +2637,7 @@
                                 "name": {
                                     "type": "string"
                                 },
-                                "tckn": {
-                                    "type": "string"
-                                },
-                                "pernetNumber": {
+                                "employeeNumber": {
                                     "type": "string"
                                 }
                             },
@@ -1087,764 +2647,30 @@
                 },
                 "type": "object"
             },
-            "EmployeeFindInfoSheetFieldsResultVM": {
+            "EmployeesFindOneById": {
                 "properties": {
                     "data": {
-                        "properties": {
-                            "fieldId": {
-                                "type": "string"
-                            },
-                            "fieldLabel": {
-                                "type": "string"
-                            }
-                        },
-                        "type": "object"
+                        "$ref": "#/components/schemas/EmployeesFindOneByIdObject"
                     }
                 },
                 "type": "object"
             },
-            "EmployeeFindOneById": {
+            "EmployeesFindOneByIdObject": {
                 "properties": {
                     "id": {
                         "type": "string",
                         "format": "uuid"
                     },
-                    "pernetNumber": {
-                        "type": "string"
-                    },
-                    "workplaceId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "customerId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "sows": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "middleName": {
-                        "type": "string"
-                    },
-                    "surname": {
-                        "type": "string"
-                    },
-                    "secondSurname": {
-                        "type": "string"
-                    },
-                    "tckn": {
-                        "type": "string"
-                    },
-                    "countryId": {
-                        "type": "string"
-                    },
-                    "passportNo": {
-                        "type": "string"
-                    },
-                    "genderId": {
-                        "type": "string"
-                    },
-                    "drivingLicenseId": {
-                        "type": "string"
-                    },
-                    "bloodTypeId": {
-                        "type": "string"
-                    },
-                    "size": {
-                        "type": "string"
-                    },
-                    "weight": {
-                        "type": "string"
-                    },
-                    "shoeSizeId": {
-                        "type": "string"
-                    },
-                    "phone": {
-                        "type": "string"
-                    },
-                    "mobile1": {
-                        "type": "string"
-                    },
-                    "mobile2": {
-                        "type": "string"
-                    },
-                    "birthdate": {
-                        "type": "string"
-                    },
-                    "employmentStartDate": {
-                        "type": "string"
-                    },
-                    "employmentEndDate": {
-                        "type": "string"
-                    },
-                    "releaseCodeId": {
-                        "type": "string"
-                    },
-                    "seniorityPrincipleDate": {
-                        "type": "string"
-                    },
-                    "employeeTypeId": {
-                        "type": "string"
-                    },
-                    "disability": {
-                        "type": "integer"
-                    },
-                    "disabilityDegree": {
-                        "type": "string"
-                    },
-                    "email1": {
-                        "type": "string"
-                    },
-                    "email2": {
-                        "type": "string"
-                    },
-                    "address1": {
-                        "type": "string"
-                    },
-                    "address2": {
-                        "type": "string"
-                    },
-                    "bankId": {
-                        "type": "string"
-                    },
-                    "bankBranchCode": {
-                        "type": "string"
-                    },
-                    "bankAccountNo": {
-                        "type": "string"
-                    },
-                    "bankIbanNo": {
-                        "type": "string"
-                    },
-                    "employeeInfoSheetDescription": {
-                        "type": "string"
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "employeeEducation": {
-                        "properties": {
-                            "schoolTypeId": {
-                                "type": "string",
-                                "format": "uuid"
-                            },
-                            "schoolName": {
-                                "type": "string"
-                            },
-                            "departmentName": {
-                                "type": "string"
-                            },
-                            "educationStartYearId": {
-                                "type": "string"
-                            },
-                            "educationEndYearId": {
-                                "type": "string"
-                            },
-                            "facultyName": {
-                                "type": "string"
-                            },
-                            "graduate": {
-                                "type": "boolean"
-                            },
-                            "educationalBackgroundId": {
-                                "type": "string",
-                                "format": "uuid"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "employeePersonal": {
-                        "properties": {
-                            "militaryStatusId": {
-                                "type": "string"
-                            },
-                            "militaryStartDate": {
-                                "type": "string"
-                            },
-                            "militaryEndDate": {
-                                "type": "string"
-                            },
-                            "marialStatusId": {
-                                "type": "string"
-                            },
-                            "spouseNameSurname": {
-                                "type": "string"
-                            },
-                            "spouseTckn": {
-                                "type": "string"
-                            },
-                            "spouseHasJob": {
-                                "type": "boolean"
-                            },
-                            "emergencyPersonName": {
-                                "type": "string"
-                            },
-                            "emergencyPersonSurname": {
-                                "type": "string"
-                            },
-                            "emergencyPersonDegreeId": {
-                                "type": "string"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "employeeChildren": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "childId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "childNameSurname": {
-                                    "type": "string"
-                                },
-                                "childTckn": {
-                                    "type": "string"
-                                },
-                                "childBirthdate": {
-                                    "type": "string"
-                                },
-                                "childSchoolName": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "employeeInfoSheet": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "fieldId": {
-                                    "type": "string"
-                                },
-                                "fieldLabel": {
-                                    "type": "string"
-                                },
-                                "fieldValue": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "employeeAgreements": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "agreementId": {
-                                    "type": "string"
-                                },
-                                "customerId": {
-                                    "type": "string"
-                                },
-                                "customerName": {
-                                    "type": "string"
-                                },
-                                "sowId": {
-                                    "type": "string"
-                                },
-                                "customerEmployeeNo": {
-                                    "type": "string"
-                                },
-                                "departmentId": {
-                                    "type": "string"
-                                },
-                                "departmentName": {
-                                    "type": "string"
-                                },
-                                "subDepartmentId": {
-                                    "type": "string"
-                                },
-                                "subDepartmentName": {
-                                    "type": "string"
-                                },
-                                "agreementTypeId": {
-                                    "type": "string"
-                                },
-                                "agreementTypeName": {
-                                    "type": "string"
-                                },
-                                "jobTitleId": {
-                                    "type": "string"
-                                },
-                                "startDate": {
-                                    "type": "string"
-                                },
-                                "endDate": {
-                                    "type": "string"
-                                },
-                                "isEnd": {
-                                    "type": "boolean"
-                                },
-                                "endReason": {
-                                    "type": "string"
-                                },
-                                "earlyEndDate": {
-                                    "type": "string"
-                                },
-                                "currencyId": {
-                                    "type": "string"
-                                },
-                                "grossSalary": {
-                                    "type": "string"
-                                },
-                                "netSalary": {
-                                    "type": "string"
-                                },
-                                "description": {
-                                    "type": "string"
-                                },
-                                "bonus": {
-                                    "type": "string"
-                                },
-                                "oss": {
-                                    "type": "boolean"
-                                },
-                                "car": {
-                                    "type": "boolean"
-                                },
-                                "ticket": {
-                                    "type": "boolean"
-                                },
-                                "transportation": {
-                                    "type": "boolean"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "employeeEducations": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "jobTitleId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "educationId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "educationStartDate": {
-                                    "type": "string"
-                                },
-                                "educatioEndDate": {
-                                    "type": "string"
-                                },
-                                "educationValidityEnd": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "employeeHealthDocs": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "jobTitleId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "healthDocId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "healthDocDate": {
-                                    "type": "string"
-                                },
-                                "healthDocDoctorDate": {
-                                    "type": "string"
-                                },
-                                "healthDocValidityEnd": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "employeeDebits": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "debitId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "employeeId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "debitStartDate": {
-                                    "type": "string"
-                                },
-                                "debitEndDate": {
-                                    "type": "string"
-                                },
-                                "debitItemId": {
-                                    "type": "uuid"
-                                },
-                                "debitSerialNo": {
-                                    "type": "string"
-                                },
-                                "debitDescription": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "employeeNotes": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "noteId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "employeeId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "subjectId": {
-                                    "type": "string",
-                                    "format": "uuid"
-                                },
-                                "noteBody": {
-                                    "type": "string"
-                                },
-                                "noteStatus": {
-                                    "type": "string"
-                                },
-                                "createdAt": {
-                                    "type": "string"
-                                },
-                                "createdBy": {
-                                    "type": "uuid"
-                                },
-                                "closedBy": {
-                                    "type": "uuid"
-                                },
-                                "closedAt": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeFindOneByIdResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/EmployeeFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeGradeListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "gradeName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeGradeSave": {
-                "properties": {
-                    "gradeId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "gradeName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeGradesFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/EmployeeGradeListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeGroupsFindAllResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeListFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/EmployeeListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeListImport": {
-                "properties": {
-                    "yearId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "listName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "listName": {
-                        "type": "string"
-                    },
-                    "pernetNumber": {
-                        "type": "string"
-                    },
-                    "workplaceName": {
-                        "type": "string"
-                    },
-                    "customerShortName": {
-                        "type": "string"
-                    },
-                    "customerColor": {
-                        "type": "string"
-                    },
-                    "sows": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "name": {
-                        "type": "string"
-                    },
-                    "middleName": {
-                        "type": "string"
-                    },
-                    "surname": {
-                        "type": "string"
-                    },
-                    "secondSurname": {
-                        "type": "string"
-                    },
-                    "fullname": {
-                        "type": "string"
-                    },
-                    "tckn": {
-                        "type": "string"
-                    },
-                    "countryId": {
-                        "type": "string"
-                    },
-                    "passportNo": {
-                        "type": "string"
-                    },
-                    "genderId": {
-                        "type": "string"
-                    },
-                    "bloodTypeId": {
-                        "type": "string"
-                    },
-                    "phone": {
-                        "type": "string"
-                    },
-                    "mobile1": {
-                        "type": "string"
-                    },
-                    "mobile2": {
-                        "type": "string"
-                    },
-                    "email1": {
-                        "type": "string"
-                    },
-                    "email2": {
-                        "type": "string"
-                    },
-                    "address1": {
-                        "type": "string"
-                    },
-                    "address2": {
-                        "type": "string"
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeListSave": {
-                "properties": {
-                    "employeeListId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "yearId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "listName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeProfileListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "gradeName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeProfileSave": {
-                "properties": {
-                    "profileId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "profileName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeProfilesFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/EmployeeProfileListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeSave": {
-                "properties": {
-                    "employeeId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "employeeListId": {
+                    "companyId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
                     "employeeNumber": {
                         "type": "string"
                     },
-                    "companyId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "workplaceId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
                     "name": {
                         "type": "string"
                     },
                     "surname": {
-                        "type": "string"
-                    },
-                    "tckn": {
                         "type": "string"
                     },
                     "jobTitleId": {
@@ -1853,77 +2679,42 @@
                     "gradeId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
-                    "departmentId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "costCenterId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
                     "employmentStartDate": {
                         "type": "string"
                     },
                     "employmentEndDate": {
                         "type": "string"
                     },
-                    "employeeTypeId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "employeeProfile": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "disabilityId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    }
-                },
-                "type": "object"
-            },
-            "EmployeeTypesFindAllResultVM": {
-                "properties": {
-                    "data": {
+                    "employeeChildren": {
                         "type": "array",
                         "items": {
                             "properties": {
-                                "id": {
+                                "childId": {
                                     "type": "string"
                                 },
-                                "name": {
+                                "childName": {
+                                    "type": "string"
+                                },
+                                "childBirthdate": {
                                     "type": "string"
                                 }
                             },
                             "type": "object"
                         }
-                    }
-                },
-                "type": "object"
-            },
-            "EndMonthItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
                     },
-                    "name": {
-                        "type": "string"
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
             },
-            "EndYearItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "ExchangeRateFindAllByPageResultVM": {
+            "FailedLoginsFindAllByPaging": {
                 "properties": {
                     "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/ExchangeRateListItem"
+                            "$ref": "#/components/schemas/FailedLoginsFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -1941,138 +2732,34 @@
                 },
                 "type": "object"
             },
-            "ExchangeRateFindOne": {
-                "properties": {
-                    "usdExchangeRate": {
-                        "type": "number"
-                    },
-                    "euroExchangeRate": {
-                        "type": "number"
-                    },
-                    "exchangeRateDate": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "ExchangeRateFindOneResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/ExchangeRateFindOne"
-                    }
-                },
-                "type": "object"
-            },
-            "ExchangeRateFindWeeklyChartResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ExchangeRateWeeklyChart"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "ExchangeRateListItem": {
-                "properties": {
-                    "exchangeRateDate": {
-                        "type": "string"
-                    },
-                    "usdExchangeRate": {
-                        "type": "number"
-                    },
-                    "euroExchangeRate": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "ExchangeRateSave": {
-                "properties": {
-                    "usdExchangeRate": {
-                        "type": "number"
-                    },
-                    "euroExchangeRate": {
-                        "type": "number"
-                    },
-                    "poundExchangeRate": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "ExchangeRateWeeklyChart": {
-                "properties": {
-                    "usdExchangeRate": {
-                        "type": "number"
-                    },
-                    "euroExchangeRate": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "GenderItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "JobTitleFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/JobTitleListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "JobTitleFindOneById": {
+            "FailedLoginsFindAllByPagingObject": {
                 "properties": {
                     "id": {
                         "type": "string",
                         "format": "uuid"
                     },
-                    "jobTitleName": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "attemptedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "userAgent": {
+                        "type": "string"
+                    },
+                    "ip": {
                         "type": "string"
                     }
                 },
                 "type": "object"
             },
-            "JobTitleFindOneByIdResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/JobTitleFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "JobTitleListFindAllByPageResultVM": {
+            "JobTitleListFindAllByPaging": {
                 "properties": {
                     "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/JobTitleListItem"
+                            "$ref": "#/components/schemas/JobTitleListFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -2086,6 +2773,21 @@
                     },
                     "totalItems": {
                         "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "JobTitleListFindAllByPagingObject": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "listName": {
+                        "type": "string"
+                    },
+                    "jobTitleName": {
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -2096,21 +2798,6 @@
                         "$ref": "#/components/schemas/ObjectId"
                     },
                     "listName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "JobTitleListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "listName": {
-                        "type": "string"
-                    },
-                    "jobTitleName": {
                         "type": "string"
                     }
                 },
@@ -2137,7 +2824,7 @@
                         "type": "string",
                         "format": "uuid"
                     },
-                    "jobTitleListId": {
+                    "companyId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
                     "jobTitleName": {
@@ -2146,12 +2833,12 @@
                 },
                 "type": "object"
             },
-            "MinWageFindAllByPageResultVM": {
+            "JobTitlesFindAllByPaging": {
                 "properties": {
                     "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/MinWageListItem"
+                            "$ref": "#/components/schemas/JobTitlesFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -2169,211 +2856,21 @@
                 },
                 "type": "object"
             },
-            "MinWageListItem": {
+            "JobTitlesFindAllByPagingObject": {
                 "properties": {
                     "id": {
                         "type": "string",
                         "format": "uuid"
                     },
-                    "yearId": {
+                    "companyId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
-                    "monthId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "daily": {
-                        "type": "number"
-                    },
-                    "monthly": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "MinWageSave": {
-                "properties": {
-                    "wageId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "yearId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "monthId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "daily": {
-                        "type": "number"
-                    },
-                    "monthly": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "MonthsFindAllResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "NotificationFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/NotificationListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "NotificationFindOneByIdResultVM": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "notifyName": {
+                    "jobTitleName": {
                         "type": "string"
-                    },
-                    "moduleId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "dateId": {
-                        "type": "string"
-                    },
-                    "days": {
-                        "type": "integer"
-                    },
-                    "dayType": {
-                        "type": "string"
-                    },
-                    "sameDay": {
-                        "type": "integer"
-                    },
-                    "atTime": {
-                        "type": "string"
-                    },
-                    "notifyType": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "active": {
-                        "type": "integer"
                     },
                     "createdAt": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "NotificationListItem": {
-                "properties": {
-                    "notifyId": {
                         "type": "string",
-                        "format": "uuid"
-                    },
-                    "notifyName": {
-                        "type": "string"
-                    },
-                    "moduleName": {
-                        "type": "string"
-                    },
-                    "dateName": {
-                        "type": "string"
-                    },
-                    "days": {
-                        "type": "integer"
-                    },
-                    "dayType": {
-                        "type": "string"
-                    },
-                    "sameDay": {
-                        "type": "integer"
-                    },
-                    "atTime": {
-                        "type": "string"
-                    },
-                    "notifyType": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "active": {
-                        "type": "integer"
-                    },
-                    "createdAt": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "NotificationSave": {
-                "properties": {
-                    "notifyId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "notifyName": {
-                        "type": "string"
-                    },
-                    "moduleId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "dateId": {
-                        "type": "string"
-                    },
-                    "days": {
-                        "type": "integer"
-                    },
-                    "dayType": {
-                        "type": "string"
-                    },
-                    "sameDay": {
-                        "type": "integer"
-                    },
-                    "atTime": {
-                        "type": "string"
-                    },
-                    "notifyType": {
-                        "type": "string"
-                    },
-                    "message": {
-                        "type": "string"
-                    },
-                    "active": {
-                        "type": "integer"
+                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -2385,108 +2882,6 @@
                         "format": "uuid"
                     },
                     "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "PasswordSave": {
-                "properties": {
-                    "password": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "PaymentTypeFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/PaymentTypeListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "PaymentTypeFindOneById": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "paymentTypeName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "PaymentTypeFindOneByIdResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/PaymentTypeFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "PaymentTypeListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "paymentTypeName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "PaymentTypeSave": {
-                "properties": {
-                    "paymentTypeId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "paymentTypeName": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "PayrollSchemeSave": {
-                "properties": {
-                    "payrollSchemeId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "companyId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "workplaceId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "schemeName": {
-                        "type": "string"
-                    },
-                    "schemeDescription": {
-                        "type": "string"
-                    },
-                    "startDate": {
-                        "type": "string"
-                    },
-                    "endDate": {
                         "type": "string"
                     }
                 },
@@ -2516,7 +2911,7 @@
                 },
                 "type": "object"
             },
-            "PermissionsFindAllResultVM": {
+            "PermissionsFindAll": {
                 "properties": {
                     "data": {
                         "type": "array",
@@ -2544,7 +2939,30 @@
                 },
                 "type": "object"
             },
-            "PermissionsFindOneById": {
+            "PermissionsFindAllByPaging": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PermissionsFindAllByPagingObject"
+                        }
+                    },
+                    "page": {
+                        "type": "integer"
+                    },
+                    "perPage": {
+                        "type": "integer"
+                    },
+                    "totalPages": {
+                        "type": "integer"
+                    },
+                    "totalItems": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "PermissionsFindAllByPagingObject": {
                 "properties": {
                     "id": {
                         "type": "string",
@@ -2553,55 +2971,16 @@
                     "moduleName": {
                         "type": "string"
                     },
-                    "route": {
-                        "type": "string"
-                    },
-                    "method": {
+                    "resource": {
                         "type": "string"
                     },
                     "action": {
                         "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "PermissionsFindOneByIdResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/PermissionsFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "RefreshToken": {
-                "properties": {
-                    "token": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "ResetPassword": {
-                "properties": {
-                    "newPassword": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "RoleListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
                     },
-                    "roleKey": {
+                    "route": {
                         "type": "string"
                     },
-                    "roleName": {
-                        "type": "string"
-                    },
-                    "roleLevel": {
+                    "method": {
                         "type": "string"
                     }
                 },
@@ -2636,26 +3015,12 @@
                 },
                 "type": "object"
             },
-            "Roles": {
-                "properties": {
-                    "roleId": {
-                        "description": "maxLength: 36",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "roleName": {
-                        "description": "maxLength: 60",
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "RolesFindAllByPageResultVM": {
+            "RolesFindAllByPaging": {
                 "properties": {
                     "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/RoleListItem"
+                            "$ref": "#/components/schemas/RolesFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -2673,26 +3038,33 @@
                 },
                 "type": "object"
             },
-            "RolesFindAllResultVM": {
+            "RolesFindAllByPagingObject": {
                 "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "roleKey": {
+                        "type": "string"
+                    },
+                    "roleName": {
+                        "type": "string"
+                    },
+                    "roleLevel": {
+                        "type": "string"
                     }
                 },
                 "type": "object"
             },
             "RolesFindOneById": {
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/RolesFindOneByIdObject"
+                    }
+                },
+                "type": "object"
+            },
+            "RolesFindOneByIdObject": {
                 "properties": {
                     "id": {
                         "type": "string",
@@ -2733,232 +3105,10 @@
                 },
                 "type": "object"
             },
-            "RolesFindOneByIdResultVM": {
+            "PasswordSave": {
                 "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/RolesFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "SalaryFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/SalaryListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "SalaryListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "yearId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "monthId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "employeeId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "paymentTypeParamId": {
-                        "type": "string"
-                    },
-                    "amount": {
-                        "type": "number"
-                    },
-                    "day": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "SalarySave": {
-                "properties": {
-                    "salaryId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "yearId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "monthId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "employeeId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "paymentTypeParamId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "amount": {
-                        "type": "number"
-                    },
-                    "day": {
-                        "type": "number"
-                    }
-                },
-                "type": "object"
-            },
-            "SendResetPassword": {
-                "properties": {
-                    "username": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "StartMonthItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "StartYearItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
-                    },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "UserFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/UserListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "UserFindAllResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "UserFindOneById": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "firstname": {
-                        "type": "string"
-                    },
-                    "lastname": {
-                        "type": "string"
-                    },
                     "password": {
                         "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "active": {
-                        "type": "integer"
-                    },
-                    "emailActivation": {
-                        "type": "integer"
-                    },
-                    "themeColor": {
-                        "type": "string"
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                },
-                "type": "object"
-            },
-            "UserFindOneByIdResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/UserFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "UserListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "firstname": {
-                        "type": "string"
-                    },
-                    "lastname": {
-                        "type": "string"
-                    },
-                    "email": {
-                        "type": "string"
-                    },
-                    "active": {
-                        "type": "integer"
-                    },
-                    "emailActivation": {
-                        "type": "integer"
-                    },
-                    "themeColor": {
-                        "type": "string"
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
                     }
                 },
                 "type": "object"
@@ -3015,7 +3165,7 @@
                     "data": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/components/schemas/UserListItem"
+                            "$ref": "#/components/schemas/UsersFindAllByPagingObject"
                         }
                     },
                     "page": {
@@ -3033,128 +3183,43 @@
                 },
                 "type": "object"
             },
-            "WorkplaceFindAllByPageResultVM": {
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/WorkplaceListItem"
-                        }
-                    },
-                    "page": {
-                        "type": "integer"
-                    },
-                    "perPage": {
-                        "type": "integer"
-                    },
-                    "totalPages": {
-                        "type": "integer"
-                    },
-                    "totalItems": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "WorkplaceFindOneById": {
+            "UsersFindAllByPagingObject": {
                 "properties": {
                     "id": {
                         "type": "string",
                         "format": "uuid"
                     },
-                    "companyId": {
+                    "email": {
                         "type": "string"
                     },
-                    "companyName": {
+                    "firstname": {
                         "type": "string"
                     },
-                    "workplaceName": {
+                    "lastname": {
                         "type": "string"
                     },
-                    "registrationNumber": {
+                    "themeColor": {
                         "type": "string"
                     },
-                    "address": {
-                        "type": "string"
+                    "lastLogin": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "active": {
+                        "type": "integer"
+                    },
+                    "emailActivation": {
+                        "type": "integer"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
-                    }
-                },
-                "type": "object"
-            },
-            "WorkplaceFindOneByIdResultVM": {
-                "properties": {
-                    "data": {
-                        "$ref": "#/components/schemas/WorkplaceFindOneById"
-                    }
-                },
-                "type": "object"
-            },
-            "WorkplaceItem": {
-                "properties": {
-                    "id": {
-                        "type": "string"
                     },
-                    "name": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "WorkplaceListItem": {
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "companyName": {
-                        "type": "string"
-                    },
-                    "workplaceName": {
-                        "type": "string"
-                    },
-                    "registrationNumber": {
-                        "description": "maxLength: 100",
-                        "type": "string"
-                    },
-                    "address": {
-                        "type": "string"
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                },
-                "type": "object"
-            },
-            "WorkplaceSave": {
-                "properties": {
-                    "workplaceId": {
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "companyId": {
-                        "$ref": "#/components/schemas/ObjectId"
-                    },
-                    "workplaceName": {
-                        "description": "maxLength: 255",
-                        "type": "string"
-                    },
-                    "registrationNumber": {
-                        "description": "maxLength: 100",
-                        "type": "string"
-                    },
-                    "address": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "WorkplacesFindAllResultVM": {
-                "properties": {
-                    "data": {
+                    "userRoles": {
                         "type": "array",
                         "items": {
                             "properties": {
@@ -3171,24 +3236,62 @@
                 },
                 "type": "object"
             },
-            "YearsFindAllResultVM": {
+            "UsersFindOneById": {
                 "properties": {
                     "data": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            },
-                            "type": "object"
-                        }
+                        "$ref": "#/components/schemas/UsersFindOneByIdObject"
                     }
                 },
                 "type": "object"
+            },
+            "UsersFindOneByIdObject": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "firstname": {
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "active": {
+                        "type": "integer"
+                    },
+                    "emailActivation": {
+                        "type": "integer"
+                    },
+                    "themeColor": {
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "lastLogin": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     }

@@ -5,7 +5,7 @@ namespace App\Schema\Users;
 /**
  * @OA\Schema()
  */
-class UserFindOneByIdObject
+class UsersFindOneByIdObject
 {
    /**
      * @var string

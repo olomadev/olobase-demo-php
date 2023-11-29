@@ -13,7 +13,7 @@ class PermissionsFindAllByPaging
      *      type="array",
      *      @OA\Items(
      *          type="object",
-     *          ref="#/components/schemas/PermissionFindAllByPagingObject",
+     *          ref="#/components/schemas/PermissionsFindAllByPagingObject",
      *      ),
      * )
      */

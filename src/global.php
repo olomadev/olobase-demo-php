@@ -147,19 +147,6 @@ function generateRandom(string $characters, int $length)
     return $randomString;
 }
 /**
- * Generate non-cached asset url
- *
- * @param  string $asset css/app.css, js/jquery.js
- * @return string css/app.css?v=1598356952
- */
-function assetVersion($asset)
-{
-    $assetFile  = str_replace('/', DIRECTORY_SEPARATOR, $asset);
-    $folder = DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR;
-
-    return $asset.'?v='.filemtime(PROJECT_ROOT.$folder.$assetFile);
-}
-/**
  * Front end hiçbir zaman para değerlerini 20,7 gibi bir rakam göndermemeli,
  * yoksa yanlış hesaplanır doğrusu 20,70 gibi formatlayıp göndermeli
  * ya da 20.70
@@ -176,14 +163,15 @@ function convertToMoney($value)
     return (float)$value;
 }
 /**
- * https://www.texelate.co.uk/blog/create-a-guid-with-php#:~:text=To%20create%20a%20GUID%20we,prefix%20it%20with%20the%20URL.
+ * GUID (aka UUID) is an acronym for 'Globally Unique Identifier' (or 'Universally Unique Identifier').
+ * It is a 128-bit integer number used to identify resources.
  */
 function createGuid()
 {
     $randomStr = generateRandomString(6);
     // Create a token
-    $token      = defined('STDIN') ? $randomStr : (string)$_SERVER['HTTP_HOST'];
-    $token     .= defined('STDIN') ? $randomStr : (string)$_SERVER['REQUEST_URI'];
+    $token      = $randomStr;
+    $token     .= $randomStr;
     $randomStr  = generateRandomString(36);
     $token     .= uniqid((string)$randomStr, true);
     // GUID is 128-bit hex
@@ -205,9 +193,10 @@ function createGuid()
 }
 /**
  * isCommandLineInterface
+ * 
  * @return bool
  */
-function isCommandLineInterface()
+function isCli()
 {
     return (php_sapi_name() === 'cli');
 }
@@ -223,53 +212,6 @@ function formatMoney($value) {
     return (float)$value;
 }
 /**
- * Format exchange rate
- * @param  money $value    string
- * @param  currecny $currency string
- * @return float
- */
-function formatExchangeRate($value, $currencyId = null) {
-    $currency = ($currencyId) == 'TRY' ? 'TL' : $currencyId;
-    if (empty($value)) {
-        return '0,0000 '.$currency;
-    }
-    $formattedValue = number_format((float)$value, 4, ',', '.').' '.$currency;
-    return $formattedValue;
-}
-/**
- * Format rate
- * @param rate $value integer
- * @return string
- */
-function formatRate($value) {
-    if (empty($value)) {
-        return '0 %';
-    }
-    return $value.' %';
-}
-/**
- * Format size
- * @param size $value integer
- * @return string
- */
-function formatSize($value) {
-    if (empty($value)) {
-        return '0 cm';
-    }
-    return $value.' cm';
-}
-/**
- * Format weight
- * @param weight $value integer
- * @return string
- */
-function formatWeight($value) {
-    if (empty($value)) {
-        return '0 kg';
-    }
-    return $value.' kg';
-}
-/**
  * Format date
  * @param date $value string
  * @return string
@@ -280,20 +222,3 @@ function formatDate($value) {
     }
     return (string)$value;
 }
-/**
- * Format date
- * @param date $value string
- * @return string
- */
-function formatPhone($value) {
-    if (empty($value)) {
-        return null;
-    }
-    $areaCode = $value[0].$value[1].$value[2];
-    $first = $value[3].$value[4].$value[5];
-    $middle = $value[6].$value[7];
-    $end = $value[8].$value[9];
-    $formatted = "(".$areaCode.")-".$first."-".$middle."-".$end;
-    return (string)$formatted;
-}
-

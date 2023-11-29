@@ -9,6 +9,7 @@ use App\Model\TokenModel;
 use Psr\Container\ContainerInterface;
 use App\Authentication\AuthenticationAdapter;
 use Laminas\Db\Adapter\Adapter;
+use Laminas\EventManager\EventManagerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
@@ -44,6 +45,7 @@ class JwtAuthenticationFactory implements FactoryInterface
             $container->get(JwtEncoder::class),
             $container->get(TokenModel::class),
             $container->get(AuthModel::class),
+            $container->get(EventManagerInterface::class),
             $container->has(UserInterface::class) ? $container->get(UserInterface::class) : null
         );
     }

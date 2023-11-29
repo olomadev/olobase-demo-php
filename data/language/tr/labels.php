@@ -34,7 +34,6 @@ return [
     'jobTitleId' => 'Görev',
     'gradeId' => 'Seviye',
     'departmentId' => 'Departman',
-    'costCenterId' => 'Masraf Merkezi',
     'employmentStartDate' => 'İşe Giriş',
     'employmentEndDate' => 'Çıkış',
     'disabilityId' => 'Engellilik',

@@ -34,8 +34,8 @@ class UpdatePasswordHandler implements RequestHandlerInterface
      *   operationId="account_updatePassword",
      *
      *   @OA\RequestBody(
-     *     description="Update Cost",
-     *     @OA\JsonContent(ref="#/components/schemas/ChangePassword"),
+     *     description="Update Password",
+     *     @OA\JsonContent(ref="#/components/schemas/UpdatePassword"),
      *   ),
      *   @OA\Response(
      *     response=200,

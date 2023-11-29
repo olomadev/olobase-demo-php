@@ -22,7 +22,7 @@ class FindAllHandler implements RequestHandlerInterface
      *   path="/currencies/findAll",
      *   tags={"Common"},
      *   summary="Find all currencies",
-     *   operationId="countries_findAll",
+     *   operationId="currencies_findAll",
      *   
      *   @OA\Response(
      *     response=200,

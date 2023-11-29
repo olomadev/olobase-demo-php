@@ -5,7 +5,7 @@ namespace App\Schema\JobTitles;
 /**
  * @OA\Schema()
  */
-class JobTitlesFindOneByIdObject
+class JobTitlesFindAllByPagingObject
 {
     /**
      * @var string
