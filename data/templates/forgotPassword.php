@@ -30,18 +30,18 @@ th, td {
 								</td>
 							</tr>
 						</table>
-						<p style="line-height: 1.8; mso-line-height-rule: exactly;line-height:130%;"><?php 
+						<p style="line-height: 1.8; mso-line-height-rule: exactly;line-height:130%;font-size:14px;"><?php 
 						$header = $translator->translate('Hello, we received a password reset request from you. You can recreate your password by clicking the following link', 'templates');
 						echo $header ?>.</p>
 						<br />
-						<a href="<?php echo $resetPasswordLink ?>" style="color: <?php echo $themeColor ?>;text-decoration: underline;"><?php echo $resetPasswordLink ?></a>
+						<span style="font-size:14px;"><a href="<?php echo $resetPasswordLink ?>" style="color: <?php echo $themeColor ?>;text-decoration: underline;"><?php echo $resetPasswordLink ?></a><span>
 					</td>
 				</tr>
 			</table>
 			<hr color="<?php echo $themeColor ?>" size="2" style="border-top: 2px solid <?php echo $themeColor ?>;" />
 			<br />
 			<p style="text-align: center;font-size:12px;color:gray;line-height: 1.4"><?php
-			$footer = $translator->translate('This e-mail was sent to {EMAIL} following your Demo App membership', 'templates').'. ';
+			$footer = $translator->translate('This e-mail was sent to {EMAIL} following your membership', 'templates').'. ';
 			$footer.= $translator->translate('Please do not reply to this e-mail', 'templates').'. ';
 			echo str_replace('{EMAIL}', '<a href="mailto:'.$email.'" style="color:'.$themeColor.';text-decoration:underline;">'.$email.'</a>', $footer); ?></p>
 		</td>
