@@ -1,19 +1,6 @@
 <?php
 
 return [
-    // Php Json parse errors
-    //
-    JSON_ERROR_DEPTH => 'İstemci json hatası: Maksimum yığın derinliği aşıldı',
-    JSON_ERROR_STATE_MISMATCH => 'İstemci json hatası: İstemci tarafından gönderilen ve geçersiz veya hatalı biçimlendirilmiş JSON',
-    JSON_ERROR_CTRL_CHAR => 'İstemci json hatası: Muhtemelen yanlış kodlanmış kontrol karakteri',
-    JSON_ERROR_SYNTAX => 'İstemci json hatası: Sözdizimi hatası',
-    JSON_ERROR_UTF8 => 'İstemci json hatası: Hatalı biçimlendirilmiş UTF-8 karakterleri, muhtemelen yanlış kodlanmış',
-    JSON_ERROR_RECURSION => 'İstemci json hatası: Kodlanacak değerde bir veya daha fazla özyinelemeli başvuru',
-    JSON_ERROR_INF_OR_NAN => 'İstemci json hatası: Kodlanacak değerde bir veya daha fazla NAN veya INF değeri',
-    JSON_ERROR_UNSUPPORTED_TYPE => 'İstemci json hatası: Kodlanamayan bir tür değeri verildi',
-    JSON_ERROR_INVALID_PROPERTY_NAME => 'İstemci json hatası: Kodlanamayan bir özellik adı verildi',
-    JSON_ERROR_UTF16 => 'İstemci json hatası: Hatalı biçimlendirilmiş UTF-16 karakterleri, muhtemelen yanlış kodlanmış',
-
     // Error Upload
     // 
     'File is not provided' => 'Dosya alınamadı',
@@ -29,6 +16,10 @@ return [
     'File upload stopped by extension' => 'Dosya yükleme, uzantı tarafından durduruldu',
     'Unknown upload error' => 'Bilinmeyen yükleme hatası',
     'Only .xls and .xlsx file formats are supported' => 'Sadece .xls ve .xlsx dosya formatları destekleniyor',
+    'Max allowed upload size exceed' => 'İzin verilen dosya yükleme sınırı aşıldı',
+
+    // Validation errors
+    //
     'Empty file id' => 'Boş dosya id',
     'Empty file content' => 'Boş dosya içeriği',
     'Empty "allowed_extensions" option' => '"allowed_extensions" seçeneği boş gözüküyor',
@@ -36,8 +27,18 @@ return [
     'Empty file "mime_types" option' => 'mime_types" seçeneği boş gözüküyor',
     'Invalid file content' => 'Geçersiz dosya içeriği',
     'Invalid file mime type' => 'Geçersiz dosya türü',
-    'Max allowed upload size exceed' => 'İzin verilen dosya yükleme sınırı aşıldı',
     'Excel file not approved' => 'Excel dosyası onaylı değil',
+
+    // Reset code validations
+    // 
+    'Your password reset code is incorrect or expired' => 'Şifre sıfırlama kodunuz yanlış veya süresi dolmuş',
+    // Resurce ownerships
+    // 
+    'You are not authorized to modify a record that is not yours' => 'Size ait olmayan bir kaydı değiştirme yetkiniz yoktur',
+    // Password validations
+    // 
+    'Current password is not correct' => 'Geçerli şifre yanlış girildi',
+    'Old password is not correct' => 'Geçerli şifre yanlış girildi',
 
     // Employee list
     // 
@@ -50,7 +51,6 @@ return [
 
     // General errors
     // 
-    'Old password is not correct' => 'Geçerli şifre yanlış girildi',
     'Username or password is incorrect' => 'Kullanıcı adı veya şifre hatalı girildi',
     'Username and password fields must be given' => 'Kullanıcı ve şifre alanları gönderilmeli',
     'This account is inactive or awaiting approval' => 'Bu hesap pasif veya onay bekliyor',
@@ -64,4 +64,17 @@ return [
     'BLOCK_300_SECONDS' => 'Çok fazla hatalı giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 5 dakika süreyle durduruldu.Lütfen şifrenizi sıfırlamayı deneyin.',
     'BLOCK_1800_SECONDS' => 'Çok fazla yanlış giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 30 dakika süreyle durduruldu.Lütfen şifrenizi sıfırlamayı deneyin.',
     'BLOCK_86400_SECONDS' => 'Çok fazla hatalı giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 1 gün süreyle durduruldu.Lütfen şifrenizi sıfırlamayı deneyin.',
+    
+    // Php Json parse errors
+    //
+    JSON_ERROR_DEPTH => 'İstemci json hatası: Maksimum yığın derinliği aşıldı',
+    JSON_ERROR_STATE_MISMATCH => 'İstemci json hatası: İstemci tarafından gönderilen ve geçersiz veya hatalı biçimlendirilmiş JSON',
+    JSON_ERROR_CTRL_CHAR => 'İstemci json hatası: Muhtemelen yanlış kodlanmış kontrol karakteri',
+    JSON_ERROR_SYNTAX => 'İstemci json hatası: Sözdizimi hatası',
+    JSON_ERROR_UTF8 => 'İstemci json hatası: Hatalı biçimlendirilmiş UTF-8 karakterleri, muhtemelen yanlış kodlanmış',
+    JSON_ERROR_RECURSION => 'İstemci json hatası: Kodlanacak değerde bir veya daha fazla özyinelemeli başvuru',
+    JSON_ERROR_INF_OR_NAN => 'İstemci json hatası: Kodlanacak değerde bir veya daha fazla NAN veya INF değeri',
+    JSON_ERROR_UNSUPPORTED_TYPE => 'İstemci json hatası: Kodlanamayan bir tür değeri verildi',
+    JSON_ERROR_INVALID_PROPERTY_NAME => 'İstemci json hatası: Kodlanamayan bir özellik adı verildi',
+    JSON_ERROR_UTF16 => 'İstemci json hatası: Hatalı biçimlendirilmiş UTF-16 karakterleri, muhtemelen yanlış kodlanmış',    
 ];

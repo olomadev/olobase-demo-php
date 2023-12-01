@@ -23,6 +23,14 @@ return [
 
     // Enable debugging; typically used to provide debugging information within templates.
     'debug' => true,
+    'smtp' => [
+        'host' => 'smtp.office365.com',
+        'port' => 587,
+        'username' => 'notifications@example.com',
+        'password' => '',
+        'from' => 'noreply@example.com',
+        'from_name' => 'Demo',
+    ],
     'jwt_encoder' => [
         //  use below the code to create secret key:
         //  php -r "echo base64_encode(openssl_random_pseudo_bytes(32)).PHP_EOL;"

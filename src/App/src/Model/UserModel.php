@@ -3,15 +3,17 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use function generateRandomNumber;
+
 use Exception;
 use Oloma\Php\ColumnFiltersInterface;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
 use Laminas\Paginator\Adapter\DbSelect;
-use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class UserModel
 {
@@ -19,6 +21,7 @@ class UserModel
     private $adapter;
     private $users;
     private $cache;
+    private $simpleCache;
     private $userRoles;
     private $userAvatars;
     private $columnFilters;
@@ -28,14 +31,14 @@ class UserModel
         TableGatewayInterface $userRoles,
         TableGatewayInterface $userAvatars,
         ColumnFiltersInterface $columnFilters,
-        StorageInterface $cache
+        SimpleCacheInterface $simpleCache
     ) {
         $this->adapter = $users->getAdapter();
         $this->users = $users;
         $this->userRoles = $userRoles;
         $this->userAvatars = $userAvatars;
         $this->columnFilters = $columnFilters;
-        $this->cache = $cache;
+        $this->simpleCache = $simpleCache;
         $this->conn = $this->adapter->getDriver()->getConnection();
     }
 
@@ -202,6 +205,30 @@ class UserModel
         return $row;
     }
 
+    public function findOneByUsername(string $username)
+    {
+        $sql = new Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(
+            [
+                'id' => 'userId',
+                'userId',
+                'firstname',
+                'lastname',
+                'email',
+                'active',
+                'themeColor',
+            ]
+        );
+        $select->from('users');
+        $select->where(['email' => $username]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $resultSet = $statement->execute();
+        $row = $resultSet->current();
+        $statement->getResource()->closeCursor();
+        return $row;
+    }
+
     public function create(array $data)
     {
         $userId = $data['id'];
@@ -268,6 +295,36 @@ class UserModel
             $this->conn->rollback();
             throw $e;
         }
+    }
+
+    public function generateResetPassword(string $username) : string
+    {
+        $this->simpleCache->set('test', ['username' => 'ersin']);
+        $resetCode = generateRandomNumber(6);
+        $this->simpleCache->set((string)$resetCode, $username, 600); // wait confirmation for 10 minutes
+        return $resetCode;
+    }
+
+    public function checkResetCode(string $resetCode)
+    {
+        return $this->simpleCache->get($resetCode);
+    }
+
+    public function updatePasswordByResetCode(string $resetCode, string $newPassword)
+    {
+        $username = $this->simpleCache->get($resetCode);
+        if ($username) {
+            $password = password_hash($newPassword, PASSWORD_DEFAULT, ['cost' => 10]);
+            try {
+                $this->conn->beginTransaction();
+                $this->users->update(['password' => $password, 'emailActivation' => 1], ['email' => $username]);
+                $this->conn->commit();
+            } catch (Exception $e) {
+                $this->conn->rollback();
+                throw $e;
+            }
+        }
+        return $username;
     }
 
     public function updatePasswordById(string $userId, string $newPassword)

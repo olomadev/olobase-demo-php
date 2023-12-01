@@ -1,20 +1,6 @@
 <?php
 
 return [
-
-    // Php Json parse errors
-    //
-    JSON_ERROR_DEPTH => 'Client json error: The maximum stack depth has been exceeded',
-    JSON_ERROR_STATE_MISMATCH => 'Client json error: Client sent and invalid or malformed JSON',
-    JSON_ERROR_CTRL_CHAR => 'Client json error: Client sent Control character error, possibly incorrectly encoded',
-    JSON_ERROR_SYNTAX => 'Client json error: Syntax error',
-    JSON_ERROR_UTF8 => 'Client json error: Malformed UTF-8 characters, possibly incorrectly encoded',
-    JSON_ERROR_RECURSION => 'Client json error: One or more recursive references in the value to be encoded',
-    JSON_ERROR_INF_OR_NAN => 'Client json error: One or more NAN or INF values in the value to be encoded',
-    JSON_ERROR_UNSUPPORTED_TYPE => 'Client json error: A value of a type that cannot be encoded was given',
-    JSON_ERROR_INVALID_PROPERTY_NAME => 'Client json error: A property name that cannot be encoded was given',
-    JSON_ERROR_UTF16 => 'Client json error: Malformed UTF-16 characters, possibly incorrectly encoded',
-
     // Error Upload
     // 
     'File is not provided' => 'File is not received',
@@ -31,6 +17,9 @@ return [
     'Unknown upload error' => 'Unknown upload error',
     'Only .xls and .xlsx file formats are supported' => 'Only .xls and .xlsx file formats are supported',
     'Max allowed upload size exceed' => 'Max allowed upload size exceed',
+
+    // Validation errors
+    // 
     'Empty file id' => 'Empty file id',
     'Empty file content' => 'Empty file content',
     'Empty "allowed_extensions" option' => 'Empty "allowed_extensions" option',
@@ -39,6 +28,17 @@ return [
     'Invalid file content' => 'Invalid file content',
     'Invalid file mime type' => 'Invalid mime type',
     'Excel file not approved' => 'Excel file not approved',
+
+    // Reset code validations
+    // 
+    'Your password reset code is incorrect or expired' => 'Your password reset code is incorrect or expired',
+    // Resurce ownerships
+    // 
+    'You are not authorized to modify a record that is not yours' => 'You are not authorized to modify a record that is not yours',
+    // Password validations
+    // 
+    'Current password is not correct' => 'Current password is not correct',
+    'Old password is not correct' => 'Current password is not correct',
 
     // Sheet import component
     // 
@@ -51,7 +51,6 @@ return [
     
     // General errors
     // 
-    'Old password is not correct' => 'Current password is not correct',
     'Username or password is incorrect' => 'Username or password is incorrect',
     'Username and password fields must be given' => 'Username and password fields must be given',
     'This account is inactive or awaiting approval' => 'This account is inactive or awaiting approval',
@@ -65,5 +64,18 @@ return [
     'BLOCK_300_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 5 minute for security reasons.Try to reset your password.',
     'BLOCK_1800_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 30 minute for security reasons.Try to reset your password.',
     'BLOCK_86400_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 1 day for security reasons.Try to reset your password.',
+
+    // Php Json parse errors
+    //
+    JSON_ERROR_DEPTH => 'Client json error: The maximum stack depth has been exceeded',
+    JSON_ERROR_STATE_MISMATCH => 'Client json error: Client sent and invalid or malformed JSON',
+    JSON_ERROR_CTRL_CHAR => 'Client json error: Client sent Control character error, possibly incorrectly encoded',
+    JSON_ERROR_SYNTAX => 'Client json error: Syntax error',
+    JSON_ERROR_UTF8 => 'Client json error: Malformed UTF-8 characters, possibly incorrectly encoded',
+    JSON_ERROR_RECURSION => 'Client json error: One or more recursive references in the value to be encoded',
+    JSON_ERROR_INF_OR_NAN => 'Client json error: One or more NAN or INF values in the value to be encoded',
+    JSON_ERROR_UNSUPPORTED_TYPE => 'Client json error: A value of a type that cannot be encoded was given',
+    JSON_ERROR_INVALID_PROPERTY_NAME => 'Client json error: A property name that cannot be encoded was given',
+    JSON_ERROR_UTF16 => 'Client json error: Malformed UTF-16 characters, possibly incorrectly encoded',
 
 ];

@@ -8,10 +8,10 @@ use Laminas\Db\Sql\Sql;
 use Oloma\Php\ColumnFiltersInterface;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
-use Predis\ClientInterface as Predis;
 use Laminas\Paginator\Adapter\DbSelect;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class FailedLoginModel
 {
@@ -24,20 +24,22 @@ class FailedLoginModel
 
     public function __construct(
         TableGatewayInterface $failedLogins,
-        Predis $predis,
+        SimpleCacheInterface $simpleCache,
         ColumnFiltersInterface $columnFilters
     ) {
-        $this->predis = $predis;
         $this->adapter = $failedLogins->getAdapter();
         $this->failedLogins = $failedLogins;
+        $this->simpleCache = $simpleCache;
         $this->columnFilters = $columnFilters;
         $this->conn = $this->adapter->getDriver()->getConnection();
     }
 
     public function checkUsername(string $username)
-    {        
-        $key = CACHE_ROOT_KEY.Self::class.':'.__FUNCTION__.':'.$username;
-        if ($banMessage = $this->predis->get($key)) {
+    {   
+        // build a safe key for simple cache
+        // 
+        $key = rtrim(CACHE_ROOT_KEY, ':').'_Failed_Login_Model_'.__FUNCTION__.'_'.md5($username);
+        if ($banMessage = $this->simpleCache->get($key)) {
             $this->setMessage($banMessage);
             return true;
         }
@@ -114,24 +116,19 @@ class FailedLoginModel
     private function blockUsername(string $key, $count = 0)
     {
         if ($count > 6) { // block user for 30 seconds
-            $this->predis->set($key, 'BLOCK_30_SECONDS');
-            $this->predis->expire($key, 30);
+            $this->simpleCache->set($key, 'BLOCK_30_SECONDS', 30);
         }
         if ($count > 9) { // block user for 60 seconds
-            $this->predis->set($key, 'BLOCK_60_SECONDS');
-            $this->predis->expire($key, 60);
+            $this->simpleCache->set($key, 'BLOCK_60_SECONDS', 60);
         }
         if ($count > 12) { // block user for 300 seconds
-            $this->predis->set($key, 'BLOCK_300_SECONDS');
-            $this->predis->expire($key, 60);
+            $this->simpleCache->set($key, 'BLOCK_300_SECONDS', 300);
         }
         if ($count > 16) { // block user for 1800 seconds (30 minutes)
-            $this->predis->set($key, 'BLOCK_1800_SECONDS');
-            $this->predis->expire($key, 1800);
+            $this->simpleCache->set($key, 'BLOCK_1800_SECONDS', 1800);
         }
         if ($count > 20) { // block user for 86400 seconds (1 day)
-            $this->predis->set($key, 'BLOCK_86400_SECONDS');
-            $this->predis->expire($key, 86400);
+            $this->simpleCache->set($key, 'BLOCK_86400_SECONDS', 86400);
         }
     }
 

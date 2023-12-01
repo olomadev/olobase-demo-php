@@ -43,6 +43,7 @@ class ConfigProvider
                     // Auth
                     Filter\Auth\AuthFilter::class => InvokableFactory::class,
                     Filter\Auth\ResetPasswordFilter::class => Filter\Auth\ResetPasswordFilterFactory::class,
+                    Filter\Auth\ChangePasswordFilter::class => Filter\Auth\ChangePasswordFilterFactory::class,
                     // Account
                     Filter\Account\SaveFilter::class => Filter\Account\SaveFilterFactory::class,
                     Filter\Account\PasswordChangeFilter::class => Filter\Account\PasswordChangeFilterFactory::class,
@@ -105,6 +106,7 @@ class ConfigProvider
                 Middleware\ClientMiddleware::class => Middleware\ClientMiddlewareFactory::class,
                 Middleware\JwtAuthenticationMiddleware::class => Middleware\JwtAuthenticationMiddlewareFactory::class,
                 Listener\LoginListener::class => Listener\LoginListenerFactory::class,
+                Utils\SmtpMailer::class => Container\SmtpMailerFactory::class,
                 StorageInterface::class => Container\CacheFactory::class,
                 SimpleCacheInterface::class => Container\SimpleCacheFactory::class,   
                 PredisInterface::class => Container\PredisFactory::class,
@@ -128,6 +130,8 @@ class ConfigProvider
                 Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
                 Handler\Auth\LogoutHandler::class => Handler\Auth\LogoutHandlerFactory::class,
                 Handler\Auth\ResetPasswordHandler::class => Handler\Auth\ResetPasswordHandlerFactory::class,
+                Handler\Auth\CheckResetCodeHandler::class => Handler\Auth\CheckResetCodeHandlerFactory::class,
+                Handler\Auth\ChangePasswordHandler::class => Handler\Auth\ChangePasswordHandlerFactory::class,
                 // account
                 Handler\Account\FindMeHandler::class => Handler\Account\FindMeHandlerFactory::class,
                 Handler\Account\UpdateHandler::class => Handler\Account\UpdateHandlerFactory::class,
@@ -198,13 +202,7 @@ class ConfigProvider
                 //
                 Model\AuthModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $simpleCache = $container->get(SimpleCacheInterface::class);
-                    $users = new TableGateway('users', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    return new Model\AuthModel(
-                        $dbAdapter,
-                        $simpleCache,
-                        $users
-                    );
+                    return new Model\AuthModel($dbAdapter);
                 },
                 Model\CompanyModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
@@ -243,10 +241,10 @@ class ConfigProvider
                 },
                 Model\FailedLoginModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
-                    $predis = $container->get(PredisInterface::class);
+                    $simpleCache = $container->get(SimpleCacheInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
                     $failedLogins = new TableGateway('failedLogins', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    return new Model\FailedLoginModel($failedLogins, $predis, $columnFilters);
+                    return new Model\FailedLoginModel($failedLogins, $simpleCache, $columnFilters);
                 },
                 Model\FileModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
@@ -312,13 +310,13 @@ class ConfigProvider
                     $userRoles = new TableGateway('userRoles', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $userAvatars = new TableGateway('userAvatars', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
-                    $cacheStorage = $container->get(StorageInterface::class);
+                    $simpleCache = $container->get(SimpleCacheInterface::class);
                     return new Model\UserModel(
                         $users,
                         $userRoles,
                         $userAvatars,
                         $columnFilters,
-                        $cacheStorage
+                        $simpleCache
                     );
                 },
 

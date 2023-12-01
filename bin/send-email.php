@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 require dirname(__DIR__).'/vendor/autoload.php';
+$container = require dirname(__DIR__).'/config/container.php';
+$config = $container->get('config');
 
-use Mailgun\Mailgun;
 use Laminas\Mime\Part as MimePart;
 use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mail\Message;
@@ -12,6 +13,9 @@ use Laminas\Mail\Transport\Smtp as SmtpTransport;
 use Laminas\Mail\Transport\SmtpOptions;
 
 $args = $_SERVER['argv'];
+if (empty($args[1]) || empty($args[2])) {
+    echo "Mail arguments cannot be empty !".PHP_EOL;
+}
 putenv("APP_ENV=$args[1]");
 
 $decodedString = base64_decode($args[2]);
@@ -22,8 +26,6 @@ if (false == $decodedString) {
     exit(1);
 }
 parse_str($decodedString, $params);
-// var_dump($params);
-// die;
 
 //--------------------------------------------------------------------------
 // Build mail parameters
@@ -33,20 +35,20 @@ $from = str_replace(['<','>'], '', $params['from']);
 $fromName = isset($params['fromName']) ? $params['fromName'] : null;
 $body = empty($params['body']) ? '' : (string)$params['body'];
 $subject = empty($params['subject']) ? '' : (string)$params['subject'];
-//
-// https://discourse.laminas.dev/t/zend-smtp-dkim-not-passing/1194
 
+// https://discourse.laminas.dev/t/zend-smtp-dkim-not-passing/1194
+// 
 // Setup SMTP transport
 // 
 $transport = new SmtpTransport();
 $options   = new SmtpOptions([
-    'name' => 'pernet.com.tr',
-    'host' => 'exch.medkar.com',
-    'port' => 25,
+    'host' => $config['smtp']['host'],
+    'port' => $config['smtp']['port'],
+    'connection_class'  => 'login', // 'plain',
     'connection_config' => [
-        'username' => 'bildirimler@pernet.com.tr',
-        'password' => 'Mbry8992@',
-        // 'ssl'      => 'tls',
+        'username' => $config['smtp']['username'],
+        'password' => $config['smtp']['password'],
+        'ssl'      => 'tls',
     ],
 ]);
 $transport->setOptions($options);
@@ -91,7 +93,7 @@ if (! empty($params['bcc'])) {
         }
     }    
 }
-$message->addFrom('bildirimler@pernet.com.tr', 'Pernet CRM');
+$message->addFrom($from, $fromName);
 $message->setSubject($subject);
 $message->setBody($body);
 

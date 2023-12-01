@@ -7,25 +7,22 @@ use function createGuid;
 
 use Exception;
 use App\Model\CommonModel;
-use Laminas\Cache\Storage\StorageInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Predis\ClientInterface as Predis;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class JobTitleListImporter
 {
-    protected $cache;
     protected $conn;
-    protected $predis;
+    protected $simpleCache;
     protected $jobTitles;
 
     public function __construct($container)
     {
-        $this->predis = $container->get(Predis::class);
         $this->commonModel = $container->get(CommonModel::class);
-        $this->cache = $container->get(StorageInterface::class);
+        $this->simpleCache = $container->get(SimpleCacheInterface::class);
 
         $this->adapter = $container->get(AdapterInterface::class);
         $this->conn = $this->adapter->getDriver()->getConnection();
@@ -39,7 +36,7 @@ class JobTitleListImporter
         if (! empty($data['yearId']) && ! empty($data['listName'])) {
             
             $fileKey = $data['fileKey'];
-            $import = $this->cache->getItem($fileKey);
+            $import = $this->simpleCache->get($fileKey);
 
             if (! empty($import['data'][0])) {
                 unset($import['data'][0]); // remove header
@@ -74,12 +71,13 @@ class JobTitleListImporter
                     $this->conn->rollback();
                     throw $e;
                 }
-                $this->cache->removeItem($fileKey);
-                $this->cache->removeItem("jobtitlelist_parse");
-                $this->cache->removeItem("jobtitlelist_save");
-
-                $this->cache->setItem($fileKey.'_status2', ['status' => true, 'error' => null]);
-                $this->predis->expire($fileKey.'_status2', 200);
+                $this->simpleCache->delete($fileKey);
+                $this->simpleCache->delete("jobtitlelist_parse");
+                $this->simpleCache->delete("jobtitlelist_save");
+                //
+                // set status to follow progress
+                //
+                $this->simpleCache->set($fileKey.'_status2', ['status' => true, 'error' => null], 200);
             }
         }               
 

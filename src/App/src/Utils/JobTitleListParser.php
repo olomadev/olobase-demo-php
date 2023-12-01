@@ -8,21 +8,25 @@ use Shuchkin\SimpleXLSX;
 use Laminas\Cache\Storage\StorageInterface;
 use App\Model\CommonModel;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Predis\ClientInterface as Predis;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class JobTitleListParser
 {
-    protected $cache;
-    protected $predis;
+    /**
+     * Db table columns
+     */
+    const COL_COMPANY_ID = 'companyId';
+
     protected $translator;
     protected $commonModel;
+    protected $simpleCache;
 
     public function __construct($container)
     {
         $this->translator = $container->get(TranslatorInterface::class);
-        $this->predis = $container->get(Predis::class);
+        $this->simpleCache = $container->get(SimpleCacheInterface::class);
         $this->commonModel = $container->get(CommonModel::class);
-        $this->cache = $container->get(StorageInterface::class);
+        $this->simpleCache = $container->get(StorageInterface::class);
     }
 
     public function parse($data)
@@ -113,10 +117,11 @@ class JobTitleListParser
                         break;
                     }
                     $headerKey = $headers[$k]['key'];
-                    // validations
+                    //
+                    // Put your validations here !!!
                     // 
                     switch ($headerKey) {
-                        case 'companyId':
+                        case Self::COL_COMPANY_ID:
                             if (empty($v) || ! in_array(trim($v), $companyShortNames)) {
                                 $data['data'][$i][$headerKey]['errors'][] = $this->translator->translate(
                                     "No such company is defined in the database"
@@ -135,11 +140,8 @@ class JobTitleListParser
             $statusData['error'] = null;
             $statusData['validationError'] = $errorFound;
 
-            $this->cache->setItem($fileKey, $data);
-            $this->predis->expire($fileKey, 600);
-
-            $this->cache->setItem($fileKey.'_status', $statusData);
-            $this->predis->expire($fileKey.'_status', 600);
+            $this->simpleCache->setItem($fileKey, $data, 600);
+            $this->simpleCache->setItem($fileKey.'_status', $statusData, 600);
             
         } // end empty sheetdata
     }

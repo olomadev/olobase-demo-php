@@ -18,7 +18,7 @@ th, td {
 <table align="center" width="60%" style="border-collapse: collapse;border: 1px solid #e8e8e8;">
 	<tr>
 		<td style="padding:40px;">
-			<h2 style="color: <?php echo $themeColor ?>;">Demp App</h2>
+			<h2 style="color: <?php echo $themeColor ?>;">Demo App</h2>
 			<hr color="<?php echo $themeColor ?>" size="2" style="border-top: 2px solid <?php echo $themeColor ?>;" />
 			<table border="0" width="100%">
 				<tr>

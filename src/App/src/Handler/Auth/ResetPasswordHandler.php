@@ -4,23 +4,29 @@ declare(strict_types=1);
 
 namespace App\Handler\Auth;
 
-use App\Model\AuthModel;
+use App\Model\UserModel;
+use App\Utils\SmtpMailer;
 use App\Filter\Auth\ResetPasswordFilter;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class ResetPasswordHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private AuthModel $authModel,
+        private Translator $translator,
+        private UserModel $userModel,
         private ResetPasswordFilter $filter,
+        private SmtpMailer $mailer,
         private Error $error
     ) {
-        $this->authModel = $authModel;
+        $this->translator = $translator;
+        $this->userModel = $userModel;
         $this->filter = $filter;
+        $this->mailer = $mailer;
         $this->error = $error;
     }
 
@@ -46,12 +52,25 @@ class ResetPasswordHandler implements RequestHandlerInterface
         $this->filter->setInputData($request->getParsedBody());
         if ($this->filter->isValid()) {
             $username = $this->filter->getValue('email');
-            $password = $this->authModel->generateResetPassword($username);
-
-            // $userRow = $this->authModel->findOneByUsername($username);
+            $resetCode = $this->userModel->generateResetPassword($username);
+            $userRow = $this->userModel->findOneByUsername($username);
             //
-            // Send reset password email to users
+            // Send reset password email to user
             //
+            $link = 'https://'.PROJECT_DOMAIN.'/resetPassword?resetCode='.$resetCode;
+            $this->mailer->isHtml(true);
+            $data = [
+                'email' => $username,
+                'resetPasswordLink' => urlencode($link),
+                'themeColor' => $userRow['themeColor'] ?: "#039BE5",
+            ];
+            $body = $this->mailer->getTemplate('forgotPassword', $data);
+            $this->mailer->to($username);
+            $this->mailer->subject($this->translator->translate('Forgotten Password', 'templates'));
+            $this->mailer->body($body);
+            // $this->mailer->debugOutput();
+            $this->mailer->send();
+        
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);
         }

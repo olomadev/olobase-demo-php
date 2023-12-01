@@ -3,32 +3,18 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use function generateRandomNumber;
-
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Db\Adapter\AdapterInterface;
-use Laminas\Cache\Storage\StorageInterface;
-use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
 
 class AuthModel
 {
-    private $conn;
-    private $users;
     private $adapter;
-    private $simpleCache;
 
-    public function __construct(
-        AdapterInterface $adapter,
-        SimpleCacheInterface $sipmleCache,
-        TableGatewayInterface $users
-    )
+    public function __construct(AdapterInterface $adapter)
     {
-        $this->users = $users;
         $this->adapter = $adapter;
-        $this->simpleCache = $sipmleCache;
-        $this->conn = $this->adapter->getDriver()->getConnection();
     }
 
     /**
@@ -89,70 +75,5 @@ class AuthModel
         return $roles;
     }
 
-    /**
-     * Generate reset password code
-     * 
-     * @param  string $username email
-     * @return string
-     */
-    public function generateResetPassword(string $username) : string
-    {
-        $resetPasswordCode = generateRandomNumber(6);
-        $this->simpleCache->set((string)$resetPasswordCode, $username, 600);
-        return $resetPasswordCode;
-    }
-
-    /**
-     * Find one user by username to create reset password template
-     * 
-     * @param  string $username email
-     * @return array
-     */
-    public function findOneByUsername(string $username)
-    {
-        $sql = new Sql($this->adapter);
-        $select = $sql->select();
-        $select->columns(
-            [
-                'id' => 'userId',
-                'userId',
-                'firstname',
-                'lastname',
-                'email',
-                'active',
-                'themeColor',
-            ]
-        );
-        $select->from('users');
-        $select->where(['email' => $username]);
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $resultSet = $statement->execute();
-        $row = $resultSet->current();
-        $statement->getResource()->closeCursor();
-        return $row;
-    }
-
-    /**
-     * Reset user password with reset code
-     * 
-     * @param  string $resetCode   the reset code emailed to user
-     * @param  string $newPassword new user password
-     * @return void
-     */
-    public function resetPassword(string $resetCode, string $newPassword)
-    {
-        $username = $this->simpleCache->get($resetCode);
-        if ($username) {
-            $password = password_hash($newPassword, PASSWORD_DEFAULT, ['cost' => 10]);
-            try {
-                $this->conn->beginTransaction();
-                $this->users->update(['password' => $password, 'emailActivation' => 1], ['username' => $username]);
-                $this->conn->commit();
-            } catch (Exception $e) {
-                $this->conn->rollback();
-                throw $e;
-            }
-        }
-    }
 
 }

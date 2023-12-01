@@ -62,6 +62,7 @@ class LogoutHandler implements RequestHandlerInterface
                     $this->tokenModel->kill($data['data']->userId, $deviceKey); // delete the user from session db
                 }
             } catch (ExpiredException $e) {
+                
                 list($header, $payload, $signature) = explode(".", $token);
                 $base64DecodedToken = base64_decode($payload);
                 $token = json_decode($base64DecodedToken, true);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Exception\JsonDecodeException;
 
 define('PROJECT_ROOT', dirname(__DIR__));
-define('PROJECT_DOMAIN', 'example.com');
+define('PROJECT_DOMAIN', 'demo.oloma.dev');
 define('CACHE_ROOT_KEY', 'demoApp:');
 define('CACHE_TMP_FILE_KEY', 'tmpFileKey_');
 /**
