@@ -40,6 +40,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/auth/token', App\Handler\Auth\TokenHandler::class, ['POST']);
     $app->route('/api/auth/refresh', [App\Handler\Auth\RefreshHandler::class], ['POST']);
     $app->route('/api/auth/logout', [App\Handler\Auth\LogoutHandler::class], ['GET']);
+    $app->route('/api/auth/session', [JwtAuthenticationMiddleware::class, App\Handler\Auth\SessionUpdateHandler::class], ['POST']);
     $app->route('/api/auth/resetPassword', [App\Handler\Auth\ResetPasswordHandler::class], ['POST']);
     $app->route('/api/auth/checkResetCode', [App\Handler\Auth\CheckResetCodeHandler::class], ['GET']);
     $app->route('/api/auth/changePassword', [App\Handler\Auth\ChangePasswordHandler::class], ['POST']);

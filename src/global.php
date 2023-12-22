@@ -8,6 +8,7 @@ define('PROJECT_ROOT', dirname(__DIR__));
 define('PROJECT_DOMAIN', 'demo.oloma.dev');
 define('CACHE_ROOT_KEY', 'demoApp:');
 define('CACHE_TMP_FILE_KEY', 'tmpFileKey_');
+define('SESSION_KEY', rtrim(CACHE_ROOT_KEY, ':').'_session_ttl_');
 /**
  * Removes image prefix "data:image/png;base64, ...."
  * 
@@ -166,9 +167,14 @@ function convertToMoney($value)
  * GUID (aka UUID) is an acronym for 'Globally Unique Identifier' (or 'Universally Unique Identifier').
  * It is a 128-bit integer number used to identify resources.
  */
-function createGuid()
+function createGuid($uppercase = false)
 {
-    $randomStr = generateRandomString(6);
+    $randomString = generateRandomString(6);
+    if ($uppercase) {
+        $randomStr = strtoupper($randomString);    
+    } else {
+        $randomStr = $randomString;
+    }
     // Create a token
     $token      = $randomStr;
     $token     .= $randomStr;

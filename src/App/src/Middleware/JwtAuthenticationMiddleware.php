@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use Mezzio\Authentication\UserInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Firebase\JWT\ExpiredException;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -20,10 +21,19 @@ class JwtAuthenticationMiddleware implements MiddlewareInterface
      * @var AuthenticationInterface
      */
     protected $auth;
+    protected $config;
+    protected $translator;
 
-    public function __construct(AuthenticationInterface $auth, Translator $translator)
+    public function __construct(
+        array $config, 
+        SimpleCacheInterface $simpleCache,
+        AuthenticationInterface $auth, 
+        Translator $translator
+    )
     {
         $this->auth = $auth;
+        $this->config = $config;
+        $this->simpleCache = $simpleCache;
         $this->translator = $translator;
     }
 
@@ -32,9 +42,16 @@ class JwtAuthenticationMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {        
+        $configSessionTTL = (int)$this->config['token']['session_ttl']; // for strong security reason it should be less
         try {
             $user = $this->auth->authenticate($request);
             if (null !== $user) {
+        
+                // reset session ttl using cache 
+                // 
+                $this->simpleCache->set(SESSION_KEY.$user->getId(), $configSessionTTL, $configSessionTTL);
+                //
+                //
                 return $handler->handle($request->withAttribute(UserInterface::class, $user));
             }
         } catch (ExpiredException $e) {

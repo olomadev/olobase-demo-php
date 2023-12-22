@@ -129,6 +129,7 @@ class ConfigProvider
                 Handler\Auth\TokenHandler::class => Handler\Auth\TokenHandlerFactory::class,
                 Handler\Auth\RefreshHandler::class => Handler\Auth\RefreshHandlerFactory::class,
                 Handler\Auth\LogoutHandler::class => Handler\Auth\LogoutHandlerFactory::class,
+                Handler\Auth\SessionUpdateHandler::class => Handler\Auth\SessionUpdateHandlerFactory::class,
                 Handler\Auth\ResetPasswordHandler::class => Handler\Auth\ResetPasswordHandlerFactory::class,
                 Handler\Auth\CheckResetCodeHandler::class => Handler\Auth\CheckResetCodeHandlerFactory::class,
                 Handler\Auth\ChangePasswordHandler::class => Handler\Auth\ChangePasswordHandlerFactory::class,
@@ -197,7 +198,7 @@ class ConfigProvider
                 Handler\FailedLogins\FindAllByPagingHandler::class => Handler\FailedLogins\FindAllByPagingHandlerFactory::class,
                 Handler\FailedLogins\FindAllIpAdressesHandler::class => Handler\FailedLogins\FindAllIpAdressesHandlerFactory::class,
                 Handler\FailedLogins\FindAllUsernamesHandler::class => Handler\FailedLogins\FindAllUsernamesHandlerFactory::class,
-
+                
                 // Models
                 //
                 Model\AuthModel::class => function ($container) {

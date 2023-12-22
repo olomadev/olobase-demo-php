@@ -237,7 +237,7 @@ class JwtAuthentication implements AuthenticationInterface
             return null;
         }
         if (preg_match(Self::HEADER_VALUE_PATTERN, $authHeader[0], $matches)) {
-            return $matches[1];
+            return $matches[1] == "null" ? null : $matches[1];
         }
         return null;
     }

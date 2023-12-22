@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
 use Mezzio\Authentication\AuthenticationInterface as Auth;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
@@ -25,6 +26,8 @@ class RefreshHandler implements RequestHandlerInterface
     protected const LOGOUT_SIGNAL = 'Logout';
 
     public function __construct(
+        array $config,
+        private SimpleCacheInterface $simpleCache,
         private Translator $translator,
         private Auth $auth,
         private AuthModel $authModel,
@@ -32,6 +35,8 @@ class RefreshHandler implements RequestHandlerInterface
         private JwtEncoder $encoder,
         private Error $error
     ) {
+        $this->config = $config;
+        $this->simpleCache = $simpleCache;
         $this->translator = $translator;
         $this->auth = $auth;
         $this->authModel = $authModel;
@@ -78,7 +83,45 @@ class RefreshHandler implements RequestHandlerInterface
             $this->encoder->decode($post['token']);
         } catch (ExpiredException $e) {
             list($header, $payload, $signature) = explode(".", $post['token']);
-            $payload = json_decode(base64_decode($payload), true);
+            $payload = json_decode(base64_decode($payload), true);  
+            //
+            // check user id
+            // 
+            if (empty($payload['data']['userId'])) {
+                return new JsonResponse(
+                    [
+                        'data' => ['error' => "User id cannot be empty"]
+                    ], 
+                    401
+                );
+            }
+            $userId = $payload['data']['userId'];
+            $expiredAt = $payload['exp'];
+            //
+            // check session is expired
+            //
+            $sessionTTL = $this->simpleCache->get(SESSION_KEY.$userId);
+            if (! $sessionTTL) {
+                return new JsonResponse(
+                    [
+                        'data' => [
+                            'error' => Self::LOGOUT_SIGNAL, // don't change
+                        ] 
+                    ],
+                    401
+                );
+            }
+            $now = time();
+            if ($expiredAt + (int)$sessionTTL < $now) {
+                return new JsonResponse(
+                    [
+                        'data' => [
+                            'error' => Self::LOGOUT_SIGNAL, // don't change
+                        ] 
+                    ],
+                    401
+                );   
+            }  
             if (json_last_error() != JSON_ERROR_NONE) {
                 $message = $this->translator->translate('Invalid token');
                 return new JsonResponse(

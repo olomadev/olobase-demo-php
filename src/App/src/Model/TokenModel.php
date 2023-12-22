@@ -27,6 +27,11 @@ class TokenModel
         $this->config = $config;
         $this->encoder = $encoder;
         $this->refreshToken = $refreshToken;
+
+        $sessionTTL = $this->config['token']['session_ttl'];
+        if ($sessionTTL < 600) {
+            throw new Exception("Configuration error: Session ttl value cannot be less than 600 seconds.");
+        }
     }
     
     /**
@@ -48,7 +53,7 @@ class TokenModel
         $issuedAt   = time();
         // $notBefore  = $issuedAt + 10;           // Adding 10 seconds
         $notBefore  = $issuedAt; // node.js nJwt token çalışmyor extra time ekler isek
-        $expire     = $notBefore + (60 * $config['access_token_duration_in_minutes']);  // Adding 60 minute
+        $expire     = $notBefore + (60 * $config['token_validity']);  // Adding 60 minute
         $http       = empty($server['HTTPS']) ? 'http://' : 'https://';
         $issuer     = $http.$server['HTTP_HOST'];
         $userAgent  = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
@@ -67,8 +72,7 @@ class TokenModel
                 'roles' => $user->getRoles(),
                 'details' => [
                     'email' => $user->getDetail('email') ? $user->getDetail('email') : $user->getIdentity(), // User email
-                    'firstname' => $user->getDetail('firstname'),
-                    'lastname' => $user->getDetail('lastname'),        
+                    'fullname' => $user->getDetail('fullname'),
                     'ip' => $user->getDetail('ip'),
                     'deviceKey' => $user->getDetail('deviceKey'),
                 ],
@@ -116,14 +120,14 @@ class TokenModel
 
             // max usage sınırı geçildiyse 401 unauthorized response dön logout için
             //
-            if ($config['refresh_token_max_usage'] > 0 AND $row['updateCount'] > $config['refresh_token_max_usage']) {
+            if ($config['max_usage_of_refresh_token'] > 0 AND $row['updateCount'] > $config['max_usage_of_refresh_token']) {
                 return false;
             }
             //------------- Create New Token ------------------//
 
             $issuedAt   = time();
             $notBefore  = $issuedAt;   // Do not add seconds
-            $expire     = $notBefore + (60 * $config['access_token_duration_in_minutes']);    // Adding 60 minute
+            $expire     = $notBefore + (60 * $config['token_validity']);    // Adding 60 minute
             $jwt = [
                 'iat'  => $decoded['iat'],  // Issued at: time when the token was generated
                 'jti'  => $decoded['jti'],  // Json Token Id: an unique identifier for the token

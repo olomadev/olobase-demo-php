@@ -23,14 +23,6 @@ return [
 
     // Enable debugging; typically used to provide debugging information within templates.
     'debug' => true,
-    'smtp' => [
-        'host' => 'smtp.office365.com',
-        'port' => 587,
-        'username' => 'notifications@example.com',
-        'password' => '',
-        'from' => 'noreply@example.com',
-        'from_name' => 'Demo',
-    ],
     'jwt_encoder' => [
         //  use below the code to create secret key:
         //  php -r "echo base64_encode(openssl_random_pseudo_bytes(32)).PHP_EOL;"
@@ -38,8 +30,13 @@ return [
         'secret_key' => '',
     ],
     'token' => [
-        'access_token_duration_in_minutes' => 5, // in minutes for how long the token will be valid in the app, you can reduce the time for high security
-        'refresh_token_max_usage' => 0, // maximum number of times a token can be used, 0 = unlimited
+        'session_ttl' => 900, // in seconds - for strong security reason it should be less
+        // in minutes for how long the token will be valid in the app every "x" time the will be refresh, 
+        // you can reduce the time for higher security
+        'token_validity' => 10, 
+        // maximum number of times a token can be used, 0 = unlimited
+        // 
+        'max_usage_of_refresh_token' => 60,
     ],
 	'db' => [
 	 	'driver'   => 'Pdo_Mysql',

@@ -80,18 +80,17 @@ class SaveFilter extends InputFilter
 
         // Role Permissions Input filter
         //
-        $rolePermissionsCollection = $this->filter->get(CollectionInputFilter::class);
-        $rolePermissionsInputFilter = $this->filter->get(InputFilter::class);
-        $rolePermissionsInputFilter->add([
+        $collection = $this->filter->get(CollectionInputFilter::class);
+        $inputFilter = $this->filter->get(InputFilter::class);
+        $inputFilter->add([
             'name' => 'permId',
             'required' => true,
             'validators' => [
                 ['name' => Uuid::class],
             ],
         ]);
-        $rolePermissionsCollection->setInputFilter($rolePermissionsInputFilter);
-        $this->add($rolePermissionsCollection, 'rolePermissions');
-
+        $collection->setInputFilter($inputFilter);
+        $this->add($collection, 'rolePermissions');
 
         $this->setData($data);
     }

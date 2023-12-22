@@ -20,8 +20,8 @@ class TokenViewModel
                 'lastname' => trim($details['lastname']),
                 'email' => trim($details['email']),
                 'roles' => $this->row['roles'],
-                'avatar' => $details['avatar'],
             ],
+            'avatar' => $details['avatar'],
             'expiresAt' => $this->row['expiresAt']
         ];
         return $data;
