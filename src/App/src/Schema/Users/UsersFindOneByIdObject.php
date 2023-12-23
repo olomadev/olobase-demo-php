@@ -50,6 +50,13 @@ class UsersFindOneByIdObject
      */
     public $themeColor;
     /**
+    * @var object
+    * @OA\Property(
+    *     ref="#/components/schemas/AvatarObject",
+    * )
+    */
+    public $avatar;
+    /**
      * @var string
      * @OA\Property(
      *     format="date-time",
@@ -70,4 +77,21 @@ class UsersFindOneByIdObject
      * )
      */
     public $lastLogin;
+    /**
+    *  @var array
+    *  @OA\Property(
+    *      type="array",
+    *      @OA\Items(
+    *           @OA\Property(
+    *             property="id",
+    *             type="string",
+    *           ),
+    *           @OA\Property(
+    *             property="name",
+    *             type="string",
+    *           ),
+    *     ),
+    *  )
+    */
+    public $userRoles;
 }

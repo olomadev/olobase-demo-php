@@ -73,19 +73,21 @@ class TokenHandler implements RequestHandlerInterface
 
                 if (null !== $user) {
                     $request = $request->withAttribute(UserInterface::class, $user);
-                    $encoded = $this->auth->getTokenModel()->create($request);                    
+                    $encoded = $this->auth->getTokenModel()->create($request);
                     $details = $user->getDetails();
-                    
-                    $data['id'] = $user->getId();
-                    $data['token'] = $encoded['token'];
-                    $data['details'] = $details;
-                    $data['roles'] = $user->getRoles();
-                    $data['expiresAt'] = $encoded['expiresAt'];
-
-                    $tokenResult = new TokenViewModel($data);
                     return new JsonResponse(
                         [
-                            'data' => $tokenResult->getData()
+                            'data' => [
+                                'token' => $encoded['token'],
+                                'user'  => [
+                                    'id' => $user->getId(),
+                                    'firstname' => trim($details['firstname']),
+                                    'lastname' => trim($details['lastname']),
+                                    'roles' => $user->getRoles(),
+                                ],
+                                'avatar' => $details['avatar'],
+                                'expiresAt' => $encoded['expiresAt']
+                            ]
                         ]
                     );
                 }

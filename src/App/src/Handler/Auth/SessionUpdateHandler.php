@@ -42,7 +42,7 @@ class SessionUpdateHandler implements RequestHandlerInterface
         if ($user) {
             // Reset session ttl
             // 
-            $configSessionTTL = (int)$this->config['token']['session_ttl'];
+            $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
             // 
             // reset session ttl using cache 
             // 

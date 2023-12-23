@@ -162,7 +162,7 @@ class UserModel
         $select->where(['u.userId' => $userId]);
         $select->join(['ua' => 'userAvatars'], 'ua.userId = u.userId',
             [
-                'avatarImage'
+                'avatar' => new Expression("JSON_OBJECT('image', CONCAT('data:image/png;base64,', TO_BASE64(avatarImage)))"),
             ],
         $select::JOIN_LEFT);
 
@@ -244,8 +244,8 @@ class UserModel
                     $this->userRoles->insert(['userId' => $userId, 'roleId' => $val['id']]);
                 }
             }
-            if (! empty($data['avatarImage'])) {
-                $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $avatarImageBlob]);
+            if (! empty($data['avatar']['image'])) {
+                $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $data['avatar']['image']]);
             }
             $this->conn->commit();
         } catch (Exception $e) {
@@ -273,8 +273,8 @@ class UserModel
                 }
             }
             $this->userAvatars->delete(['userId' => $userId]);
-            if (! empty($data['avatarImage'])) {
-                $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $data['avatarImage']]);
+            if (! empty($data['avatar']['image'])) {
+                $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $data['avatar']['image']]);
             }
             $this->conn->commit();
         } catch (Exception $e) {

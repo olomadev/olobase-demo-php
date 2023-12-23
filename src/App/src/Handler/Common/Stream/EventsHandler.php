@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Handler\Common\Stream;
 
-use App\Model\CommonModel;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Diactoros\Response\TextResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +39,11 @@ class EventsHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        // Which modules use event stream
+        // 
+        // 1 - Job title lists
+        // 2 - x ..
+
         $get = $request->getQueryParams();
         $error = "";
         $status = 0;

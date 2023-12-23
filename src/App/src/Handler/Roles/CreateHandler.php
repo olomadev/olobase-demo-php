@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
-use App\Entity\RolesEntity;
-use App\Entity\RolePermissionsEntity;
 use App\Schema\Roles\RoleSave;
 use App\Filter\Roles\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -59,13 +57,7 @@ class CreateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                RoleSave::class,
-                [
-                    'roles' => RolesEntity::class,
-                    'rolePermissions' => RolePermissionsEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(RoleSave::class, 'roles');
             $this->roleModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

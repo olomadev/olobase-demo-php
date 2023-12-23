@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
-use App\Entity\UsersEntity;
 use App\Schema\Account\AccountSave;
 use App\Filter\Account\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -61,12 +60,7 @@ class UpdateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                AccountSave::class,
-                [
-                    'users' => UsersEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(AccountSave::class, 'users');
             $data['id'] = $user->getId();
             $this->userModel->update($data);
         } else {

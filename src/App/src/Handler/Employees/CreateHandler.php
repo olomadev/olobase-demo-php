@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\Employees;
 
 use App\Model\EmployeeModel;
-use App\Entity\EmployeesEntity;
 use App\Schema\Employees\EmployeeSave;
 use App\Filter\Employees\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -58,12 +57,7 @@ class CreateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                EmployeeSave::class,
-                [
-                    EmployeesEntity::TABLE_NAME => EmployeesEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(EmployeeSave::class, 'employees');
             $this->employeeModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

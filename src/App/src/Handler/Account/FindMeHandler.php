@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
+use Oloma\Php\DataManagerInterface;
+use App\Schema\Account\AccountFindMe;
 use Mezzio\Authentication\UserInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -14,10 +16,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 class FindMeHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private UserModel $userModel
+        private UserModel $userModel,
+        private DataManagerInterface $dataManager
     ) 
     {
         $this->userModel = $userModel;
+        $this->dataManager = $dataManager;
     }
 
     /**
@@ -40,8 +44,8 @@ class FindMeHandler implements RequestHandlerInterface
         $userId = $user->getId();
         $row = $this->userModel->findOneById($userId);
         if ($row) {
-            $viewModel = new FindMeViewModel($row);
-            return new JsonResponse(['data' => $viewModel->getData()]);            
+            $data = $this->dataManager->getViewData(AccountFindMe::class, $row);
+            return new JsonResponse($data);            
         }
         return new JsonResponse([], 404);
     }

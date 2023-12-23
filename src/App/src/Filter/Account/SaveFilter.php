@@ -6,6 +6,7 @@ namespace App\Filter\Account;
 
 use App\Filter\InputFilter;
 use App\Filter\Utils\ToFile;
+use App\Filter\ObjectInputFilter;
 use App\Validator\BlobFileUpload;
 use Laminas\Filter\StringTrim;
 use App\Validator\Db\RecordExists;
@@ -99,8 +100,9 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $this->add([
-            'name' => 'avatarImage',
+        $objectFilter = new ObjectInputFilter();
+        $objectFilter->add([
+            'name' => 'image',
             'required' => false,
             'filters' => [
                 ['name' => ToFile::class],
@@ -112,12 +114,16 @@ class SaveFilter extends InputFilter
                         'operation' => HTTP_METHOD == 'POST' ? 'create' : 'update',
                         'max_allowed_upload' => 2097152,  // 2 mega bytes
                         'mime_types' => [
-                            'image/png', 'image/jpeg', 'image/jpg', 'image/gif',
+                            'image/png',
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif',
                         ],
                     ],
                 ]
             ]
         ]);
+        $this->add($objectFilter, 'avatar');
 
         // render & set data
         //

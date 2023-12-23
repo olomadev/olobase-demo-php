@@ -30,7 +30,8 @@ return [
         'secret_key' => '',
     ],
     'token' => [
-        'session_ttl' => 900, // in seconds - for strong security reason it should be less
+        // for strong security reason it should be less
+        'session_ttl' => 10, // in minutes (TTL cannot be less then 10 minute)
         // in minutes for how long the token will be valid in the app every "x" time the will be refresh, 
         // you can reduce the time for higher security
         'token_validity' => 10, 

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\Employees;
 
 use App\Model\EmployeeModel;
-use App\Entity\EmployeesEntity;
-use App\Entity\EmployeeChildrenEntity;
 use App\Schema\Employees\EmployeeSave;
 use App\Filter\Employees\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -67,13 +65,7 @@ class UpdateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                EmployeeSave::class,
-                [
-                    'employees' => EmployeesEntity::class,
-                    'employeeChildren' => EmployeeChildrenEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(EmployeeSave::class, 'employees');
             $this->employeeModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

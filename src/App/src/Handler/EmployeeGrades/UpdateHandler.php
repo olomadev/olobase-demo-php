@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\EmployeeGrades;
 
 use App\Model\EmployeeGradeModel;
-use App\Entity\EmployeeGradesEntity;
 use App\Schema\EmployeeGrades\EmployeeGradeSave;
 use App\Filter\EmployeeGrades\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -66,12 +65,7 @@ class UpdateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                EmployeeGradeSave::class,
-                [
-                    'employeeGrades' => EmployeeGradesEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(EmployeeGradeSave::class, 'employeeGrades');
             $this->employeeGradeModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

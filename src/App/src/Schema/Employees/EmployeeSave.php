@@ -15,7 +15,7 @@ class EmployeeSave
      */
     public $employeeId;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="uuid",
@@ -38,7 +38,7 @@ class EmployeeSave
      */
     public $surname;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="uuid",
@@ -46,7 +46,7 @@ class EmployeeSave
     */
     public $jobTitleId;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="uuid",

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\Users;
 
 use App\Model\UserModel;
-use App\Entity\UsersEntity;
 use App\Schema\Users\UserSave;
 use App\Filter\Users\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -58,12 +57,7 @@ class CreateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                UserSave::class,
-                [
-                    'users' => UsersEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(UserSave::class, 'users');
             $this->userModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

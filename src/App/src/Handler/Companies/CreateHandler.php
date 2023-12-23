@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\Companies;
 
 use App\Model\CompanyModel;
-use App\Entity\CompaniesEntity;
 use App\Schema\Companies\CompanySave;
 use App\Filter\Companies\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -58,12 +57,7 @@ class CreateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                CompanySave::class,
-                [
-                    'companies' => CompaniesEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(CompanySave::class, 'companies');
             $this->companySaveModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

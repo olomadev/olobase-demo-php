@@ -38,8 +38,10 @@ class AccountFindMeObject
      */
     public $emailActivation;
     /**
-     * @var string
-     * @OA\Property()
-     */
-    public $avatarImage;
+    * @var object
+    * @OA\Property(
+    *     ref="#/components/schemas/AvatarObject",
+    * )
+    */
+    public $avatar;
 }

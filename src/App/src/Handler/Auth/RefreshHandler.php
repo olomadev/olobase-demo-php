@@ -141,10 +141,19 @@ class RefreshHandler implements RequestHandlerInterface
                     401
                 );
             }
-            $refreshResult = new RefreshViewModel($data);
             return new JsonResponse(
                 [
-                    'data' => $refreshResult->getData(),
+                    'data' => [
+                        'token' => $data['token'],
+                        'user'  => [
+                            'id' => $data['data']['userId'],
+                            'firstname' => trim($data['data']['details']['firstname']),
+                            'lastname' => trim($data['data']['details']['lastname']),   
+                            'roles' => $data['data']['roles'],
+                            'email'=> $data['data']['details']['email']
+                        ],
+                        'expiresAt' => $data['expiresAt'],
+                    ],
                 ]
             );
         } catch (Exception $e) {

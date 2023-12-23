@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\Permissions;
 
 use App\Model\PermissionModel;
-use App\Entity\PermissionsEntity;
 use App\Schema\Permissions\PermissionSave;
 use App\Filter\Permissions\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -58,12 +57,7 @@ class CreateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                PermissionSave::class,
-                [
-                    'permissions' => PermissionsEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(PermissionSave::class, 'permissions');
             $this->permissionModel->create($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

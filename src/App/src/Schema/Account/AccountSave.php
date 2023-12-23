@@ -38,8 +38,10 @@ class AccountSave
      */
     public $emailActivation;
     /**
-    * @var string
-    * @OA\Property()
+    * @var object
+    * @OA\Property(
+    *     ref="#/components/schemas/AvatarObject",
+    * )
     */
-    public $avatarImage;
+    public $avatar;
 }

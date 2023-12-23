@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\JobTitles;
 
 use App\Model\JobTitleModel;
-use App\Entity\JobTitlesEntity;
 use App\Schema\JobTitles\JobTitleSave;
 use App\Filter\JobTitles\SaveFilter;
 use Oloma\Php\DataManagerInterface;
@@ -66,12 +65,7 @@ class UpdateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getEntityData(
-                JobTitleSave::class,
-                [
-                    'jobTitles' => JobTitlesEntity::class,
-                ]
-            );
+            $data = $this->dataManager->getSaveData(JobTitleSave::class, 'jobTitles');
             $this->jobTitleModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

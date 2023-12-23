@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Handler\Companies;
 
 use App\Model\CompanyModel;
+use Oloma\Php\DataManagerInterface;
+use App\Schema\Companies\CompaniesFindOneById;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,9 +14,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindOneByIdHandler implements RequestHandlerInterface
 {
-    public function __construct(CompanyModel $companyModel)
+    public function __construct(
+        private CompanyModel $companyModel,
+        private DataManagerInterface $dataManager
+    )
     {
         $this->companyModel = $companyModel;
+        $this->dataManager = $dataManager;
     }
 
     /**
@@ -43,11 +49,8 @@ class FindOneByIdHandler implements RequestHandlerInterface
     {
         $row = $this->companyModel->findOneById($request->getAttribute("companyId"));
         if ($row) {
-            return new JsonResponse(
-                [
-                    'data' => (new FindOneByIdViewModel($row))->getData()
-                ]
-            );
+            $data = $this->dataManager->getViewData(CompaniesFindOneById::class, $row);
+            return new JsonResponse($data);   
         }
         return new JsonResponse([], 404);
     }

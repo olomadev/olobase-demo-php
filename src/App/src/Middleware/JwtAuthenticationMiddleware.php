@@ -42,7 +42,7 @@ class JwtAuthenticationMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {        
-        $configSessionTTL = (int)$this->config['token']['session_ttl']; // for strong security reason it should be less
+        $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60; // for strong security reason it should be less
         try {
             $user = $this->auth->authenticate($request);
             if (null !== $user) {

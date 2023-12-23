@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Handler\Users;
 
 use App\Model\UserModel;
+use Oloma\Php\DataManagerInterface;
+use App\Schema\Users\UsersFindOneById;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,9 +14,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindOneByIdHandler implements RequestHandlerInterface
 {
-    public function __construct(UserModel $userModel)
+    public function __construct(
+        private UserModel $userModel,
+        private DataManagerInterface $dataManager
+    )
     {
         $this->userModel = $userModel;
+        $this->dataManager = $dataManager;
     }
 
     /**
@@ -40,8 +46,8 @@ class FindOneByIdHandler implements RequestHandlerInterface
         $userId = $request->getAttribute("userId");
         $row = $this->userModel->findOneById($userId);
         if ($row) {
-            $viewModel = new FindOneByIdViewModel($row);
-            return new JsonResponse(['data' => $viewModel->getData()]);            
+            $data = $this->dataManager->getViewData(UsersFindOneById::class, $row);
+            return new JsonResponse($data); 
         }
         return new JsonResponse([], 404);
     }

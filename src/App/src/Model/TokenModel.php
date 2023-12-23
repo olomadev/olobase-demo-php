@@ -28,9 +28,9 @@ class TokenModel
         $this->encoder = $encoder;
         $this->refreshToken = $refreshToken;
 
-        $sessionTTL = $this->config['token']['session_ttl'];
-        if ($sessionTTL < 600) {
-            throw new Exception("Configuration error: Session ttl value cannot be less than 600 seconds.");
+        $sessionTTL = $this->config['token']['session_ttl'] * 60;
+        if ($sessionTTL < 10) {
+            throw new Exception("Configuration error: Session ttl value cannot be less than 10 minutes.");
         }
     }
     
@@ -72,7 +72,8 @@ class TokenModel
                 'roles' => $user->getRoles(),
                 'details' => [
                     'email' => $user->getDetail('email') ? $user->getDetail('email') : $user->getIdentity(), // User email
-                    'fullname' => $user->getDetail('fullname'),
+                    'firstname' => $user->getDetail('firstname'),
+                    'lastname' => $user->getDetail('lastname'),
                     'ip' => $user->getDetail('ip'),
                     'deviceKey' => $user->getDetail('deviceKey'),
                 ],

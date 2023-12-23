@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
+use Oloma\Php\DataManagerInterface;
+use App\Schema\Roles\RolesFindOneById;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -12,9 +14,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindOneByIdHandler implements RequestHandlerInterface
 {
-    public function __construct(RoleModel $roleModel)
+    public function __construct(
+        private RoleModel $roleModel,
+        private DataManagerInterface $dataManager
+    )
     {
         $this->roleModel = $roleModel;
+        $this->dataManager = $dataManager;
     }
 
     /**
@@ -44,8 +50,8 @@ class FindOneByIdHandler implements RequestHandlerInterface
         $roleId = $request->getAttribute("roleId");
         $row = $this->roleModel->findOneById($roleId);
         if ($row) {
-            $viewModel = new FindOneByIdViewModel($row);
-            return new JsonResponse(['data' => $viewModel->getData()]);
+            $data = $this->dataManager->getViewData(RolesFindOneById::class, $row);
+            return new JsonResponse($data);   
         }
         return new JsonResponse([], 404);
     }

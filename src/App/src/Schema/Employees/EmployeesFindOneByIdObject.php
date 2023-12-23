@@ -15,7 +15,7 @@ class EmployeesFindOneByIdObject
      */
     public $id;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="uuid",
@@ -38,7 +38,7 @@ class EmployeesFindOneByIdObject
      */
     public $surname;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="uuid",
@@ -46,7 +46,7 @@ class EmployeesFindOneByIdObject
     */
     public $jobTitleId;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="uuid",
@@ -84,6 +84,31 @@ class EmployeesFindOneByIdObject
     *  );
     */
     public $employeeChildren;
+    /**
+    *  @var array
+    *  @OA\Property(
+    *      type="array",
+    *      @OA\Items(
+    *           @OA\Property(
+    *             property="id",
+    *             type="string",
+    *           ),
+    *           @OA\Property(
+    *             property="name",
+    *             type="string",
+    *           ),
+    *           @OA\Property(
+    *             property="size",
+    *             type="number",
+    *           ),
+    *           @OA\Property(
+    *             property="type",
+    *             type="string",
+    *           ),
+    *     ),
+    *  );
+    */
+    public $files;
     /**
      * @var string
      * @OA\Property(
