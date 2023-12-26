@@ -38,16 +38,7 @@ class SessionUpdateHandler implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(UserInterface::class);
-
         if ($user) {
-            // Reset session ttl
-            // 
-            $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
-            // 
-            // reset session ttl using cache 
-            // 
-            $this->simpleCache->set(SESSION_KEY.$user->getId(), $configSessionTTL, $configSessionTTL);
-            
             return new TextResponse("ok", 200);
         }
         return new TextResponse("logout", 200);

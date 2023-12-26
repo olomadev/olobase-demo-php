@@ -31,10 +31,10 @@ return [
     ],
     'token' => [
         // for strong security reason it should be less
-        'session_ttl' => 10, // in minutes (TTL cannot be less then 10 minute)
+        'session_ttl' => 15, // in minutes (TTL cannot be less then 10 minute)
         // in minutes for how long the token will be valid in the app every "x" time the will be refresh, 
         // you can reduce the time for higher security
-        'token_validity' => 10, 
+        'token_validity' => 5, 
         // maximum number of times a token can be used, 0 = unlimited
         // 
         'max_usage_of_refresh_token' => 60,
@@ -63,7 +63,7 @@ return [
 
 	],
 	'redis' => [
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
 		'port' => '6379',
 		'timeout' => 60,
 		'password' => '',
