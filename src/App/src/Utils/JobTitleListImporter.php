@@ -7,10 +7,10 @@ use function createGuid;
 
 use Exception;
 use App\Model\CommonModel;
-use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\Db\Adapter\AdapterInterface;
 use Laminas\Db\ResultSet\ResultSet;
 use Laminas\Db\TableGateway\TableGateway;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class JobTitleListImporter
@@ -77,7 +77,7 @@ class JobTitleListImporter
                 //
                 // set status to follow progress
                 //
-                $this->simpleCache->set($fileKey.'_status2', ['status' => true, 'error' => null], 200);
+                $this->simpleCache->set($fileKey.'_status2', ['status' => true, 'error' => null], 600);
             }
         }               
 

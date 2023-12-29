@@ -20,7 +20,7 @@ $container = require dirname(__DIR__).'/config/container.php';
 use App\Utils\JobTitleListParser;
 use App\Utils\JobTitleListImporter;
 use Predis\ClientInterface as Predis;
-use Laminas\Cache\Storage\StorageInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 try {
     $predis = $container->get(Predis::class);
     //
@@ -42,9 +42,12 @@ try {
 } catch (Exception $e) {
     if (! empty($data['fileKey'])) { // set error 
         $fileKey = $data['fileKey'];
-        $cache = $container->get(StorageInterface::class);
-        $cache->setItem($fileKey.'_status', ['status' => false, 'error' => $e->getMessage()]);
-        $predis->expire($fileKey.'_status', 600);
+        $simpleCache = $container->get(SimpleCacheInterface::class);
+        $simpleCache->set(
+            $fileKey.'_status', 
+            ['status' => false, 'error' => $e->getMessage()],
+            600
+        );
     }
     $errorStr = $e->getMessage()." Error Line: ".$e->getLine();
     echo $errorStr.PHP_EOL;

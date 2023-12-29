@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Handler\JobTitleLists;
 
 use Mezzio\Authentication\UserInterface;
-use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class PreviewHandler implements RequestHandlerInterface
 {
-    public function __construct(StorageInterface $cache) 
+    public function __construct(SimpleCacheInterface $simpleCache) 
     {
-        $this->cache = $cache;     
+        $this->simpleCache = $simpleCache;     
     }
     
      /**
@@ -41,8 +41,8 @@ class PreviewHandler implements RequestHandlerInterface
 
         $user = $request->getAttribute(UserInterface::class);
         $fileKey = CACHE_TMP_FILE_KEY.$user->getId();
-        $resultStatus = $this->cache->getItem($fileKey.'_status');
-        $result = $this->cache->getItem($fileKey);
+        $resultStatus = $this->simpleCache->get($fileKey.'_status');
+        $result = $this->simpleCache->get($fileKey);
 
         $status = false;
         if (empty($resultStatus['status'])) {

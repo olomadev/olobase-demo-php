@@ -5,7 +5,6 @@ namespace App\Utils;
 
 use Exception;
 use Shuchkin\SimpleXLSX;
-use Laminas\Cache\Storage\StorageInterface;
 use App\Model\CommonModel;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
@@ -24,9 +23,8 @@ class JobTitleListParser
     public function __construct($container)
     {
         $this->translator = $container->get(TranslatorInterface::class);
-        $this->simpleCache = $container->get(SimpleCacheInterface::class);
         $this->commonModel = $container->get(CommonModel::class);
-        $this->simpleCache = $container->get(StorageInterface::class);
+        $this->simpleCache = $container->get(SimpleCacheInterface::class);
     }
 
     public function parse($data)
@@ -140,8 +138,8 @@ class JobTitleListParser
             $statusData['error'] = null;
             $statusData['validationError'] = $errorFound;
 
-            $this->simpleCache->setItem($fileKey, $data, 600);
-            $this->simpleCache->setItem($fileKey.'_status', $statusData, 600);
+            $this->simpleCache->set($fileKey, $data, 600);
+            $this->simpleCache->set($fileKey.'_status', $statusData, 600);
             
         } // end empty sheetdata
     }

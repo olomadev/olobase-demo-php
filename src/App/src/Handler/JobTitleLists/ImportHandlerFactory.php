@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Handler\JobTitleLists;
 
 use Predis\ClientInterface as Predis;
-use Laminas\Cache\Storage\StorageInterface;
 use App\Filter\JobTitleLists\ImportFilter;
 use Oloma\Php\DataManagerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
@@ -21,11 +20,10 @@ class ImportHandlerFactory
         $translator = $container->get(Translator::class);
         $error = $container->get(Error::class);
         $predis = $container->get(Predis::class);
-        $storage = $container->get(StorageInterface::class);
 
         $pluginManager = $container->get(InputFilterPluginManager::class);
         $inputFilter   = $pluginManager->get(ImportFilter::class);
 
-        return new ImportHandler($translator, $predis, $storage, $inputFilter, $error);
+        return new ImportHandler($translator, $predis, $inputFilter, $error);
     }
 }

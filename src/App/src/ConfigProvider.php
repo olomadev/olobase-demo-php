@@ -102,7 +102,7 @@ class ConfigProvider
             'factories' => [
                 // Classes
                 //
-                Authentication\JwtAuthentication::class => Container\JwtAuthenticationFactory::class,
+                Authentication\JwtAuthentication::class => Authentication\JwtAuthenticationFactory::class,
                 Middleware\ClientMiddleware::class => Middleware\ClientMiddlewareFactory::class,
                 Middleware\JwtAuthenticationMiddleware::class => Middleware\JwtAuthenticationMiddlewareFactory::class,
                 Listener\LoginListener::class => Listener\LoginListenerFactory::class,

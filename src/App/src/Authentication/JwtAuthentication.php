@@ -89,6 +89,11 @@ class JwtAuthentication implements AuthenticationInterface
     /**
      * @var string
      */
+    protected $ipAddress;
+
+    /**
+     * @var string
+     */
     protected $error;
 
     public function __construct(
@@ -116,6 +121,8 @@ class JwtAuthentication implements AuthenticationInterface
         ) use ($userFactory) : UserInterface {
             return $userFactory($id, $identity, $roles, $details);
         };
+        $remoteAddress = new RemoteAddress;
+        $this->ipAddress = $remoteAddress->getIpAddress();
     }
     /**
      * Authenticate
@@ -134,8 +141,8 @@ class JwtAuthentication implements AuthenticationInterface
     public function initAuthentication(ServerRequestInterface $request) : ?UserInterface
     {
         $post = $request->getParsedBody();
-        $usernameField = $this->config['form']['username'];
-        $passwordField = $this->config['form']['password'];
+        $usernameField = $this->config['authentication']['form']['username'];
+        $passwordField = $this->config['authentication']['form']['password'];
         
         // credentials are given ? 
         //
@@ -169,11 +176,6 @@ class JwtAuthentication implements AuthenticationInterface
             $this->error(Self::USERNAME_OR_PASSWORD_INCORRECT);
             return null;
         }
-        $remoteAddress = new RemoteAddress;
-        $ip = $remoteAddress->getIpAddress();
-        $server = $request->getServerParams();
-        $userAgent = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
-        $deviceKey = md5($userAgent);
         $rowObject = $this->authAdapter->getResultRowObject();
         //
         // successful login event
@@ -199,8 +201,8 @@ class JwtAuthentication implements AuthenticationInterface
             'firstname' => $rowObject->firstname,
             'lastname' => $rowObject->lastname,
             'avatar' => $rowObject->avatar,
-            'ip' => $ip,
-            'deviceKey' => $deviceKey,
+            'ip' => $this->getIpAddress(),
+            'deviceKey' => $this->getDeviceKey($request),
         ];
         return ($this->userFactory)(
             $rowObject->userId,
@@ -217,6 +219,16 @@ class JwtAuthentication implements AuthenticationInterface
             return false;
         }
         $this->payload = $this->encoder->decode($this->token);
+        if ($this->config['token']['validation']['user_ip'] 
+            && $this->payload['data']->details->ip != $this->getIpAddress()
+        ) {
+            return false;
+        }
+        if ($this->config['token']['validation']['user_agent'] 
+            &&  $this->payload['data']->details->deviceKey != $this->getDeviceKey($request)
+        ) {
+            return false;
+        }
         return $this->payload !== null;
     }
 
@@ -268,6 +280,18 @@ class JwtAuthentication implements AuthenticationInterface
             return;
         }
         $this->error = $this->translator->translate(Self::$messageTemplates[$errorKey]);
+    }
+    
+    private function getDeviceKey(ServerRequestInterface $request)
+    {
+        $server = $request->getServerParams();
+        $userAgent = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
+        return md5($userAgent);
+    }
+
+    private function getIpAddress()
+    {
+        return $this->ipAddress;
     }
     
 }

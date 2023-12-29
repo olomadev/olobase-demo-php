@@ -7,12 +7,13 @@ namespace App\Handler\JobTitleLists;
 use Psr\Container\ContainerInterface;
 use Laminas\Cache\Storage\StorageInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class PreviewHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        $storage = $container->get(StorageInterface::class);
-        return new PreviewHandler($storage);
+        $simpleCache = $container->get(SimpleCacheInterface::class);
+        return new PreviewHandler($simpleCache);
     }
 }

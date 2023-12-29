@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Handler\Common\Stream;
 
-use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Diactoros\Response\TextResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 /**
  * An "EventSource" instance opens a persistent connection to an HTTP server, 
@@ -19,9 +19,9 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class EventsHandler implements RequestHandlerInterface
 {
-    public function __construct(StorageInterface $cache)
+    public function __construct(SimpleCacheInterface $simpleCache)
     {
-        $this->cache = $cache;
+        $this->simpleCache = $simpleCache;
     }
 
     /**
@@ -66,16 +66,19 @@ class EventsHandler implements RequestHandlerInterface
             $processData = false;
             switch ($route) {
                 case 'upload':
-                    $processData = $this->cache->getItem(CACHE_TMP_FILE_KEY.$userId.'_status');
+                    $processData = $this->simpleCache->get(CACHE_TMP_FILE_KEY.$userId.'_status');
                     break;
                 case 'list':
-                    $processData = $this->cache->getItem(CACHE_TMP_FILE_KEY.$userId.'_status2');
+                    $processData = $this->simpleCache->get(CACHE_TMP_FILE_KEY.$userId.'_status2');
                     break;
             }
             if ($processData && array_key_exists("status", $processData)) {
                 $status = $processData['status'];    
             }
         }
+        // debug:
+        // file_put_contents(PROJECT_ROOT."/data/tmp/error-output.txt", print_r($processData, true), FILE_APPEND | LOCK_EX);
+
         //
         // encode data
         //

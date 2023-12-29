@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Handler\JobTitleLists;
 
 use Mezzio\Authentication\UserInterface;
-use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class RemoveHandler implements RequestHandlerInterface
 {
-    public function __construct(StorageInterface $cache) 
+    public function __construct(SimpleCacheInterface $simpleCache) 
     {
-        $this->cache = $cache;     
+        $this->simpleCache = $simpleCache;     
     }
     
     /**
@@ -38,17 +38,17 @@ class RemoveHandler implements RequestHandlerInterface
         $user = $request->getAttribute(UserInterface::class);
         $fileKey = CACHE_TMP_FILE_KEY.$user->getId();
 
-        $data = $this->cache->getItem($fileKey);
+        $data = $this->simpleCache->get($fileKey);
         if (! empty($data['fileId'])) {
             $tmpFile = PROJECT_ROOT."/data/tmp/".$data['fileId'].".xlsx";
             if (file_exists($tmpFile)) {
                 unlink($tmpFile);
             }
         }
-        $this->cache->removeItem('jobtitlelist_parse');
-        $this->cache->removeItem($fileKey);
-        $fileKey = CACHE_TMP_FILE_KEY.$user->getId().'_status';
-        $this->cache->removeItem($fileKey);
+        $this->simpleCache->delete('jobtitlelist_parse'); // remove job list
+        $this->simpleCache->delete($fileKey);
+        $statusKey = CACHE_TMP_FILE_KEY.$user->getId().'_status';
+        $this->simpleCache->delete($statusKey);
 
         return new JsonResponse([], 200);
     }

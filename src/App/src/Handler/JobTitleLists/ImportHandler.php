@@ -7,9 +7,8 @@ namespace App\Handler\JobTitleLists;
 use App\Filter\JobTitleLists\ImportFilter;
 use Mezzio\Authentication\UserInterface;
 use Oloma\Php\DataManagerInterface;
-use Predis\ClientInterface as Predis;
-use Laminas\Cache\Storage\StorageInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Predis\ClientInterface as Predis;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,14 +20,12 @@ class ImportHandler implements RequestHandlerInterface
     public function __construct(
         Translator $translator,
         Predis $predis,
-        StorageInterface $cache,
         ImportFilter $filter,
         Error $error
     ) 
     {
         $this->filter = $filter;
         $this->predis = $predis;
-        $this->cache = $cache;
         $this->error = $error;
     }
     
@@ -58,7 +55,7 @@ class ImportHandler implements RequestHandlerInterface
         $user = $request->getAttribute(UserInterface::class);
         $post = $request->getParsedBody();
         $fileKey = CACHE_TMP_FILE_KEY.$user->getId();
-        $hasFile = $this->cache->getItem($fileKey);
+        $hasFile = $this->predis->get($fileKey);
 
         if (! $hasFile) {
             return new JsonResponse(

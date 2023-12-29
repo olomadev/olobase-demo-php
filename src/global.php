@@ -7,7 +7,7 @@ use App\Exception\JsonDecodeException;
 define('PROJECT_ROOT', dirname(__DIR__));
 define('PROJECT_DOMAIN', 'demo.oloma.dev');
 define('CACHE_ROOT_KEY', 'demoApp:');
-define('CACHE_TMP_FILE_KEY', 'tmpFileKey_');
+define('CACHE_TMP_FILE_KEY', 'tmp_file_');
 define('SESSION_KEY', rtrim(CACHE_ROOT_KEY, ':').'_session_ttl_');
 /**
  * Removes image prefix "data:image/png;base64, ...."
