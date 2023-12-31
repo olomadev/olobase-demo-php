@@ -300,10 +300,11 @@ class ConfigProvider
                 },
                 Model\TokenModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
+                    $cacheStorage = $container->get(StorageInterface::class);
                     $jwtEncoder = $container->get(JwtEncoderInterface::class);
                     $users = new TableGateway('users', $dbAdapter, null);
-                    $refreshToken = new TableGateway('refreshTokens', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    return new Model\TokenModel($container->get('config'), $jwtEncoder, $users, $refreshToken);
+                    $tokens = new TableGateway('tokens', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    return new Model\TokenModel($container->get('config'), $cacheStorage, $jwtEncoder, $users, $tokens);
                 },
                 Model\UserModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);

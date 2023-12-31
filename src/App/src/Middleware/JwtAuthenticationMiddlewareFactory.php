@@ -6,7 +6,7 @@ namespace App\Middleware;
 
 use Mezzio\Authentication\Exception;
 use Mezzio\Authentication\AuthenticationInterface;
-use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Laminas\Cache\Storage\StorageInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
@@ -23,7 +23,7 @@ class JwtAuthenticationMiddlewareFactory implements FactoryInterface
         }
         return new JwtAuthenticationMiddleware(
             $container->get('config'), 
-            $container->get(SimpleCacheInterface::class), 
+            $container->get(StorageInterface::class), 
             $authentication, 
             $container->get(Translator::class)
         );

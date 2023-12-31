@@ -58,8 +58,12 @@ class LogoutHandler implements RequestHandlerInterface
         if (! empty($token)) {
             try {
                 $data = $this->encoder->decode($token);
+
                 if (! empty($data['data']->userId)) {
-                    $this->tokenModel->kill($data['data']->userId, $deviceKey); // delete the user from session db
+                    $this->tokenModel->kill( // delete the user from session db
+                        $data['data']->userId,
+                        $data['data']->details->tokenId
+                    ); 
                 }
             } catch (ExpiredException $e) {
                 
@@ -78,8 +82,11 @@ class LogoutHandler implements RequestHandlerInterface
                         401
                     );
                 }
-                if (! empty($token['data']['userId'])) {
-                    $this->tokenModel->kill($token['data']['userId'], $deviceKey); // delete the user from session db
+                if ($token) {
+                    $this->tokenModel->kill( // delete the user from session db
+                        $token['data']['userId'],
+                        $token['data']['details']['tokenId']
+                    );
                 }
             } catch (Exception $e) {
                 return new JsonResponse(

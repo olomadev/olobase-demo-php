@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use Mezzio\Authentication\UserInterface;
-use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Laminas\Cache\Storage\StorageInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Firebase\JWT\ExpiredException;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -17,49 +17,52 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class JwtAuthenticationMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var AuthenticationInterface
-     */
     protected $auth;
     protected $config;
     protected $translator;
 
     public function __construct(
         array $config, 
-        SimpleCacheInterface $simpleCache,
+        StorageInterface $cache,
         AuthenticationInterface $auth, 
         Translator $translator
     )
     {
         $this->auth = $auth;
         $this->config = $config;
-        $this->simpleCache = $simpleCache;
+        $this->cache = $cache;
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler) : ResponseInterface
     {        
-        $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60; // for strong security reason it should be less
+        $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
         try {
             $user = $this->auth->authenticate($request);
+
             if (null !== $user) {
-        
+                //
                 // reset session ttl using cache 
                 // 
-                $this->simpleCache->set(SESSION_KEY.$user->getId(), $configSessionTTL, $configSessionTTL);
-                //
-                //
+                $tokenId = $user->getDetails()['tokenId'];
+                $this->cache->getOptions()->setTtl($configSessionTTL);
+                $userHasSession = $this->cache->getItem(SESSION_KEY.$user->getId().":".$tokenId);
+                if ($userHasSession) {
+                    $this->cache->setItem(SESSION_KEY.$user->getId().":".$tokenId, $configSessionTTL);    
+                }
                 return $handler->handle($request->withAttribute(UserInterface::class, $user));
             }
-        } catch (ExpiredException $e) {
-
-            // 401 Unauthorized response
-            // Response Header = 'Token-Expired: true'
-
-            return new JsonResponse(['data' => ['error' => $this->translator->translate('Token Expired')]], 401, ['Token-Expired' => 1]);
+        } catch (ExpiredException $e) { // 401 Unauthorized response
+            return new JsonResponse(
+                [
+                    'data' => [
+                        'error' => $this->translator->translate('Token Expired')]
+                    ],
+                    401,
+                    [
+                        'Token-Expired' => 1
+                    ]
+            );
         }
         return $this->auth->unauthorizedResponse($request);
     }

@@ -12,6 +12,7 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Laminas\Cache\Storage\StorageInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\AuthenticationInterface as Auth;
 
@@ -33,11 +34,15 @@ use Mezzio\Authentication\AuthenticationInterface as Auth;
 class TokenHandler implements RequestHandlerInterface
 {
     public function __construct(
+        array $config, 
+        private StorageInterface $cache,
         private Auth $auth,
         private AuthFilter $filter,
         private Error $error
     ) {
+        $this->config = $config;
         $this->auth = $auth;
+        $this->cache = $cache;
         $this->filter = $filter;
         $this->error = $error;
     }
@@ -73,8 +78,16 @@ class TokenHandler implements RequestHandlerInterface
 
                 if (null !== $user) {
                     $request = $request->withAttribute(UserInterface::class, $user);
-                    $encoded = $this->auth->getTokenModel()->create($request);
+                    $encoded = $this->auth->getTokenModel()->create($request);                   
                     $details = $user->getDetails();
+                    $tokenId = $encoded['tokenId'];
+                    $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
+                    //
+                    // create first session
+                    //
+                    $this->cache->getOptions()->setTtl($configSessionTTL);
+                    $this->cache->setItem(SESSION_KEY.$user->getId().":".$tokenId, $configSessionTTL);
+
                     return new JsonResponse(
                         [
                             'data' => [

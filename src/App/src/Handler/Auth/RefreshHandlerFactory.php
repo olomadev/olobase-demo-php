@@ -12,14 +12,14 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface;
-use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Psr\SimpleCache\CacheInterface as StorageInterface;
 
 class RefreshHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
         $config = $container->get('config');
-        $simpleCache = $container->get(SimpleCacheInterface::class);
+        $cache = $container->get(StorageInterface::class);
         $translator = $container->get(TranslatorInterface::class);
         $auth = $container->get(AuthenticationInterface::class);
         $authModel = $container->get(AuthModel::class);
@@ -29,7 +29,7 @@ class RefreshHandlerFactory
 
         return new RefreshHandler(
             $config, 
-            $simpleCache,
+            $cache,
             $translator, 
             $auth, 
             $authModel, 

@@ -13,7 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
-use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Laminas\Cache\Storage\StorageInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
 use Mezzio\Authentication\AuthenticationInterface as Auth;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
@@ -27,7 +27,7 @@ class RefreshHandler implements RequestHandlerInterface
 
     public function __construct(
         array $config,
-        private SimpleCacheInterface $simpleCache,
+        private StorageInterface $cache,
         private Translator $translator,
         private Auth $auth,
         private AuthModel $authModel,
@@ -36,7 +36,7 @@ class RefreshHandler implements RequestHandlerInterface
         private Error $error
     ) {
         $this->config = $config;
-        $this->simpleCache = $simpleCache;
+        $this->cache = $cache;
         $this->translator = $translator;
         $this->auth = $auth;
         $this->authModel = $authModel;
@@ -100,7 +100,8 @@ class RefreshHandler implements RequestHandlerInterface
             //
             // check session is expired
             //
-            $sessionTTL = $this->simpleCache->get(SESSION_KEY.$userId);
+            $tokenId = $payload['data']['details']['tokenId'];
+            $sessionTTL = $this->cache->getItem(SESSION_KEY.$userId.":".$tokenId);
             if (! $sessionTTL) {
                 return new JsonResponse(
                     [
@@ -131,8 +132,7 @@ class RefreshHandler implements RequestHandlerInterface
                     401
                 );
             }
-            $tokenId = $payload['jti'];
-            $data = $this->tokenModel->refresh($request, $tokenId, $payload);
+            $data = $this->tokenModel->refresh($request, $payload);
             if (false == $data) {
                 return new JsonResponse(
                     [
@@ -147,8 +147,7 @@ class RefreshHandler implements RequestHandlerInterface
                         'token' => $data['token'],
                         'user'  => [
                             'id' => $data['data']['userId'],
-                            'firstname' => trim($data['data']['details']['firstname']),
-                            'lastname' => trim($data['data']['details']['lastname']),   
+                            'fullname' => trim($data['data']['details']['fullname']),            
                             'roles' => $data['data']['roles'],
                             'email'=> $data['data']['details']['email']
                         ],
