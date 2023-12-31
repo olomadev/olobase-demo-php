@@ -1,10 +1,6 @@
 <?php
 
 declare(strict_types=1);
-/**
- * License activation key
- */
-define("OLOMA_LICENSE_KEY", "NEL3TF-4BSAMG-XSRFPL-9A941UIDJT");
 
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     // Decide if the origin in $_SERVER['HTTP_ORIGIN'] is one
@@ -39,7 +35,6 @@ chdir(dirname(__DIR__));
 
 require 'vendor/autoload.php';
 
-$headers = apache_request_headers();
 /**
  * Self-called anonymous function that creates its own scope and keeps the global namespace clean.
  */

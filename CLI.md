@@ -1,5 +1,13 @@
 
-### Bin Folder Example Insert
+### Cli Commands
+
+```sh
+cd /var/www/project/bin/
+php redis-listener.php local
+php flush-cache.php
+```
+
+### Example Insert
 
 ```php
 declare(strict_types=1);

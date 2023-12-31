@@ -5,23 +5,10 @@ declare(strict_types=1);
 use App\Exception\JsonDecodeException;
 
 define('PROJECT_ROOT', dirname(__DIR__));
-define('PROJECT_DOMAIN', 'demo.oloma.dev');
-define('CACHE_ROOT_KEY', 'demoApp:');
+define('PROJECT_DOMAIN', 'demo.local');
+define('CACHE_ROOT_KEY', 'demo_app:');
 define('CACHE_TMP_FILE_KEY', 'tmp_file_');
 define('SESSION_KEY', CACHE_ROOT_KEY.'sessions:');
-/**
- * Removes image prefix "data:image/png;base64, ...."
- * 
- * @param  string $value image string with prefix
- * @return string
- */
-function cleanBase64Image($value) {
-    if (strpos($value, ",") > 0) {
-        $exp = explode(",", $value);
-        return trim($exp[1]);
-    }
-    return $value;
-}
 /**
  * Paginator json decode
  *
@@ -207,24 +194,15 @@ function isCli()
     return (php_sapi_name() === 'cli');
 }
 /**
- * Format money
- * @param  money $value    string
- * @return float
- */
-function formatMoney($value) {
-    if (empty($value)) {
-        return 0;
-    }
-    return (float)$value;
-}
-/**
- * Format date
- * @param date $value string
+ * Removes image prefix "data:image/png;base64, ...."
+ * 
+ * @param  string $value image string with prefix
  * @return string
  */
-function formatDate($value) {
-    if (empty($value)) {
-        return null;
+function cleanBase64Image($value) {
+    if (strpos($value, ",") > 0) {
+        $exp = explode(",", $value);
+        return trim($exp[1]);
     }
-    return (string)$value;
+    return $value;
 }
