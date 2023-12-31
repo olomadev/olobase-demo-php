@@ -12,7 +12,6 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Cache\Storage\StorageInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\AuthenticationInterface as Auth;
 
@@ -33,16 +32,19 @@ use Mezzio\Authentication\AuthenticationInterface as Auth;
  */
 class TokenHandler implements RequestHandlerInterface
 {
+    /**
+     * This signal is controlled by the frontend, do not change the value.
+     */
+    protected const EXPIRE_SIGNAL = 'Token Expired';
+
     public function __construct(
         array $config, 
-        private StorageInterface $cache,
         private Auth $auth,
         private AuthFilter $filter,
         private Error $error
     ) {
         $this->config = $config;
         $this->auth = $auth;
-        $this->cache = $cache;
         $this->filter = $filter;
         $this->error = $error;
     }
@@ -75,18 +77,11 @@ class TokenHandler implements RequestHandlerInterface
         if ($this->filter->isValid()) {
             try {
                 $user = $this->auth->initAuthentication($request);
-
+                
                 if (null !== $user) {
                     $request = $request->withAttribute(UserInterface::class, $user);
                     $encoded = $this->auth->getTokenModel()->create($request);                   
                     $details = $user->getDetails();
-                    $tokenId = $encoded['tokenId'];
-                    $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
-                    //
-                    // create first session
-                    //
-                    $this->cache->getOptions()->setTtl($configSessionTTL);
-                    $this->cache->setItem(SESSION_KEY.$user->getId().":".$tokenId, $configSessionTTL);
 
                     return new JsonResponse(
                         [
@@ -96,6 +91,7 @@ class TokenHandler implements RequestHandlerInterface
                                     'id' => $user->getId(),
                                     'firstname' => trim($details['firstname']),
                                     'lastname' => trim($details['lastname']),
+                                    'email' => trim($details['email']),
                                     'roles' => $user->getRoles(),
                                 ],
                                 'avatar' => $details['avatar'],
@@ -107,7 +103,7 @@ class TokenHandler implements RequestHandlerInterface
             } catch (ExpiredException $e) {
                 return new JsonResponse(
                     [
-                        'data' => ['error' => "Token Expired"]
+                        'data' => ['error' => Self::EXPIRE_SIGNAL]
                     ], 
                     401,
                     ['Token-Expired' => 1]

@@ -6,7 +6,7 @@ namespace App\Handler\Auth;
 
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Laminas\Cache\Storage\StorageInterface;
 
 class SessionUpdateHandlerFactory
 {
@@ -14,7 +14,7 @@ class SessionUpdateHandlerFactory
     {
         return new SessionUpdateHandler(
             $container->get('config'),
-            $container->get(SimpleCacheInterface::class)
+            $container->get(StorageInterface::class)
         );
     }
 }

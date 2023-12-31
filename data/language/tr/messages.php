@@ -50,7 +50,10 @@ return [
     'No such company is defined in the database' => 'Veritabanında böyle bir şirket tanımlı değil',
 
     // General errors
-    // 
+    //
+    'Invalid token' => 'Geçersiz jeton',
+    'Token value cannot be sent empty' => 'Jeton değeri boş gönderilemez',
+    'Token not expired to refresh' => 'Jetonun yenileme için süresi dolmadı',
     'Username or password is incorrect' => 'Kullanıcı adı veya şifre hatalı girildi',
     'Username and password fields must be given' => 'Kullanıcı ve şifre alanları gönderilmeli',
     'This account is inactive or awaiting approval' => 'Bu hesap pasif veya onay bekliyor',

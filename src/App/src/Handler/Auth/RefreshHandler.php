@@ -13,7 +13,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Oloma\Php\Error\ErrorWrapperInterface as Error;
-use Laminas\Cache\Storage\StorageInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
 use Mezzio\Authentication\AuthenticationInterface as Auth;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
@@ -21,27 +20,23 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 class RefreshHandler implements RequestHandlerInterface
 {
     /**
-     * This signal is controlled by the frontend, do not change the value
+     * This signal is controlled by the frontend, do not change the value.
      */
     protected const LOGOUT_SIGNAL = 'Logout';
 
     public function __construct(
         array $config,
-        private StorageInterface $cache,
         private Translator $translator,
         private Auth $auth,
         private AuthModel $authModel,
         private TokenModel $tokenModel,
-        private JwtEncoder $encoder,
         private Error $error
     ) {
         $this->config = $config;
-        $this->cache = $cache;
         $this->translator = $translator;
         $this->auth = $auth;
         $this->authModel = $authModel;
         $this->tokenModel = $tokenModel;
-        $this->encoder = $encoder;
         $this->error = $error;
     }
 
@@ -71,7 +66,7 @@ class RefreshHandler implements RequestHandlerInterface
     {
         $post = $request->getParsedBody();
         if (empty($post['token'])) {
-            $message = $this->translator->translate('Token input cannot be empty');
+            $message = $this->translator->translate("Token value cannot be sent empty");
             return new JsonResponse(
                 [
                     'data' => ['error' => $message]
@@ -80,51 +75,14 @@ class RefreshHandler implements RequestHandlerInterface
             );
         }
         try { // Signature check !!
-            $this->encoder->decode($post['token']);
+            $this->tokenModel->decode($post['token']);
         } catch (ExpiredException $e) {
+
             list($header, $payload, $signature) = explode(".", $post['token']);
             $payload = json_decode(base64_decode($payload), true);  
-            //
-            // check user id
-            // 
-            if (empty($payload['data']['userId'])) {
-                return new JsonResponse(
-                    [
-                        'data' => ['error' => "User id cannot be empty"]
-                    ], 
-                    401
-                );
-            }
-            $userId = $payload['data']['userId'];
-            $expiredAt = $payload['exp'];
-            //
-            // check session is expired
-            //
-            $tokenId = $payload['data']['details']['tokenId'];
-            $sessionTTL = $this->cache->getItem(SESSION_KEY.$userId.":".$tokenId);
-            if (! $sessionTTL) {
-                return new JsonResponse(
-                    [
-                        'data' => [
-                            'error' => Self::LOGOUT_SIGNAL, // don't change
-                        ] 
-                    ],
-                    401
-                );
-            }
-            $now = time();
-            if ($expiredAt + (int)$sessionTTL < $now) {
-                return new JsonResponse(
-                    [
-                        'data' => [
-                            'error' => Self::LOGOUT_SIGNAL, // don't change
-                        ] 
-                    ],
-                    401
-                );   
-            }  
+
             if (json_last_error() != JSON_ERROR_NONE) {
-                $message = $this->translator->translate('Invalid token');
+                $message = $this->translator->translate("Invalid token");
                 return new JsonResponse(
                     [
                         'data' => ['error' => $message]
@@ -147,9 +105,10 @@ class RefreshHandler implements RequestHandlerInterface
                         'token' => $data['token'],
                         'user'  => [
                             'id' => $data['data']['userId'],
-                            'fullname' => trim($data['data']['details']['fullname']),            
+                            'firstname' => trim($data['data']['details']['fullname']),            
+                            'lastname' => trim($data['data']['details']['lastname']),            
+                            'email' => trim($data['data']['details']['email']),
                             'roles' => $data['data']['roles'],
-                            'email'=> $data['data']['details']['email']
                         ],
                         'expiresAt' => $data['expiresAt'],
                     ],
@@ -163,7 +122,7 @@ class RefreshHandler implements RequestHandlerInterface
                 401
             );
         }
-        $message = $this->translator->translate('Token not expired to refresh');
+        $message = $this->translator->translate("Token not expired to refresh");
         return new JsonResponse(
             [
                 'data' => ['info' => $message]

@@ -7,19 +7,19 @@ namespace App\Handler\Auth;
 use Mezzio\Authentication\UserInterface;
 use Laminas\Diactoros\Response\TextResponse;
 use Psr\Http\Message\ResponseInterface;
+use Laminas\Cache\Storage\StorageInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class SessionUpdateHandler implements RequestHandlerInterface
 {
     public function __construct(
-        array $config, 
-        SimpleCacheInterface $simpleCache
+        array $config,
+        StorageInterface $cache
     )
     {
         $this->config = $config;
-        $this->simpleCache = $simpleCache;
+        $this->cache = $cache;
     }
 
     /**
@@ -39,6 +39,16 @@ class SessionUpdateHandler implements RequestHandlerInterface
     {
         $user = $request->getAttribute(UserInterface::class);
         if ($user) {
+            //
+            // reset session ttl using cache 
+            // 
+            $tokenId = $user->getDetails()['tokenId'];
+            $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
+            $this->cache->getOptions()->setTtl($configSessionTTL);
+            $userHasSession = $this->cache->getItem(SESSION_KEY.$user->getId().":".$tokenId);
+            if ($userHasSession) {
+                $this->cache->setItem(SESSION_KEY.$user->getId().":".$tokenId, $configSessionTTL);    
+            }
             return new TextResponse("ok", 200);
         }
         return new TextResponse("logout", 200);

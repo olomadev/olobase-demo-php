@@ -8,7 +8,6 @@ use App\Model\TokenModel;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
-use Oloma\Php\Authentication\JwtEncoderInterface;
 
 class LogoutHandlerFactory
 {
@@ -16,12 +15,10 @@ class LogoutHandlerFactory
     {
         $translator = $container->get(TranslatorInterface::class);
         $tokenModel = $container->get(TokenModel::class);
-        $encoder = $container->get(JwtEncoderInterface::class);
 
         return new LogoutHandler(
             $translator, 
-            $tokenModel, 
-            $encoder
+            $tokenModel
         );
     }
 }

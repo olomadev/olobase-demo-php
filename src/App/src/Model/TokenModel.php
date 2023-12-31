@@ -17,21 +17,18 @@ class TokenModel
     private $cache;
     private $config;
     private $encoder;
-    private $tokens;
 
     public function __construct(
         array $config,
         StorageInterface $cache,
         JwtEncoderInterface $encoder,
-        TableGatewayInterface $users,
-        TableGatewayInterface $tokens
+        TableGatewayInterface $users
     )
     {
         $this->users = $users;
         $this->cache = $cache;
         $this->config = $config;
         $this->encoder = $encoder;
-        $this->tokens = $tokens;
         $this->conn = $users->getAdapter()
             ->getDriver()
             ->getConnection();
@@ -43,28 +40,35 @@ class TokenModel
     }
     
     /**
+     * Decode token
+     * 
+     * @param  string $token token
+     * @return mixed
+     */
+    public function decode(string $token)
+    {
+        return $this->encoder->decode($token);
+    }
+    
+    /**
      * Returns to encoded token with expire date
      *
      * @param  ServerRequestInterface $request request
-     * @return array
+     * @return array|boolean
      */
     public function create(ServerRequestInterface $request)
     {
         $user   = $request->getAttribute(UserInterface::class);
+        $userId = $user->getId();
         $server = $request->getServerParams();
-
-        $post = $request->getParsedBody();
-        $config = $this->config['token'];
 
         $mtRand     = mt_rand();
         $tokenId    = md5(uniqid((string)$mtRand, true));
         $issuedAt   = time();
-        // $notBefore  = $issuedAt + 10;           // Adding 10 seconds
-        $notBefore  = $issuedAt; // node.js nJwt token çalışmyor extra time ekler isek
-        $expire     = $notBefore + (60 * $config['token_validity']);
+        $notBefore  = $issuedAt;
+        $expire     = $notBefore + (60 * $this->config['token']['token_validity']);
         $http       = empty($server['HTTPS']) ? 'http://' : 'https://';
         $issuer     = $http.$server['HTTP_HOST'];
-        $userAgent  = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
         //
         // JWT token data
         //
@@ -75,12 +79,13 @@ class TokenModel
             'nbf'  => $notBefore,        // Not before
             'exp'  => $expire,           // Expire
             'data' => [                  // Data related to the signer user
-                'userId' => $user->getId(),     // userid from the users table
+                'userId' => $userId,     // userid from the users table
                 'identity' => $user->getIdentity(), // User identity can be email, username or phone
                 'roles' => $user->getRoles(),
                 'details' => [
                     'email' => $user->getDetail('email') ? $user->getDetail('email') : $user->getIdentity(), // User email
-                    'fullname' => $user->getDetail('fullname'),
+                    'firstname' => $user->getDetail('firstname'),
+                    'lastname' => $user->getDetail('firstname'),
                     'ip' => $user->getDetail('ip'),
                     'deviceKey' => $user->getDetail('deviceKey'),
                     'tokenId' => $tokenId,
@@ -88,55 +93,68 @@ class TokenModel
             ]
         ];
         $token = $this->encoder->encode($jwt);
-
-        //------------- Insert Token ------------------//
-
-        $createdAt = date('Y-m-d H:i:s', $issuedAt);
-        $expiresAt = date('Y-m-d H:i:s', $expire);
-        $data = array(
-            'tokenId' => $tokenId,
-            'userId' => $user->getId(),
-            'issuer' => $issuer,
-            'ip' => $user->getDetail('ip'),
-            'userAgent' => substr($userAgent, 0, 255),
-            'deviceKey' => $user->getDetail('deviceKey'),
-            'createdAt' => $createdAt,
-            'expiresAt' => $expiresAt,
-        );
-
+        //
+        // update last login date
+        // 
         try {
             $this->conn->beginTransaction();
-            $this->tokens->insert($data);
-            $this->users->update(['lastLogin' => $createdAt], ['userId' => $user->getId()]);
+            $this->users->update(['lastLogin' => date("Y-m-d H:i:s", $issuedAt)], ['userId' => $userId]);
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();
             throw $e;
         }
-        return ['token' => $token, 'tokenId' => $tokenId, 'expiresAt' => $expiresAt, 'avatar' => $user->getDetail('avatar')];
+        //
+        // create token session
+        //
+        $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
+        $this->cache->getOptions()->setTtl($configSessionTTL);
+        $this->cache->setItem(SESSION_KEY.$userId.":".$tokenId, $configSessionTTL);
+
+        return [
+            'token' => $token,
+            'tokenId' => $tokenId,
+            'expiresAt' => date('Y-m-d H:i:s', $expire),
+        ];
     }
 
-
+    /**
+     * Refresh token
+     * 
+     * @param  ServerRequestInterface $request request
+     * @param  array                  $decoded payload
+     * @return array|boolean
+     */
     public function refresh(ServerRequestInterface $request, array $decoded)
     {
-        $post = $request->getParsedBody();
-        $config = $this->config['token'];
-
         $server = $request->getServerParams();
         $userAgent = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
         $userId = $decoded['data']['userId'];
-
-        //------------- Create New Token ------------------//
-
+        //
+        // validate token session
+        //
+        $oldTokenId = $decoded['data']['details']['tokenId'];
+        $sessionTTL = $this->cache->getItem(SESSION_KEY.$userId.":".$oldTokenId);
+        if (! $sessionTTL) {
+            return false; // ttl expired
+        }
+        $expiredAt = $decoded['exp'];
+        $now = time();
+        if ($expiredAt + (int)$sessionTTL < $now) {
+            return false; // ttl expired
+        }  
+        //
+        // recreate new token
+        // 
         $mtRand     = mt_rand();
         $issuedAt   = time();
         $tokenId    = md5(uniqid((string)$mtRand, true));
         $notBefore  = $issuedAt;   // Do not add seconds
-        $expire     = $notBefore + (60 * $config['token_validity']);    // Adding 60 minute
+        $expire     = $notBefore + (60 * $this->config['token']['token_validity']);
         $http       = empty($server['HTTPS']) ? 'http://' : 'https://';
         $issuer     = $http.$server['HTTP_HOST'];
 
-        $decoded['data']['details']['tokenId'] = $tokenId;
+        $decoded['data']['details']['tokenId'] = $tokenId; // renew token id
         $jwt = [
             'iat'  => $decoded['iat'],  // Issued at: time when the token was generated
             'jti'  => $tokenId,         // Json Token Id: an unique identifier for the token
@@ -146,33 +164,20 @@ class TokenModel
             'data' => (array)$decoded['data']
         ];
         $newToken = $this->encoder->encode($jwt);
+        //
+        // refresh the user session
+        //
+        $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
+        $this->cache->getOptions()->setTtl($configSessionTTL);
+        $this->cache->setItem(SESSION_KEY.$userId.":".$tokenId, $configSessionTTL);
+        $this->cache->removeItem(SESSION_KEY.$userId.":".$oldTokenId);
 
-        //------------- Insert Token ------------------//
-
-        $createdAt = date('Y-m-d H:i:s', $issuedAt);
-        $expiresAt = date('Y-m-d H:i:s', $expire);
-        $data = array(
+        return [
+            'token' => $newToken,
             'tokenId' => $tokenId,
-            'userId' => $userId,
-            'issuer' => $issuer,
-            'ip' => $decoded['data']['details']['ip'],
-            'userAgent' => substr($userAgent, 0, 255),
-            'deviceKey' => $decoded['data']['details']['deviceKey'],
-            'createdAt' => $createdAt,
-            'expiresAt' => $expiresAt,
-        );
-        
-        try {
-            $this->conn->beginTransaction();
-            $this->tokens->insert($data);
-            $this->conn->commit();
-        } catch (Exception $e) {
-            $this->conn->rollback();
-            throw $e;
-        }
-        //------------- Insert Token ------------------//
-
-        return ['token' => $newToken, 'expiresAt' => $expiresAt, 'data' => (array)$decoded['data']];
+            'expiresAt' => date("Y-m-d H:i:s", $expire),
+            'data' => (array)$decoded['data']
+        ];
     }
 
     /**
@@ -184,14 +189,7 @@ class TokenModel
      */
     public function kill(string $userId, string $tokenId)
     {
-        try {
-            $this->conn->beginTransaction();
-            $this->cache->removeItem(SESSION_KEY.$userId.":".$tokenId);
-            $this->tokens->delete(['userId' => $userId, 'tokenId' => $tokenId]);
-            $this->conn->commit();
-        } catch (Exception $e) {
-            $this->conn->rollback();
-            throw $e;
-        }
+        $this->cache->removeItem(SESSION_KEY.$userId.":".$tokenId);
     }
+
 }

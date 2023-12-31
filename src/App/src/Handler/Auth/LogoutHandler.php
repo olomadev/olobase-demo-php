@@ -11,19 +11,16 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Oloma\Php\Authentication\JwtEncoderInterface as JwtEncoder;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class LogoutHandler implements RequestHandlerInterface
 {
     public function __construct(
         private Translator $translator,
-        private TokenModel $tokenModel,
-        private JwtEncoder $encoder
+        private TokenModel $tokenModel
     ) {
         $this->translator = $translator;
         $this->tokenModel = $tokenModel;
-        $this->encoder = $encoder;
     }
 
     /**
@@ -41,10 +38,6 @@ class LogoutHandler implements RequestHandlerInterface
      **/
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $server = $request->getServerParams();
-        $userAgent = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
-        $deviceKey = md5($userAgent);
-
         // user token may expired thats why it's 
         // important manually extract the token from header 
         //
@@ -57,7 +50,7 @@ class LogoutHandler implements RequestHandlerInterface
         }
         if (! empty($token)) {
             try {
-                $data = $this->encoder->decode($token);
+                $data = $this->tokenModel->decode($token);
 
                 if (! empty($data['data']->userId)) {
                     $this->tokenModel->kill( // delete the user from session db
@@ -72,7 +65,7 @@ class LogoutHandler implements RequestHandlerInterface
                 $token = json_decode($base64DecodedToken, true);
 
                 if (json_last_error() != JSON_ERROR_NONE) {
-                    $message = $this->translator->translate('Invalid token');
+                    $message = $this->translator->translate("Invalid token");
                     return new JsonResponse(
                         [
                             'data' => [

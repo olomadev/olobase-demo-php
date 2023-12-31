@@ -1,7 +1,17 @@
 
 # Php Demo
 
-Vuetify admin php demo application.
+Php REST demo application.
+
+```sh
+git clone git@github.com:olomadev/demo-php.git
+```
+
+Install composer packages
+
+```sh
+/var/www/demo-php$ composer install
+```
 
 ### Swagger Docs
 

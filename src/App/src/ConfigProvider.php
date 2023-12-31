@@ -303,8 +303,7 @@ class ConfigProvider
                     $cacheStorage = $container->get(StorageInterface::class);
                     $jwtEncoder = $container->get(JwtEncoderInterface::class);
                     $users = new TableGateway('users', $dbAdapter, null);
-                    $tokens = new TableGateway('tokens', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    return new Model\TokenModel($container->get('config'), $cacheStorage, $jwtEncoder, $users, $tokens);
+                    return new Model\TokenModel($container->get('config'), $cacheStorage, $jwtEncoder, $users);
                 },
                 Model\UserModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);

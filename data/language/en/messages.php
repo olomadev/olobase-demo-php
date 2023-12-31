@@ -51,6 +51,9 @@ return [
     
     // General errors
     // 
+    'Invalid token' => 'Invalid token',
+    'Token value cannot be sent empty' => 'Token value cannot be sent empty',
+    'Token not expired to refresh' => 'Token not expired to refresh',
     'Username or password is incorrect' => 'Username or password is incorrect',
     'Username and password fields must be given' => 'Username and password fields must be given',
     'This account is inactive or awaiting approval' => 'This account is inactive or awaiting approval',
