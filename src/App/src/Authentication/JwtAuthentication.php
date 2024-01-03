@@ -23,78 +23,38 @@ use function strtoupper;
 
 class JwtAuthentication implements AuthenticationInterface
 {
-    private const HEADER_VALUE_PATTERN = "/Bearer\s+(.*)$/i";
-    private const AUTHENTICATIN_REQUIRED = 'authenticationRequired';
-    private const USERNAME_OR_PASSWORD_INCORRECT = 'usernameOrPasswordIncorrect';
-    private const ACCOUNT_IS_INACTIVE_OR_SUSPENDED = 'accountIsInactiveOrSuspended';
-    private const USERNAME_OR_PASSWORD_FIELDS_NOT_GIVEN = 'usernameOrPasswordNotGiven';
-    private const NO_ROLE_DEFINED_ON_THE_ACCOUNT = 'noRoleDefinedOnAccount';
-
     /**
-     * @var array
+     * Do not change these values
      */
+    public const AUTHENTICATION_REQUIRED = 'authenticationRequired';
+    public const IP_VALIDATION_FAILED = 'ipValidationFailed';
+    public const USER_AGENT_VALIDATION_FAILED = 'userAgentValidationFailed';
+    public const USERNAME_OR_PASSWORD_INCORRECT = 'usernameOrPasswordIncorrect';
+    public const ACCOUNT_IS_INACTIVE_OR_SUSPENDED = 'accountIsInactiveOrSuspended';
+    public const USERNAME_OR_PASSWORD_FIELDS_NOT_GIVEN = 'usernameOrPasswordNotGiven';
+    public const NO_ROLE_DEFINED_ON_THE_ACCOUNT = 'noRoleDefinedOnAccount';
+
     protected static $messageTemplates = [
-        Self::AUTHENTICATIN_REQUIRED => 'Authentication required. Please sign in to your account',
+        Self::AUTHENTICATION_REQUIRED => 'Authentication required. Please sign in to your account',
         Self::USERNAME_OR_PASSWORD_INCORRECT => 'Username or password is incorrect',
         Self::ACCOUNT_IS_INACTIVE_OR_SUSPENDED => 'This account is awaiting approval or suspended',
         Self::USERNAME_OR_PASSWORD_FIELDS_NOT_GIVEN => 'Username and password fields must be given',
         Self::NO_ROLE_DEFINED_ON_THE_ACCOUNT => 'There is no role defined for this user',
+        Self::IP_VALIDATION_FAILED => 'Ip validation failed and you are logged out',
+        Self::USER_AGENT_VALIDATION_FAILED => 'Browser validation failed and you are logged out',
     ];
-
-    /**
-     * @var array
-     */
     protected $config;
-
-    /**
-     * @var Laminas auth adapter
-     */
     protected $authAdapter;
-
-    /**
-     * @var Translator
-     */
     protected $translator;
-
-    /**
-     * @var Jwt encoder
-     */
     protected $encoder;
-
-    /**
-     * @var TokenModel
-     */
     protected $tokenModel;
-
-    /**
-     * @var AuthModel
-     */
     protected $authModel;
-
-    /**
-     * @var EventManager
-     */
     protected $events;
-
-    /**
-     * @var callable
-     */
     protected $userFactory;
-
-    /**
-     * @var Jwt payload
-     */
     protected $payload = array();
-
-    /**
-     * @var string
-     */
     protected $ipAddress;
-
-    /**
-     * @var string
-     */
     protected $error;
+    protected $code;
 
     public function __construct(
         array $config,
@@ -124,13 +84,10 @@ class JwtAuthentication implements AuthenticationInterface
         $remoteAddress = new RemoteAddress;
         $this->ipAddress = $remoteAddress->getIpAddress();
     }
-    /**
-     * Authenticate
-     */
+
     public function authenticate(ServerRequestInterface $request) : ?UserInterface
     {
         if (! $this->validate($request)) {
-            $this->error(Self::AUTHENTICATIN_REQUIRED);
             return null;
         }
         $payload = $this->getPayload()['data'];
@@ -216,17 +173,30 @@ class JwtAuthentication implements AuthenticationInterface
     {
         $this->token = $this->extractToken($request);
         if (empty($this->token)) {
+            $this->error(Self::AUTHENTICATION_REQUIRED);
             return false;
         }
-        $this->payload = $this->encoder->decode($this->token);
+        $token = $this->tokenModel->getTokenEncrypt()->decrypt($this->token);
+        $this->payload = $this->encoder->decode($token);
+
         if ($this->config['token']['validation']['user_ip'] 
             && $this->payload['data']->details->ip != $this->getIpAddress()
         ) {
+            $this->tokenModel->kill(
+                $this->payload['data']->userId,
+                $this->payload['jti'],
+            );
+            $this->error(Self::IP_VALIDATION_FAILED);
             return false;
         }
         if ($this->config['token']['validation']['user_agent'] 
-            &&  $this->payload['data']->details->deviceKey != $this->getDeviceKey($request)
+            && $this->payload['data']->details->deviceKey != $this->getDeviceKey($request)
         ) {
+            $this->tokenModel->kill(
+                $this->payload['data']->userId,
+                $this->payload['jti'],
+            );
+            $this->error(Self::USER_AGENT_VALIDATION_FAILED);
             return false;
         }
         return $this->payload !== null;
@@ -264,10 +234,20 @@ class JwtAuthentication implements AuthenticationInterface
         return $this->error;
     }
 
+    public function getCode()
+    {
+        return $this->code;
+    }
+
     public function unauthorizedResponse(ServerRequestInterface $request) : ResponseInterface
     {
         return new JsonResponse(
-            ['data' => ['error' => $this->getError()]],
+            [
+                'data' => [
+                    'code' => $this->getCode(),
+                    'error' => $this->getError()
+                ]
+            ],
             401,
             ['WWW-Authenticate' => 'Bearer realm="Jwt token"']
         );
@@ -276,12 +256,14 @@ class JwtAuthentication implements AuthenticationInterface
     protected function error(string $errorKey)
     {
         if (empty(Self::$messageTemplates[$errorKey])) {
+            $this->code = $errorKey;
             $this->error = $this->translator->translate($errorKey);
             return;
         }
+        $this->code = $errorKey;
         $this->error = $this->translator->translate(Self::$messageTemplates[$errorKey]);
     }
-    
+
     private function getDeviceKey(ServerRequestInterface $request)
     {
         $server = $request->getServerParams();
@@ -293,5 +275,4 @@ class JwtAuthentication implements AuthenticationInterface
     {
         return $this->ipAddress;
     }
-    
 }

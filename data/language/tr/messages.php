@@ -59,6 +59,8 @@ return [
     'This account is inactive or awaiting approval' => 'Bu hesap pasif veya onay bekliyor',
     'There is no role defined for this user' => 'Bu kullanıcı herhangi bir rol tanımlı değil',
     'Authentication required. Please sign in to your account' => 'Kimlik doğrulama gerekli. Lütfen hesabınıza giriş yapın',
+    'Ip validation failed and you are logged out' => 'IP adresiniz doğrulanamadı ve güvenlik nedeniyle çıkış yapıldı',
+    'Browser validation failed and you are logged out' => 'Tarayıcınız doğrulanamadı ve güvenlik nedeniyle çıkış yapıldı',
 
     // Failed Logins
     // 

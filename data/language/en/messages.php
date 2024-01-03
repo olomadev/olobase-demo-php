@@ -59,6 +59,8 @@ return [
     'This account is inactive or awaiting approval' => 'This account is inactive or awaiting approval',
     'There is no role defined for this user' => 'There is no role defined for this user',
     'Authentication required. Please sign in to your account' => 'Authentication required. Please sign in to your account',
+    'Ip validation failed and you are logged out' => 'Your IP address could not be verified and has been logged out for security reasons',
+    'Browser validation failed and you are logged out' => 'Your browser could not be verified and has been logged out for security reasons',
 
     // Failed Logins
     // 

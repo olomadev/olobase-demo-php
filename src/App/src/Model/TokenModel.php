@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Exception;
+use App\Utils\TokenEncrypt;
 use Laminas\Cache\Storage\StorageInterface;
 use Mezzio\Authentication\UserInterface;
 use Oloma\Php\Authentication\JwtEncoderInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
+use Laminas\Http\PhpEnvironment\RemoteAddress;
 
 class TokenModel
 {
@@ -17,10 +19,12 @@ class TokenModel
     private $cache;
     private $config;
     private $encoder;
+    private $tokenEncrypt;
 
     public function __construct(
         array $config,
         StorageInterface $cache,
+        TokenEncrypt $tokenEncrypt,
         JwtEncoderInterface $encoder,
         TableGatewayInterface $users
     )
@@ -29,6 +33,7 @@ class TokenModel
         $this->cache = $cache;
         $this->config = $config;
         $this->encoder = $encoder;
+        $this->tokenEncrypt = $tokenEncrypt;
         $this->conn = $users->getAdapter()
             ->getDriver()
             ->getConnection();
@@ -51,6 +56,34 @@ class TokenModel
     }
     
     /**
+     * Generate token header variables
+     * 
+     * @param  ServerRequestInterface $request psr7 http request object
+     * @return array
+     */
+    private function generateHeader(ServerRequestInterface $request)
+    {
+        $server = $request->getServerParams();
+        $mtRand     = mt_rand();
+        $tokenId    = md5(uniqid((string)$mtRand, true));
+        $issuedAt   = time();
+        $notBefore  = $issuedAt;
+        $expire     = $notBefore + (60 * $this->config['token']['token_validity']);
+        $http       = empty($server['HTTPS']) ? 'http://' : 'https://';
+        $issuer     = $http.$server['HTTP_HOST'];
+        $userAgent  = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
+        $deviceKey  = md5($userAgent);
+        return [
+            $tokenId,
+            $issuedAt,
+            $notBefore,
+            $expire,
+            $issuer,
+            $deviceKey
+        ];
+    }
+
+    /**
      * Returns to encoded token with expire date
      *
      * @param  ServerRequestInterface $request request
@@ -60,15 +93,16 @@ class TokenModel
     {
         $user   = $request->getAttribute(UserInterface::class);
         $userId = $user->getId();
-        $server = $request->getServerParams();
-
-        $mtRand     = mt_rand();
-        $tokenId    = md5(uniqid((string)$mtRand, true));
-        $issuedAt   = time();
-        $notBefore  = $issuedAt;
-        $expire     = $notBefore + (60 * $this->config['token']['token_validity']);
-        $http       = empty($server['HTTPS']) ? 'http://' : 'https://';
-        $issuer     = $http.$server['HTTP_HOST'];
+        //
+        // JWT header
+        //
+        list(
+            $tokenId,
+            $issuedAt,
+            $notBefore,
+            $expire,
+            $issuer
+        ) = $this->generateHeader($request);
         //
         // JWT token data
         //
@@ -112,7 +146,7 @@ class TokenModel
         $this->cache->setItem(SESSION_KEY.$userId.":".$tokenId, $configSessionTTL);
 
         return [
-            'token' => $token,
+            'token' => $this->tokenEncrypt->encrypt($token),
             'tokenId' => $tokenId,
             'expiresAt' => date('Y-m-d H:i:s', $expire),
         ];
@@ -144,17 +178,23 @@ class TokenModel
             return false; // ttl expired
         }  
         //
-        // recreate new token
+        // JWT header - renew token
         // 
-        $mtRand     = mt_rand();
-        $issuedAt   = time();
-        $tokenId    = md5(uniqid((string)$mtRand, true));
-        $notBefore  = $issuedAt;   // Do not add seconds
-        $expire     = $notBefore + (60 * $this->config['token']['token_validity']);
-        $http       = empty($server['HTTPS']) ? 'http://' : 'https://';
-        $issuer     = $http.$server['HTTP_HOST'];
-
+        list(
+            $tokenId,
+            $issuedAt,
+            $notBefore,
+            $expire,
+            $issuer,
+            $deviceKey
+        ) = $this->generateHeader($request);
+        //
+        // Renew JWT token data
+        //
+        $remoteAddress = new RemoteAddress;
         $decoded['data']['details']['tokenId'] = $tokenId; // renew token id
+        $decoded['data']['details']['ip'] = $remoteAddress->getIpAddress(); 
+        $decoded['data']['details']['deviceKey'] = $deviceKey; 
         $jwt = [
             'iat'  => $decoded['iat'],  // Issued at: time when the token was generated
             'jti'  => $tokenId,         // Json Token Id: an unique identifier for the token
@@ -173,7 +213,7 @@ class TokenModel
         $this->cache->removeItem(SESSION_KEY.$userId.":".$oldTokenId);
 
         return [
-            'token' => $newToken,
+            'token' => $this->tokenEncrypt->encrypt($newToken),
             'tokenId' => $tokenId,
             'expiresAt' => date("Y-m-d H:i:s", $expire),
             'data' => (array)$decoded['data']
@@ -191,5 +231,14 @@ class TokenModel
     {
         $this->cache->removeItem(SESSION_KEY.$userId.":".$tokenId);
     }
-
+    
+    /**
+     * Returns to token encryption object
+     * 
+     * @return object
+     */
+    public function getTokenEncrypt() : TokenEncrypt
+    {
+        return $this->tokenEncrypt;
+    }
 }

@@ -1,6 +1,6 @@
 local.php
 *.local.php
-production.php
+dev.php
 prod.php
 test.php
 qa.php

@@ -74,18 +74,26 @@ class RefreshHandler implements RequestHandlerInterface
                 401
             );
         }
+        $token = $this->tokenModel->getTokenEncrypt()->decrypt($post['token']);
+        if (! $token) {
+            return new JsonResponse(
+                [
+                    'data' => ['error' => Self::LOGOUT_SIGNAL] // don't change
+                ],
+                401
+            );
+        }
         try { // Signature check !!
-            $this->tokenModel->decode($post['token']);
+            $this->tokenModel->decode($token);
         } catch (ExpiredException $e) {
 
-            list($header, $payload, $signature) = explode(".", $post['token']);
+            list($header, $payload, $signature) = explode(".", $token);
             $payload = json_decode(base64_decode($payload), true);  
 
             if (json_last_error() != JSON_ERROR_NONE) {
-                $message = $this->translator->translate("Invalid token");
                 return new JsonResponse(
                     [
-                        'data' => ['error' => $message]
+                        'data' => ['error' => $this->translator->translate("Invalid token")]
                     ], 
                     401
                 );
@@ -122,10 +130,9 @@ class RefreshHandler implements RequestHandlerInterface
                 401
             );
         }
-        $message = $this->translator->translate("Token not expired to refresh");
         return new JsonResponse(
             [
-                'data' => ['info' => $message]
+                'data' => ['info' => $this->translator->translate("Token not expired to refresh")]
             ], 
             401
         );

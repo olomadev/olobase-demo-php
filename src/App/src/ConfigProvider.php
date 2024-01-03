@@ -107,6 +107,7 @@ class ConfigProvider
                 Middleware\JwtAuthenticationMiddleware::class => Middleware\JwtAuthenticationMiddlewareFactory::class,
                 Listener\LoginListener::class => Listener\LoginListenerFactory::class,
                 Utils\SmtpMailer::class => Container\SmtpMailerFactory::class,
+                Utils\TokenEncrypt::class => Utils\TokenEncryptFactory::class,
                 StorageInterface::class => Container\CacheFactory::class,
                 SimpleCacheInterface::class => Container\SimpleCacheFactory::class,   
                 PredisInterface::class => Container\PredisFactory::class,
@@ -300,10 +301,11 @@ class ConfigProvider
                 },
                 Model\TokenModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
+                    $tokenEncrypt = $container->get(Utils\TokenEncrypt::class);
                     $cacheStorage = $container->get(StorageInterface::class);
                     $jwtEncoder = $container->get(JwtEncoderInterface::class);
                     $users = new TableGateway('users', $dbAdapter, null);
-                    return new Model\TokenModel($container->get('config'), $cacheStorage, $jwtEncoder, $users);
+                    return new Model\TokenModel($container->get('config'), $cacheStorage, $tokenEncrypt, $jwtEncoder, $users);
                 },
                 Model\UserModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
