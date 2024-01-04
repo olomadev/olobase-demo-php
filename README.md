@@ -13,7 +13,40 @@ Install composer packages
 /var/www/demo-php$ composer install
 ```
 
-### Swagger Docs
+### Install Demo.sql
+
+Create a database named <b>va_demo</b>. Import the demo.sql file which is located in your project root.
+
+### Create a Host Name
+
+Go to your host file
+
+```sh
+vim /etc/hosts
+```
+
+Give your name host to <b>demo-php.local</b>. 
+
+```sh
+127.0.0.1       localhost
+127.0.0.1       demo-php.local
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+```
+
+Don't forget this value defined in your <b>demo-vuetify</b> front-end project <b>.env.dev</b> file.
+
+```sh
+VITE_API_URL=http://demo-php.local/api
+```
+
+### How to Build Swagger Docs
 
 ```
 $ /var/www/demo-php composer swagger
@@ -21,36 +54,7 @@ $ /var/www/demo-php composer swagger
 
 <a href="https://medium.com/@tatianaensslin/how-to-add-swagger-ui-to-php-server-code-f1610c01dc03">https://medium.com/@tatianaensslin/how-to-add-swagger-ui-to-php-server-code-f1610c01dc03</a>
 
-## Installation Redis-Server
-
-<a href="https://tecadmin.net/install-redis-ubuntu-20-04//">https://tecadmin.net/install-redis-ubuntu-20-04/</a>
-
-```
-sudo apt update
-sudo apt install redis-server
-sudo systemctl enable redis-server
-sudo apt install php-redis
-```
-
-```sh
-vim /etc/redis/redis.conf
-bind 0.0.0.0
-protected-mode no
-```
-
-Remove all keys
-
-```
-redis-cli FLUSHALL
-```
-
-To set a password
-
-```
-https://stackoverflow.com/questions/7537905/how-to-set-password-for-redis
-```
-
-## Apache2
+## Apache2 Installation
 
 ```
 sudo a2enmod rewrite
@@ -102,11 +106,36 @@ sudo apt install php libapache2-mod-php php-cli
 sudo apt install php-common php-mysql php-xml php-curl php-json php-opcache php-mbstring php-intl php-gd php-zip
 ```
 
-## Installation of Composer Packages
+## Installation Redis-Server for Local
+
+<a href="https://tecadmin.net/install-redis-ubuntu-20-04//">https://tecadmin.net/install-redis-ubuntu-20-04/</a>
 
 ```
-composer install
+sudo apt update
+sudo apt install redis-server
+sudo systemctl enable redis-server
+sudo apt install php-redis
+sudo phpenmod redis
 ```
+
+```sh
+vim /etc/redis/redis.conf
+bind 0.0.0.0
+protected-mode no
+```
+
+Remove all keys
+
+```
+redis-cli FLUSHALL
+```
+
+To set a password
+
+```
+https://stackoverflow.com/questions/7537905/how-to-set-password-for-redis
+```
+
 
 ## Installation Redis Desktop Manager
 
@@ -117,6 +146,12 @@ Sign up and download free.
 ## Installation Of MySQL
 
 https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-ubuntu-22-04
+
+## Installation of Composer Packages
+
+```
+#var/www/demo-php$ composer install
+```
 
 ## Tests
 
