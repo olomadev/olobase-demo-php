@@ -62,6 +62,10 @@ return [
     'Ip validation failed and you are logged out' => 'Your IP address could not be verified and has been logged out for security reasons',
     'Browser validation failed and you are logged out' => 'Your browser could not be verified and has been logged out for security reasons',
 
+    // Restricted Mode Middleware
+    // 
+    'Demo mode can only handle read operations. To perform writes, install the demo application in your environment and remove the RestrictedModeMiddleware class from config/pipeline.php' => 'Demo mode can only handle read operations. To perform writes, install the demo application in your environment and remove the RestrictedModeMiddleware class from config/pipeline.php',
+
     // Failed Logins
     // 
     'BLOCK_30_SECONDS' => 'Too many incorrect login attempts.Login operations has been suspended for 30 seconds for security reasons.',

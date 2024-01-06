@@ -31,7 +31,13 @@ return [
         'from' => 'example@example.com',
         'from_name' => 'Example Name'
     ],
-    'token' => [  
+    'token' => [
+        // Cookie encryption
+        'encryption' => [
+            'iv' => '', // generate random 16 chars string
+            'enabled' => true, // it should be true in production environment
+            'secret_key' => '',
+        ],
         // Public and private keys are expected to be Base64 encoded.
         // The last non-empty line is used so that keys can be generated with
         'public_key' => '',

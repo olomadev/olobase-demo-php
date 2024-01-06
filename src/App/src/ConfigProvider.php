@@ -104,6 +104,7 @@ class ConfigProvider
                 //
                 Authentication\JwtAuthentication::class => Authentication\JwtAuthenticationFactory::class,
                 Middleware\ClientMiddleware::class => Middleware\ClientMiddlewareFactory::class,
+                Middleware\RestrictedModeMiddleware::class => Middleware\RestrictedModeMiddlewareFactory::class,
                 Middleware\JwtAuthenticationMiddleware::class => Middleware\JwtAuthenticationMiddlewareFactory::class,
                 Listener\LoginListener::class => Listener\LoginListenerFactory::class,
                 Utils\SmtpMailer::class => Container\SmtpMailerFactory::class,

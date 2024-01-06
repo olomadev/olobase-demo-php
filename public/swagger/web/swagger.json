@@ -80,6 +80,55 @@
                 }
             }
         },
+        "/auth/changePassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Changing password after resetting code",
+                "operationId": "auth_changePassword",
+                "requestBody": {
+                    "description": "Send reset code request",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ChangePassword"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/auth/checkResetCode": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Check reset code is valid or expired",
+                "operationId": "auth_checkResetCode",
+                "parameters": [
+                    {
+                        "name": "resetCode",
+                        "in": "query",
+                        "description": "File id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
         "/auth/logout": {
             "get": {
                 "tags": [
@@ -145,6 +194,20 @@
                         }
                     }
                 },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/auth/session": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Updaate session with aixos requests",
+                "operationId": "auth_session",
                 "responses": {
                     "200": {
                         "description": "Successful operation"
@@ -1292,7 +1355,7 @@
                 "tags": [
                     "JobTitle Lists"
                 ],
-                "summary": "Reset all statuses",
+                "summary": "Reset all statuses to restart operation",
                 "operationId": "jobTitleLists_reset",
                 "responses": {
                     "200": {
@@ -2178,8 +2241,8 @@
                     "emailActivation": {
                         "type": "integer"
                     },
-                    "avatarImage": {
-                        "type": "string"
+                    "avatar": {
+                        "$ref": "#/components/schemas/AvatarObject"
                     }
                 },
                 "type": "object"
@@ -2204,8 +2267,8 @@
                     "emailActivation": {
                         "type": "integer"
                     },
-                    "avatarImage": {
-                        "type": "string"
+                    "avatar": {
+                        "$ref": "#/components/schemas/AvatarObject"
                     }
                 },
                 "type": "object"
@@ -2248,6 +2311,17 @@
                 },
                 "type": "object"
             },
+            "ChangePassword": {
+                "properties": {
+                    "newPassword": {
+                        "type": "string"
+                    },
+                    "newPasswordConfirm": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "RefreshToken": {
                 "properties": {
                     "token": {
@@ -2282,6 +2356,14 @@
                         }
                     },
                     "email": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "AvatarObject": {
+                "properties": {
+                    "image": {
                         "type": "string"
                     }
                 },
@@ -2696,6 +2778,26 @@
                                     "type": "string"
                                 },
                                 "childBirthdate": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "files": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "size": {
+                                    "type": "number"
+                                },
+                                "type": {
                                     "type": "string"
                                 }
                             },
@@ -3271,6 +3373,9 @@
                     "themeColor": {
                         "type": "string"
                     },
+                    "avatar": {
+                        "$ref": "#/components/schemas/AvatarObject"
+                    },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -3282,6 +3387,20 @@
                     "lastLogin": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "userRoles": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"

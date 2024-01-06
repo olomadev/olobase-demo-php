@@ -62,6 +62,10 @@ return [
     'Ip validation failed and you are logged out' => 'IP adresiniz doğrulanamadı ve güvenlik nedeniyle çıkış yapıldı',
     'Browser validation failed and you are logged out' => 'Tarayıcınız doğrulanamadı ve güvenlik nedeniyle çıkış yapıldı',
 
+    // Restricted Mode Middleware
+    // 
+    'Demo mode can only handle read operations. To perform writes, install the demo application in your environment and remove the RestrictedModeMiddleware class from config/pipeline.php' => 'Demo modu yalnızca okuma işlemlerini yürütebilir. Yazma işlemlerini gerçekleştirebilmek için demo uygulamasını çalışma ortamınızda kurun ve RestrictedModeMiddleware sınıfını config/pipeline.php dosyasından kaldırın',
+
     // Failed Logins
     // 
     'BLOCK_30_SECONDS' => 'Çok fazla yanlış giriş denemesi yapıldı. Güvenlik nedeniyle giriş işlemleri 30 saniye süreyle durduruldu.',
