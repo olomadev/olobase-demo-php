@@ -6,7 +6,7 @@ namespace App\Handler\Permissions;
 
 use App\Model\PermissionModel;
 use App\Filter\Permissions\DeleteFilter;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

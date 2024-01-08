@@ -6,7 +6,7 @@ namespace App\Handler\Account;
 
 use App\Model\UserModel;
 use App\Filter\Account\PasswordChangeFilter;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

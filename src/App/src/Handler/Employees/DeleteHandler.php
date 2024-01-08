@@ -6,7 +6,7 @@ namespace App\Handler\Employees;
 
 use App\Model\EmployeeModel;
 use App\Filter\Employees\DeleteFilter;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

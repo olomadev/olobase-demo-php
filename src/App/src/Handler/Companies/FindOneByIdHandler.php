@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Companies;
 
 use App\Model\CompanyModel;
-use Oloma\Php\DataManagerInterface;
+use Oloma\Mezzio\DataManagerInterface;
 use App\Schema\Companies\CompaniesFindOneById;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

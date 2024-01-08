@@ -6,7 +6,7 @@ namespace App\Handler\Companies;
 
 use App\Model\CompanyModel;
 use App\Filter\Companies\DeleteFilter;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

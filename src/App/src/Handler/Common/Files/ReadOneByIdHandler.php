@@ -6,7 +6,7 @@ namespace App\Handler\Common\Files;
 
 use App\Model\FileModel;
 use App\Filter\Files\ReadFileFilter;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Laminas\Diactoros\Response\TextResponse;
 use Laminas\Diactoros\Response;

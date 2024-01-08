@@ -6,8 +6,8 @@ namespace App\Handler\JobTitleLists;
 
 use App\Filter\JobTitleLists\ImportFilter;
 use Mezzio\Authentication\UserInterface;
-use Oloma\Php\DataManagerInterface;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\DataManagerInterface;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Predis\ClientInterface as Predis;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

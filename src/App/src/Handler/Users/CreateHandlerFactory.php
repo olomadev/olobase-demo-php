@@ -6,8 +6,8 @@ namespace App\Handler\Users;
 
 use App\Model\UserModel;
 use App\Filter\Users\SaveFilter;
-use Oloma\Php\DataManagerInterface;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\DataManagerInterface;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;

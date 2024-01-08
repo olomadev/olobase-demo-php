@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Companies;
 
 use App\Model\CompanyModel;
-use Oloma\Php\DataManagerInterface;
+use Oloma\Mezzio\DataManagerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 

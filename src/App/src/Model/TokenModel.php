@@ -7,7 +7,7 @@ use Exception;
 use App\Utils\TokenEncrypt;
 use Laminas\Cache\Storage\StorageInterface;
 use Mezzio\Authentication\UserInterface;
-use Oloma\Php\Authentication\JwtEncoderInterface;
+use Oloma\Mezzio\Authentication\JwtEncoderInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
 use Laminas\Http\PhpEnvironment\RemoteAddress;

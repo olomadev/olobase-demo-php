@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
-use Oloma\Php\DataManagerInterface;
+use Oloma\Mezzio\DataManagerInterface;
 use App\Schema\Roles\RolesFindOneById;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

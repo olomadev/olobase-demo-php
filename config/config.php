@@ -43,7 +43,7 @@ $aggregator = new ConfigAggregator([
         : function(){ return[]; },
     
     // Oloma components
-    \Oloma\Php\ConfigProvider::class,
+    \Oloma\Mezzio\ConfigProvider::class,
 
     // Default App module config
     // 

@@ -6,8 +6,8 @@ namespace App\Handler\JobTitleLists;
 
 use App\Filter\JobTitleLists\FileUploadFilter;
 use Predis\ClientInterface as Predis;
-use Oloma\Php\DataManagerInterface;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\DataManagerInterface;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

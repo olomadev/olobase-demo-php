@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Auth;
 
 use App\Filter\Auth\AuthFilter;
-use Oloma\Php\Error\ErrorWrapperInterface;
+use Oloma\Mezzio\Error\ErrorWrapperInterface;
 use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;

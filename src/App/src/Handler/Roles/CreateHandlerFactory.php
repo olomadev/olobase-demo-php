@@ -6,8 +6,8 @@ namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
 use App\Filter\Roles\SaveFilter;
-use Oloma\Php\DataManagerInterface;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\DataManagerInterface;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;

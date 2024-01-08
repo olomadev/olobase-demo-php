@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
-use Oloma\Php\ColumnFiltersInterface;
-use Oloma\Php\Authentication\JwtEncoderInterface;
-use Oloma\Php\Authorization\PermissionModelInterface;
+use Oloma\Mezzio\ColumnFiltersInterface;
+use Oloma\Mezzio\Authentication\JwtEncoderInterface;
+use Oloma\Mezzio\Authorization\PermissionModelInterface;
 
 use Predis\ClientInterface as PredisInterface;
 use Laminas\Cache\Storage\StorageInterface;

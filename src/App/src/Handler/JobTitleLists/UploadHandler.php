@@ -6,9 +6,9 @@ namespace App\Handler\JobTitleLists;
 
 use App\Filter\JobTitleLists\FileUploadFilter;
 use Predis\ClientInterface as Predis;
-use Oloma\Php\DataManagerInterface;
+use Oloma\Mezzio\DataManagerInterface;
 use Mezzio\Authentication\UserInterface;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

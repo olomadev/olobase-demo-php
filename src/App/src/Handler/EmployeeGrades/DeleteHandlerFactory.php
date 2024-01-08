@@ -6,7 +6,7 @@ namespace App\Handler\EmployeeGrades;
 
 use App\Model\EmployeeGradeModel;
 use App\Filter\EmployeeGrades\DeleteFilter;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

@@ -6,7 +6,7 @@ namespace App\Handler\Auth;
 
 use App\Model\AuthModel;
 use App\Model\TokenModel;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;

@@ -9,7 +9,7 @@ use App\Utils\SmtpMailer;
 use App\Filter\Auth\ResetPasswordFilter;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Oloma\Php\Error\ErrorWrapperInterface as Error;
+use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\InputFilter\InputFilterPluginManager;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
