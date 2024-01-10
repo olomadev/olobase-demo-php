@@ -10,7 +10,8 @@ use Mezzio\Authentication\UserInterface;
 use Oloma\Mezzio\Authentication\JwtEncoderInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Db\TableGateway\TableGatewayInterface;
-use Laminas\Http\PhpEnvironment\RemoteAddress;
+
+use function getRealUserIp;
 
 class TokenModel
 {
@@ -191,9 +192,8 @@ class TokenModel
         //
         // Renew JWT token data
         //
-        $remoteAddress = new RemoteAddress;
         $decoded['data']['details']['tokenId'] = $tokenId; // renew token id
-        $decoded['data']['details']['ip'] = $remoteAddress->getIpAddress(); 
+        $decoded['data']['details']['ip'] = getRealUserIp(); 
         $decoded['data']['details']['deviceKey'] = $deviceKey; 
         $jwt = [
             'iat'  => $decoded['iat'],  // Issued at: time when the token was generated

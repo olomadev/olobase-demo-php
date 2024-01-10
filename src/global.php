@@ -9,6 +9,32 @@ define('PROJECT_DOMAIN', 'demo.local');
 define('CACHE_ROOT_KEY', 'demo_app:');
 define('CACHE_TMP_FILE_KEY', 'tmp_file_');
 define('SESSION_KEY', CACHE_ROOT_KEY.'sessions:');
+
+/**
+ * Get user real ip if proxy used
+ * 
+ * @param  string|null  $default default value
+ * @param  integer $options filter_var options
+ * @return string|null
+ */
+function getRealUserIp($default = null, $options = 12582912) 
+{
+    // 
+    // clouflare support
+    // 
+    $HTTP_CF_CONNECTING_IP = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : getenv('HTTP_CF_CONNECTING_IP');
+    $HTTP_X_FORWARDED_FOR = isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : getenv('HTTP_X_FORWARDED_FOR');
+    $HTTP_CLIENT_IP = isset($_SERVER["HTTP_CLIENT_IP"]) ? $_SERVER["HTTP_CLIENT_IP"] : getenv('HTTP_CLIENT_IP');
+    $REMOTE_ADDR = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : getenv('REMOTE_ADDR');
+
+    $allIps = explode(",", "$HTTP_X_FORWARDED_FOR,$HTTP_CLIENT_IP,$HTTP_CF_CONNECTING_IP,$REMOTE_ADDR");
+    foreach ($allIps as $ip) {
+        if ($ip = filter_var($ip, FILTER_VALIDATE_IP, $options)) {
+            break;
+        }
+    }
+    return $ip ? $ip : $default;
+}
 /**
  * Paginator json decode
  *

@@ -11,7 +11,8 @@ use Laminas\EventManager\EventInterface;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\EventManager\ListenerAggregateTrait;
-use Laminas\Http\PhpEnvironment\RemoteAddress;
+
+use function getRealUserIp;
 
 class LoginListener implements ListenerAggregateInterface
 {
@@ -37,8 +38,6 @@ class LoginListener implements ListenerAggregateInterface
         $request = $params['request'];
         $username = trim($params['username']);
 
-        $remoteAddress = new RemoteAddress;
-        $realIpAddress = $remoteAddress->getIpAddress();
         $server = $request->getServerParams();
         $userAgent = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
         //
@@ -56,7 +55,7 @@ class LoginListener implements ListenerAggregateInterface
                 'username' => $username,
                 'userAgent' => $userAgent,
                 'attemptedAt' => date("Y-m-d"),
-                'ip' => $realIpAddress,
+                'ip' => getRealUserIp(),
             ]
         );
         return ['banned' => false];

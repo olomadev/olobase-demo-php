@@ -17,9 +17,8 @@ use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Http\PhpEnvironment\RemoteAddress;
 
-use function strtoupper;
+use function strtoupper, getRealUserIp;
 
 class JwtAuthentication implements AuthenticationInterface
 {
@@ -81,8 +80,7 @@ class JwtAuthentication implements AuthenticationInterface
         ) use ($userFactory) : UserInterface {
             return $userFactory($id, $identity, $roles, $details);
         };
-        $remoteAddress = new RemoteAddress;
-        $this->ipAddress = $remoteAddress->getIpAddress();
+        $this->ipAddress = getRealUserIp();
     }
 
     public function authenticate(ServerRequestInterface $request) : ?UserInterface

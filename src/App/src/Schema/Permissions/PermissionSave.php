@@ -25,7 +25,7 @@ class PermissionSave
      */
     public $resource;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="string",
@@ -38,7 +38,7 @@ class PermissionSave
      */
     public $route;
     /**
-    * @var string
+    * @var object
     * @OA\Property(
     *     ref="#/components/schemas/ObjectId",
     *     format="string",
