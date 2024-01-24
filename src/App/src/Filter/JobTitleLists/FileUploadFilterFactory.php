@@ -12,6 +12,8 @@ class FileUploadFilterFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new FileUploadFilter($container->get(CommonModel::class));
+        return new FileUploadFilter(
+            $container->get(CommonModel::class)
+        );
     }
 }

@@ -151,6 +151,7 @@ class UserModel
                 'firstname',
                 'lastname',
                 'email',
+                'locale' => new Expression("JSON_OBJECT('id', l.langId, 'name', l.langName)"),
                 'emailActivation',
                 'active',
                 'themeColor',
@@ -159,12 +160,13 @@ class UserModel
             ]
         );
         $select->from(['u' => 'users']);
-        $select->where(['u.userId' => $userId]);
+        $select->join(['l' => 'languages'], 'u.locale = l.langId', [], $select::JOIN_LEFT);
         $select->join(['ua' => 'userAvatars'], 'ua.userId = u.userId',
             [
                 'avatar' => new Expression("JSON_OBJECT('image', CONCAT('data:image/png;base64,', TO_BASE64(avatarImage)))"),
             ],
         $select::JOIN_LEFT);
+        $select->where(['u.userId' => $userId]);
 
         // echo $select->getSqlString($this->adapter->getPlatform());
         // die;

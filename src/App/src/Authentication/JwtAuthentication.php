@@ -110,6 +110,7 @@ class JwtAuthentication implements AuthenticationInterface
 
         $eventParams = [
             'request' => $request,
+            'translator' => $this->translator,
             'username' => $post[$usernameField],
         ];
         // credentials are correct ? 
@@ -135,6 +136,7 @@ class JwtAuthentication implements AuthenticationInterface
         //
         // successful login event
         //
+        $eventParams['rowObject'] = $rowObject;
         $this->events->trigger(LoginListener::onSuccessfullLogin, null, $eventParams);
         //
         // user is active ? 

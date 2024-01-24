@@ -33,6 +33,13 @@ class AccountFindMeObject
      */
     public $active;
     /**
+    * @var object
+    * @OA\Property(
+    *     ref="#/components/schemas/ObjectId",
+    * )
+    */
+    public $locale;
+    /**
      * @var integer
      * @OA\Property()
      */

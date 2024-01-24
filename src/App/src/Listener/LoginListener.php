@@ -37,7 +37,6 @@ class LoginListener implements ListenerAggregateInterface
         $params = $e->getParams();
         $request = $params['request'];
         $username = trim($params['username']);
-
         $server = $request->getServerParams();
         $userAgent = empty($server['HTTP_USER_AGENT']) ? 'unknown' : $server['HTTP_USER_AGENT'];
         //
@@ -64,15 +63,23 @@ class LoginListener implements ListenerAggregateInterface
     public function onSuccessfullLogin(EventInterface $e)
     {
         $params = $e->getParams();
-        // $request = $params['request'];
         $username = trim($params['username']);
+        $rowObject = $params['rowObject'];
+        $translator = $params['translator'];
+        $updateData = [
+            'locale' => $translator->getLocale(), // last locale
+            'lastLogin' => date("Y-m-d H:i:s", time()),
+        ];
         /**
          * We delete attempts:
          *
          * 1- When user do the successful login
          * 2- When the user clicks on the reset link in the email we send
          */
-        $this->failedLoginModel->deleteAttempts($username);
+        $this->failedLoginModel->deleteAttemptsAndUpdateUser(
+            $updateData,
+            ['username' => $username, 'userId' => $rowObject->userId]
+        );
     }
 
 }

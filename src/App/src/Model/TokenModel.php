@@ -175,7 +175,7 @@ class TokenModel
         }
         $expiredAt = $decoded['exp'];
         $now = time();
-        if ($expiredAt + (int)$sessionTTL < $now) {
+        if ($expiredAt + (int)$sessionTTL + 10 < $now) {
             return false; // ttl expired
         }  
         //

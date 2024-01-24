@@ -136,6 +136,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     // Common (public)
     // 
     $app->route('/api/stream/events', App\Handler\Common\Stream\EventsHandler::class, ['GET']);
+    $app->route('/api/locales/findAll', App\Handler\Common\Locales\FindAllHandler::class, ['GET']);
     $app->route('/api/years/findAll', App\Handler\Common\Years\FindAllHandler::class, ['GET']);
     $app->route('/api/months/findAll', App\Handler\Common\Months\FindAllHandler::class, ['GET']);
     $app->route('/api/cities/findAll', App\Handler\Common\Cities\FindAllHandler::class, ['GET']);

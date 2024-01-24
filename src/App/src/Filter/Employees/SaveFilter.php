@@ -87,7 +87,7 @@ class SaveFilter extends InputFilter
         ]);
         $this->add($objectFilter, 'companyId');
 
-        $objectFilter = new ObjectInputFilter();
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
         $objectFilter->add([
             'name' => 'id',
             'required' => false,
@@ -187,7 +187,7 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $objectFilter = new ObjectInputFilter();
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
         $objectFilter->add([
             'name' => 'id',
             'required' => false,

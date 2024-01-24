@@ -19,15 +19,18 @@ class FailedLoginModel
     private $predis;
     private $adapter;
     private $message;
+    private $users;
     private $failedLogins;
     private $columnFilters;
 
     public function __construct(
+        TableGatewayInterface $users,
         TableGatewayInterface $failedLogins,
         SimpleCacheInterface $simpleCache,
         ColumnFiltersInterface $columnFilters
     ) {
-        $this->adapter = $failedLogins->getAdapter();
+        $this->users = $users;
+        $this->adapter = $users->getAdapter();
         $this->failedLogins = $failedLogins;
         $this->simpleCache = $simpleCache;
         $this->columnFilters = $columnFilters;
@@ -93,19 +96,21 @@ class FailedLoginModel
     }
 
     /**
-     * Delete attempt events:
+     * In these cases we delete unsuccessful attempts:
      *
      * 1- When user do the successful login
      * 2- When the user clicks on the reset link in the email we send
      * 
-     * @param  string $username identity
+     * @param  array $data update data
+     * @param  array $where where data
      * @return void
      */
-    public function deleteAttempts(string $username)
+    public function deleteAttemptsAndUpdateUser(array $data, array $where)
     {
         try {
             $this->conn->beginTransaction();
-            $this->failedLogins->delete(['username' => $username]);
+            $this->users->update($data, ['userId' => $where['userId']]);
+            $this->failedLogins->delete(['username' => $where['username']]);
             $this->conn->commit();
         } catch (Exception $e) {
             $this->conn->rollback();

@@ -44,10 +44,11 @@ class SessionUpdateHandler implements RequestHandlerInterface
             // 
             $tokenId = $user->getDetails()['tokenId'];
             $configSessionTTL = (int)$this->config['token']['session_ttl'] * 60;
-            $this->cache->getOptions()->setTtl($configSessionTTL);
             $userHasSession = $this->cache->getItem(SESSION_KEY.$user->getId().":".$tokenId);
             if ($userHasSession) {
-                $this->cache->setItem(SESSION_KEY.$user->getId().":".$tokenId, $configSessionTTL);    
+                // do not change the order of this code otherwise the user will be logged out quickly
+                $this->cache->getOptions()->setTtl($configSessionTTL);
+                $this->cache->setItem(SESSION_KEY.$user->getId().":".$tokenId, $configSessionTTL);
             }
             return new TextResponse("ok", 200);
         }

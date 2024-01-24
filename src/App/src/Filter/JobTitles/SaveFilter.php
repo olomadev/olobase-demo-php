@@ -11,16 +11,18 @@ use Laminas\Validator\Uuid;
 use Laminas\Validator\InArray;
 use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
 
 class SaveFilter extends InputFilter
 {
     public function __construct(
         CommonModel $commonModel, 
-        AdapterInterface $adapter
+        InputFilterPluginManager $filter
     )
     {
+        $this->filter = $filter;
         $this->commonModel = $commonModel;
-        $this->adapter  = $adapter;
+        $this->adapter = $commonModel->getAdapter();
     }
 
     public function setInputData(array $data)
@@ -56,7 +58,8 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $objectFilter = new ObjectInputFilter();
+        
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
         $objectFilter->add([
             'name' => 'id',
             'required' => true,

@@ -118,6 +118,7 @@ class ConfigProvider
                 //------------------------------------------
                 // common
                 Handler\Common\Stream\EventsHandler::class => Handler\Common\Stream\EventsHandlerFactory::class,
+                Handler\Common\Locales\FindAllHandler::class => Handler\Common\Locales\FindAllHandlerFactory::class,
                 Handler\Common\Years\FindAllHandler::class => Handler\Common\Years\FindAllHandlerFactory::class,
                 Handler\Common\Months\FindAllHandler::class => Handler\Common\Months\FindAllHandlerFactory::class,
                 Handler\Common\Cities\FindAllHandler::class => Handler\Common\Cities\FindAllHandlerFactory::class,
@@ -246,8 +247,9 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $simpleCache = $container->get(SimpleCacheInterface::class);
                     $columnFilters = $container->get(ColumnFiltersInterface::class);
+                    $users = new TableGateway('users', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
                     $failedLogins = new TableGateway('failedLogins', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
-                    return new Model\FailedLoginModel($failedLogins, $simpleCache, $columnFilters);
+                    return new Model\FailedLoginModel($users, $failedLogins, $simpleCache, $columnFilters);
                 },
                 Model\FileModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);

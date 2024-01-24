@@ -4,31 +4,43 @@ declare(strict_types=1);
 
 namespace App\Filter\Account;
 
+use App\Model\CommonModel;
 use App\Filter\InputFilter;
 use App\Filter\Utils\ToFile;
+use Laminas\Validator\InArray;
 use App\Filter\ObjectInputFilter;
 use App\Validator\BlobFileUpload;
+use App\Validator\LatinCharacters;
 use Laminas\Filter\StringTrim;
 use App\Validator\Db\RecordExists;
 use App\Validator\Db\NoRecordExists;
 use Laminas\Validator\EmailAddress;
 use Laminas\Validator\StringLength;
 use Laminas\Db\Adapter\AdapterInterface;
+use Laminas\InputFilter\InputFilterPluginManager;
 
 class SaveFilter extends InputFilter
 {
-    public function __construct(AdapterInterface $adapter)
+    public function __construct(
+        CommonModel $commonModel,
+        InputFilterPluginManager $filter
+    )
     {
-        $this->adapter = $adapter;
+        $this->filter = $filter;
+        $this->commonModel = $commonModel;
+        $this->adapter = $commonModel->getAdapter();
         $this->user = $this->getUser();
     }
 
     public function setInputData(array $data)
     {
+        $locales = $this->commonModel->findLocales();
+
         $this->add([
             'name' => 'email',
             'required' => true,
             'validators' => [
+                ['name' => LatinCharacters::class],
                 [
                     'name' => EmailAddress::class,
                     'options' => [
@@ -100,7 +112,21 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $objectFilter = new ObjectInputFilter();
+
+        $this->add([
+            'name' => 'locale',
+            'required' => true,
+            'validators' => [
+                [
+                    'name' => InArray::class,
+                    'options' => [
+                        'haystack' => $locales,
+                    ],
+                ]
+            ],
+        ]);
+
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
         $objectFilter->add([
             'name' => 'image',
             'required' => false,

@@ -12,6 +12,8 @@ class DeleteFilterFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new DeleteFilter($container->get(AdapterInterface::class));
+        return new DeleteFilter(
+            $container->get(AdapterInterface::class)
+        );
     }
 }

@@ -13,11 +13,16 @@ use Laminas\Filter\StringTrim;
 use Laminas\Validator\Uuid;
 use Laminas\Validator\InArray;
 use Laminas\Validator\StringLength;
+use Laminas\InputFilter\InputFilterPluginManager;
 
 class SaveFilter extends InputFilter
 {
-    public function __construct(CommonModel $commonModel)
+    public function __construct(
+        CommonModel $commonModel,
+        InputFilterPluginManager $filter
+    )
     {
+        $this->filter = $filter;
         $this->commonModel = $commonModel;
         $this->adapter = $commonModel->getAdapter();
     }
@@ -42,8 +47,8 @@ class SaveFilter extends InputFilter
             ],
         ]);
 
-        $yearIdFilter = new ObjectInputFilter();
-        $yearIdFilter->add([
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
+        $objectFilter->add([
             'name' => 'id',
             'required' => true,
             'validators' => [
@@ -55,7 +60,7 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $this->add($yearIdFilter, 'yearId');
+        $this->add($objectFilter, 'yearId');
 
         $this->add([
             'name' => 'listName',

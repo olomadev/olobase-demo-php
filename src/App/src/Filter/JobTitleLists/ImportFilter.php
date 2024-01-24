@@ -9,11 +9,16 @@ use App\Filter\InputFilter;
 use App\Filter\ObjectInputFilter;
 use Laminas\Validator\InArray;
 use Laminas\Validator\StringLength;
+use Laminas\InputFilter\InputFilterPluginManager;
 
 class ImportFilter extends InputFilter
 {
-    public function __construct(CommonModel $commonModel)
+    public function __construct(
+        CommonModel $commonModel,
+        InputFilterPluginManager $filter
+    )
     {
+        $this->filter = $filter;
         $this->commonModel = $commonModel;
     }
 
@@ -21,8 +26,8 @@ class ImportFilter extends InputFilter
     {
         $years = $this->commonModel->findYearIds();
 
-        $yearIdFilter = new ObjectInputFilter();
-        $yearIdFilter->add([
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
+        $objectFilter->add([
             'name' => 'id',
             'required' => true,
             'validators' => [
@@ -34,7 +39,7 @@ class ImportFilter extends InputFilter
                 ],
             ],
         ]);
-        $this->add($yearIdFilter, 'yearId');
+        $this->add($objectFilter, 'yearId');
 
         $this->add([
             'name' => 'listName',

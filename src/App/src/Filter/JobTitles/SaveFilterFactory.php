@@ -16,7 +16,7 @@ class SaveFilterFactory implements FactoryInterface
     {
         return new SaveFilter(
             $container->get(CommonModel::class),
-            $container->get(AdapterInterface::class)
+            $container->get(InputFilterPluginManager::class)
         );
     }
 }

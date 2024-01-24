@@ -76,8 +76,8 @@ class SaveFilter extends InputFilter
             ],
         ]);  
 
-        $actionIdFilter = new ObjectInputFilter();
-        $actionIdFilter->add([
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
+        $objectFilter->add([
             'name' => 'id',
             'required' => true,
             'validators' => [
@@ -89,7 +89,7 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $this->add($actionIdFilter, 'action');
+        $this->add($objectFilter, 'action');
 
         $this->add([
             'name' => 'route',
@@ -106,8 +106,8 @@ class SaveFilter extends InputFilter
             ],
         ]);
         
-        $methodIdFilter = new ObjectInputFilter();
-        $methodIdFilter->add([
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
+        $objectFilter->add([
             'name' => 'id',
             'required' => true,
             'validators' => [
@@ -119,7 +119,7 @@ class SaveFilter extends InputFilter
                 ],
             ],
         ]);
-        $this->add($methodIdFilter, 'method');
+        $this->add($objectFilter, 'method');
 
         $this->setData($data);
     }
