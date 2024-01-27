@@ -413,6 +413,30 @@
                 }
             }
         },
+        "/locales/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all locales",
+                "operationId": "locales_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
         "/months/findAll": {
             "get": {
                 "tags": [
@@ -2238,6 +2262,9 @@
                     "active": {
                         "type": "integer"
                     },
+                    "locale": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
                     "emailActivation": {
                         "type": "integer"
                     },
@@ -2263,6 +2290,9 @@
                     },
                     "active": {
                         "type": "integer"
+                    },
+                    "locale": {
+                        "$ref": "#/components/schemas/ObjectId"
                     },
                     "emailActivation": {
                         "type": "integer"
