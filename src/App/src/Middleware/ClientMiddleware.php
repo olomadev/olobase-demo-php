@@ -67,9 +67,14 @@ class ClientMiddleware implements MiddlewareInterface
         // application sends current language in http header)
         //
         $langId = "en"; // fallback language
-        if (! empty($headers['client-locale'][0])) {
-            $currentLocale = $headers['client-locale'][0];
-            if ($currentLocale && in_array($currentLocale, $this->acceptedLanguages)) {
+        if (! empty($headers['x-client-locale'][0])) {
+            $currentLocale = $headers['x-client-locale'][0];
+            if ($currentLocale 
+                && in_array(
+                    $currentLocale,
+                    $this->acceptedLanguages
+                )
+            ) {
                 $langId = $currentLocale;
             }
         }
