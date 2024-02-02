@@ -66,7 +66,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // 
     // $app->pipe(CorsMiddleware::class);
     $app->pipe(ClientMiddleware::class);
-    $app->pipe(RestrictedModeMiddleware::class);
+    // $app->pipe(RestrictedModeMiddleware::class);
 
     // The following handle routing failures for common conditions:
     // - HEAD request but no routes answer that method
