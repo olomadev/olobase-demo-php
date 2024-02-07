@@ -1,5 +1,5 @@
 /*
-MySQL - 8.0.35-0ubuntu0.22.04.1 : Database - va_demo
+MySQL - 8.0.36-0ubuntu0.22.04.1 : Database - olobase_demo
 *********************************************************************
 */
 
@@ -11,9 +11,9 @@ MySQL - 8.0.35-0ubuntu0.22.04.1 : Database - va_demo
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`va_demo` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`olobase_demo` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
-USE `va_demo`;
+USE `olobase_demo`;
 
 /*Table structure for table `areaCodes` */
 
@@ -72,6 +72,17 @@ CREATE TABLE `currencies` (
   PRIMARY KEY (`currencyId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+/*Table structure for table `departments` */
+
+DROP TABLE IF EXISTS `departments`;
+
+CREATE TABLE `departments` (
+  `departmentId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `companyId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `departmentName` varchar(160) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`departmentId`,`companyId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 /*Table structure for table `employeeChildren` */
 
 DROP TABLE IF EXISTS `employeeChildren`;
@@ -116,6 +127,7 @@ CREATE TABLE `employees` (
   `employeeId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `employeeNumber` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `companyId` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `departmentId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `name` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `surname` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `jobTitleId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
@@ -145,11 +157,11 @@ CREATE TABLE `errors` (
 DROP TABLE IF EXISTS `failedLogins`;
 
 CREATE TABLE `failedLogins` (
-  `loginId` char(36) COLLATE utf8mb4_general_ci NOT NULL,
+  `loginId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `username` varchar(160) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `attemptedAt` date DEFAULT NULL,
-  `userAgent` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `ip` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `userAgent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`loginId`,`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -192,10 +204,9 @@ CREATE TABLE `jobTitles` (
 DROP TABLE IF EXISTS `languages`;
 
 CREATE TABLE `languages` (
-  `langId` varchar(2) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
-  `langName` varchar(60) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-  PRIMARY KEY (`langId`),
-  KEY `langId` (`langId`) USING BTREE
+  `langId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `langName` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  PRIMARY KEY (`langId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Table structure for table `monthLang` */
@@ -293,6 +304,7 @@ CREATE TABLE `users` (
   `lastLogin` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
   `emailActivation` tinyint(1) DEFAULT '0',
+  `locale` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `themeColor` char(7) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
   PRIMARY KEY (`userId`) USING BTREE,
   KEY `user_id` (`userId`) USING BTREE,

@@ -98,6 +98,12 @@ SELECT CONCAT('SHOW GRANTS FOR ''',user,'''@''',host,''';') FROM mysql.user;
 +------------------------------------------------------+
 ```
 
+Shor Privileges
+
+```
+SHOW GRANTS FOR 'test'@'213.185.73.xxx';
+```
+
 ### MYSQL Server 8 Remote Access Configruation
 
 https://www.configserverfirewall.com/ubuntu-linux/enable-mysql-remote-access-ubuntu/
@@ -126,10 +132,11 @@ FLUSH PRIVILEGES;
 
 > Note: 213.185.73.183 is static ip address of your location.
 
-Kullanıcı listelemek;
+### List Users;
+
 SELECT CONCAT('SHOW GRANTS FOR ''',user,'''@''',host,''';') FROM mysql.user;
 
-Delete the user;
+### Delete User;
 
 ```sql
 DROP USER 'admin'@'213.185.73.xxx';

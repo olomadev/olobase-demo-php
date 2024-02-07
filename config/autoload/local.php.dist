@@ -74,7 +74,7 @@ return [
 	        // Enable exceptions
 	        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     	],
-        'database' => '',
+        'database' => 'olobase_demo',
         'hostname' => 'localhost',
         'username' => 'root',
         'password' => '',
