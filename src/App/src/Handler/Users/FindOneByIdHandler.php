@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Users;
 
 use App\Model\UserModel;
-use Oloma\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\DataManagerInterface;
 use App\Schema\Users\UsersFindOneById;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

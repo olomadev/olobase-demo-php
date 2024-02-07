@@ -12,8 +12,8 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
-use Oloma\Mezzio\Authentication\JwtEncoderInterface as JwtEncoder;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Authentication\JwtEncoderInterface as JwtEncoder;
 use Mezzio\Authentication\AuthenticationInterface as Auth;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 

@@ -7,7 +7,7 @@ namespace App\Middleware;
 use Mezzio\Router\RouteResult;
 use Laminas\Diactoros\Response;
 use Laminas\Diactoros\Response\JsonResponse;
-use Oloma\Mezzio\Exception\BodyDecodeException;
+use Olobase\Mezzio\Exception\BodyDecodeException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

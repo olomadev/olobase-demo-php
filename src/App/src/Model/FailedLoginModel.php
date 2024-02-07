@@ -5,7 +5,7 @@ namespace App\Model;
 
 use Exception;
 use Laminas\Db\Sql\Sql;
-use Oloma\Mezzio\ColumnFiltersInterface;
+use Olobase\Mezzio\ColumnFiltersInterface;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
 use Laminas\Paginator\Adapter\DbSelect;

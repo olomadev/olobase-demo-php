@@ -6,7 +6,7 @@ namespace App\Handler\JobTitleLists;
 
 use App\Model\JobTitleListModel;
 use App\Filter\JobTitleLists\DeleteFilter;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

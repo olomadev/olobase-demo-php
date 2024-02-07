@@ -707,6 +707,183 @@
                 }
             }
         },
+        "/departments/create": {
+            "post": {
+                "tags": [
+                    "Departments"
+                ],
+                "summary": "Create a new department grade",
+                "operationId": "departments_create",
+                "requestBody": {
+                    "description": "Create new department",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DepartmentSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
+        "/departments/delete/{gradeId}": {
+            "delete": {
+                "tags": [
+                    "Departments"
+                ],
+                "summary": "Delete employee grade",
+                "operationId": "departments_delete",
+                "parameters": [
+                    {
+                        "name": "gradeId",
+                        "in": "path",
+                        "description": "Grade uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        },
+        "/departments/findAllByPaging": {
+            "get": {
+                "tags": [
+                    "Departments"
+                ],
+                "summary": "Find all employee grades by pagination",
+                "operationId": "departments_findAllByPaging",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_page",
+                        "in": "query",
+                        "description": "Page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_perPage",
+                        "in": "query",
+                        "description": "Per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "_sort",
+                        "in": "query",
+                        "description": "Order items",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {}
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DepartmentsFindAllByPaging"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/departments/findAll": {
+            "get": {
+                "tags": [
+                    "Permissions"
+                ],
+                "summary": "Find all employee grades",
+                "operationId": "departments_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/departments/update/{gradeId}": {
+            "put": {
+                "tags": [
+                    "Departments"
+                ],
+                "summary": "Update employee grade",
+                "operationId": "departments_update",
+                "parameters": [
+                    {
+                        "name": "gradeId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Update Company",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DepartmentSave"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request, returns to validation errors"
+                    }
+                }
+            }
+        },
         "/employeegrades/create": {
             "post": {
                 "tags": [
@@ -2557,6 +2734,59 @@
                 },
                 "type": "object"
             },
+            "DepartmentSave": {
+                "properties": {
+                    "departmentId": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "companyId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "departmentName": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "DepartmentsFindAllByPaging": {
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DepartmentsFindAllByPagingObject"
+                        }
+                    },
+                    "page": {
+                        "type": "integer"
+                    },
+                    "perPage": {
+                        "type": "integer"
+                    },
+                    "totalPages": {
+                        "type": "integer"
+                    },
+                    "totalItems": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "DepartmentsFindAllByPagingObject": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "companyId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "departmentName": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "EmployeeGradeSave": {
                 "properties": {
                     "gradeId": {
@@ -2611,6 +2841,9 @@
                         "format": "uuid"
                     },
                     "companyId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "departmentId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
                     "employeeNumber": {
@@ -2709,6 +2942,9 @@
                     "companyId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
+                    "departmentId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
                     "employeeNumber": {
                         "type": "string"
                     },
@@ -2774,6 +3010,9 @@
                         "format": "uuid"
                     },
                     "companyId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "departmentId": {
                         "$ref": "#/components/schemas/ObjectId"
                     },
                     "employeeNumber": {

@@ -6,7 +6,7 @@ namespace App\Handler\JobTitles;
 
 use App\Model\JobTitleModel;
 use App\Filter\JobTitles\DeleteFilter;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

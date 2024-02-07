@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
-use Oloma\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\DataManagerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 

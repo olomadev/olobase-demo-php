@@ -6,7 +6,7 @@ namespace App\Handler\Companies;
 
 use App\Model\CompanyModel;
 use App\Filter\Companies\DeleteFilter;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

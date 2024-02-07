@@ -8,7 +8,7 @@ use App\Model\FileModel;
 use App\Filter\Files\ReadFileFilter;
 use Psr\Container\ContainerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\I18n\Translator\TranslatorInterface as Translator;
 

@@ -12,7 +12,7 @@ use Laminas\Db\Adapter\Adapter;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Oloma\Mezzio\Authentication\JwtEncoderInterface as JwtEncoder;
+use Olobase\Mezzio\Authentication\JwtEncoderInterface as JwtEncoder;
 use Laminas\Authentication\Adapter\DbTable\CallbackCheckAdapter;
 use Mezzio\Authentication\Exception;
 use Mezzio\Authentication\UserInterface;

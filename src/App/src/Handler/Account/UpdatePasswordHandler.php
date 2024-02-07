@@ -7,7 +7,7 @@ namespace App\Handler\Account;
 use App\Model\UserModel;
 use App\Filter\Account\PasswordChangeFilter;
 use Mezzio\Authentication\UserInterface;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

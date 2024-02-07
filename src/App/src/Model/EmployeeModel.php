@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Exception;
-use Oloma\Mezzio\ColumnFiltersInterface;
+use Olobase\Mezzio\ColumnFiltersInterface;
 use Laminas\Db\Sql\Sql;
 use Laminas\Db\Sql\Expression;
 use Laminas\Paginator\Paginator;
@@ -117,6 +117,11 @@ class EmployeeModel
         $select->join(['c' => 'companies'], 'c.companyId = e.companyId', 
             [
                 'companyId' => new Expression("JSON_OBJECT('id', c.companyId, 'name', c.companyShortName)"),
+            ],
+        $select::JOIN_LEFT);
+        $select->join(['d' => 'departments'], 'd.departmentId = e.departmentId', 
+            [
+                'departmentId' => new Expression("JSON_OBJECT('id', d.departmentId, 'name', d.departmentName)"),
             ],
         $select::JOIN_LEFT);
         $select->join(['j' => 'jobTitles'], 'j.jobTitleId = e.jobTitleId', 
@@ -241,6 +246,11 @@ class EmployeeModel
                 'companyId' => new Expression(
                     "if(c.companyId IS NULL, null, JSON_OBJECT('id', c.companyId, 'name', c.companyShortName))"
                 ),
+            ],
+        $select::JOIN_LEFT);
+        $select->join(['d' => 'departments'], 'd.departmentId = e.departmentId', 
+            [
+                'departmentId' => new Expression("JSON_OBJECT('id', d.departmentId, 'name', d.departmentName)"),
             ],
         $select::JOIN_LEFT);
         $select->join(['j' => 'jobTitles'], 'j.jobTitleId = e.jobTitleId', 

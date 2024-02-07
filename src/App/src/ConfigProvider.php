@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
-use Oloma\Mezzio\ColumnFiltersInterface;
-use Oloma\Mezzio\Authentication\JwtEncoderInterface;
-use Oloma\Mezzio\Authorization\PermissionModelInterface;
+use Olobase\Mezzio\ColumnFiltersInterface;
+use Olobase\Mezzio\Authentication\JwtEncoderInterface;
+use Olobase\Mezzio\Authorization\PermissionModelInterface;
 
 use Predis\ClientInterface as PredisInterface;
 use Laminas\Cache\Storage\StorageInterface;
@@ -47,25 +47,20 @@ class ConfigProvider
                     // Account
                     Filter\Account\SaveFilter::class => Filter\Account\SaveFilterFactory::class,
                     Filter\Account\PasswordChangeFilter::class => Filter\Account\PasswordChangeFilterFactory::class,
-                    // Users
-                    Filter\Users\SaveFilter::class => Filter\Users\SaveFilterFactory::class,
-                    Filter\Users\DeleteFilter::class => Filter\Users\DeleteFilterFactory::class,
-                    Filter\Users\PasswordSaveFilter::class => Filter\Users\PasswordSaveFilterFactory::class,
-                    // Roles
-                    Filter\Roles\SaveFilter::class => Filter\Roles\SaveFilterFactory::class,
-                    Filter\Roles\DeleteFilter::class => Filter\Roles\DeleteFilterFactory::class,
-                    // Permissions
-                    Filter\Permissions\SaveFilter::class => Filter\Permissions\SaveFilterFactory::class,
-                    Filter\Permissions\DeleteFilter::class => Filter\Permissions\DeleteFilterFactory::class,
+                    // Companies
+                    Filter\Companies\SaveFilter::class => Filter\Companies\SaveFilterFactory::class,
+                    Filter\Companies\DeleteFilter::class => Filter\Companies\DeleteFilterFactory::class,
                     // Employees
                     Filter\Employees\SaveFilter::class => Filter\Employees\SaveFilterFactory::class,
                     Filter\Employees\DeleteFilter::class => Filter\Employees\DeleteFilterFactory::class,
                     // Employee Grades
                     Filter\EmployeeGrades\SaveFilter::class => Filter\EmployeeGrades\SaveFilterFactory::class,
                     Filter\EmployeeGrades\DeleteFilter::class => Filter\EmployeeGrades\DeleteFilterFactory::class,
-                    // Companies
-                    Filter\Companies\SaveFilter::class => Filter\Companies\SaveFilterFactory::class,
-                    Filter\Companies\DeleteFilter::class => Filter\Companies\DeleteFilterFactory::class,
+                    // Departments
+                    Filter\Departments\SaveFilter::class => Filter\Departments\SaveFilterFactory::class,
+                    Filter\Departments\DeleteFilter::class => Filter\Departments\DeleteFilterFactory::class,
+                    // Files
+                    Filter\Files\ReadFileFilter::class => Filter\Files\ReadFileFilterFactory::class,
                     // Job Titles
                     Filter\JobTitles\SaveFilter::class => Filter\JobTitles\SaveFilterFactory::class,
                     Filter\JobTitles\DeleteFilter::class => Filter\JobTitles\DeleteFilterFactory::class,
@@ -74,8 +69,16 @@ class ConfigProvider
                     Filter\JobTitleLists\DeleteFilter::class => Filter\JobTitleLists\DeleteFilterFactory::class,
                     Filter\JobTitleLists\FileUploadFilter::class => InvokableFactory::class,
                     Filter\JobTitleLists\ImportFilter::class => Filter\JobTitleLists\ImportFilterFactory::class,
-                    // Files
-                    Filter\Files\ReadFileFilter::class => Filter\Files\ReadFileFilterFactory::class,
+                    // Permissions
+                    Filter\Permissions\SaveFilter::class => Filter\Permissions\SaveFilterFactory::class,
+                    Filter\Permissions\DeleteFilter::class => Filter\Permissions\DeleteFilterFactory::class,
+                    // Roles
+                    Filter\Roles\SaveFilter::class => Filter\Roles\SaveFilterFactory::class,
+                    Filter\Roles\DeleteFilter::class => Filter\Roles\DeleteFilterFactory::class,
+                    // Users
+                    Filter\Users\SaveFilter::class => Filter\Users\SaveFilterFactory::class,
+                    Filter\Users\DeleteFilter::class => Filter\Users\DeleteFilterFactory::class,
+                    Filter\Users\PasswordSaveFilter::class => Filter\Users\PasswordSaveFilterFactory::class,
                 ],
             ],
         ];
@@ -181,6 +184,12 @@ class ConfigProvider
                 Handler\Companies\FindOneByIdHandler::class => Handler\Companies\FindOneByIdHandlerFactory::class,
                 Handler\Companies\FindAllHandler::class => Handler\Companies\FindAllHandlerFactory::class,
                 Handler\Companies\FindAllByPagingHandler::class => Handler\Companies\FindAllByPagingHandlerFactory::class,
+                // departments
+                Handler\Departments\CreateHandler::class => Handler\Departments\CreateHandlerFactory::class,
+                Handler\Departments\UpdateHandler::class => Handler\Departments\UpdateHandlerFactory::class,
+                Handler\Departments\DeleteHandler::class => Handler\Departments\DeleteHandlerFactory::class,
+                Handler\Departments\FindAllHandler::class => Handler\Departments\FindAllHandlerFactory::class,
+                Handler\Departments\FindAllByPagingHandler::class => Handler\Departments\FindAllByPagingHandlerFactory::class,
                 // job titles
                 Handler\JobTitles\CreateHandler::class => Handler\JobTitles\CreateHandlerFactory::class,
                 Handler\JobTitles\UpdateHandler::class => Handler\JobTitles\UpdateHandlerFactory::class,
@@ -220,6 +229,12 @@ class ConfigProvider
                     $dbAdapter = $container->get(AdapterInterface::class);
                     $cacheStorage = $container->get(StorageInterface::class);
                     return new Model\CommonModel($dbAdapter, $cacheStorage, $config);
+                },
+                Model\DepartmentModel::class => function ($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $departments = new TableGateway('departments', $dbAdapter, null, new ResultSet(ResultSet::TYPE_ARRAY));
+                    $columnFilters = $container->get(ColumnFiltersInterface::class);
+                    return new Model\DepartmentModel($departments, $columnFilters);
                 },
                 Model\EmployeeModel::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);

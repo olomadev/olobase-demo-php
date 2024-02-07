@@ -23,6 +23,14 @@ class EmployeeSave
     */
     public $companyId;
     /**
+    * @var object
+    * @OA\Property(
+    *     ref="#/components/schemas/ObjectId",
+    *     format="uuid",
+    * )
+    */
+    public $departmentId;
+    /**
      * @var string
      * @OA\Property()
      */

@@ -37,6 +37,7 @@ class SaveFilter extends InputFilter
     public function setInputData(array $data)
     {
         $companies = $this->commonModel->findCompanyIds();
+        $departments = $this->commonModel->findDepartmentIds();
         $jobTitles = $this->commonModel->findJobTitleIds();
         $employeeGrades = $this->commonModel->findEmployeeGradeIds();
 
@@ -72,7 +73,7 @@ class SaveFilter extends InputFilter
                 ],           
             ],
         ]);
-        $objectFilter = new ObjectInputFilter();
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
         $objectFilter->add([
             'name' => 'id',
             'required' => true,
@@ -86,6 +87,21 @@ class SaveFilter extends InputFilter
             ],
         ]);
         $this->add($objectFilter, 'companyId');
+
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
+        $objectFilter->add([
+            'name' => 'id',
+            'required' => true,
+            'validators' => [
+                [
+                    'name' => InArray::class,
+                    'options' => [
+                        'haystack' => $departments,
+                    ],
+                ],
+            ],
+        ]);
+        $this->add($objectFilter, 'departmentId');
 
         $objectFilter = $this->filter->get(ObjectInputFilter::class);
         $objectFilter->add([

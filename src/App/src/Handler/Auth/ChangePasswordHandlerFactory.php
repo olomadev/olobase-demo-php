@@ -10,7 +10,7 @@ use App\Filter\Auth\ChangePasswordFilter;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 
 class ChangePasswordHandlerFactory
 {

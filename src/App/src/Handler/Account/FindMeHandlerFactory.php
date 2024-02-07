@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
-use Oloma\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\DataManagerInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 

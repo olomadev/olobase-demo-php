@@ -6,7 +6,7 @@ namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
 use App\Filter\Roles\DeleteFilter;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

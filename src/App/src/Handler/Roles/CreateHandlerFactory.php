@@ -6,8 +6,8 @@ namespace App\Handler\Roles;
 
 use App\Model\RoleModel;
 use App\Filter\Roles\SaveFilter;
-use Oloma\Mezzio\DataManagerInterface;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Mezzio\Authentication\AuthenticationInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\Db\Adapter\AdapterInterface;

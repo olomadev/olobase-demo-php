@@ -7,8 +7,8 @@ namespace App\Handler\Employees;
 use App\Model\EmployeeModel;
 use App\Schema\Employees\EmployeeSave;
 use App\Filter\Employees\SaveFilter;
-use Oloma\Mezzio\DataManagerInterface;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -65,7 +65,10 @@ class UpdateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getSaveData(EmployeeSave::class, 'employees');
+            $data = $this->dataManager->getSaveData(
+                EmployeeSave::class, 
+                'employees'
+            );
             $this->employeeModel->update($data);
         } else {
             return new JsonResponse($this->error->getMessages($this->filter), 400);

@@ -6,8 +6,8 @@ namespace App\Handler\JobTitleLists;
 
 use Predis\ClientInterface as Predis;
 use App\Filter\JobTitleLists\ImportFilter;
-use Oloma\Mezzio\DataManagerInterface;
-use Oloma\Mezzio\Error\ErrorWrapperInterface as Error;
+use Olobase\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\Error\ErrorWrapperInterface as Error;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Laminas\InputFilter\InputFilterPluginManager;

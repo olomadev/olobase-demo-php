@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Employees;
 
 use App\Model\EmployeeModel;
-use Oloma\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\DataManagerInterface;
 use App\Schema\Employees\EmployeesFindOneById;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;

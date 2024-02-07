@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler\Account;
 
 use App\Model\UserModel;
-use Oloma\Mezzio\DataManagerInterface;
+use Olobase\Mezzio\DataManagerInterface;
 use App\Schema\Account\AccountFindMe;
 use Mezzio\Authentication\UserInterface;
 use Laminas\Diactoros\Response\JsonResponse;

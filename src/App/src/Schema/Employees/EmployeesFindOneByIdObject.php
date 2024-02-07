@@ -23,6 +23,13 @@ class EmployeesFindOneByIdObject
     */
     public $companyId;
     /**
+     * @var object
+     * @OA\Property(
+     *     ref="#/components/schemas/ObjectId",
+     * )
+     */
+    public $departmentId;
+    /**
      * @var string
      * @OA\Property()
      */
