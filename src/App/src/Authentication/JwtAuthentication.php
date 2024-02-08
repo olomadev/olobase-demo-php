@@ -155,8 +155,7 @@ class JwtAuthentication implements AuthenticationInterface
         }
         $details = [
             'email' => $rowObject->email,
-            'firstname' => $rowObject->firstname,
-            'lastname' => $rowObject->lastname,
+            'fullname' => $rowObject->firstname.' '.$rowObject->lastname,
             'avatar' => $rowObject->avatar,
             'ip' => $this->getIpAddress(),
             'deviceKey' => $this->getDeviceKey($request),

@@ -275,8 +275,19 @@ class UserModel
                 }
             }
             $this->userAvatars->delete(['userId' => $userId]);
-            if (! empty($data['avatar']['image'])) {
-                $this->userAvatars->insert(['userId' => $userId, 'avatarImage' => $data['avatar']['image']]);
+            if (! empty($data['avatar']['image'])) { // let's read mime type safely
+                $mimeType = finfo_buffer(
+                    finfo_open(),
+                    $data['avatar']['image'],
+                    FILEINFO_MIME_TYPE
+                );
+                $this->userAvatars->insert(
+                    [
+                        'userId' => $userId, 
+                        'mimeType' => $mimeType,
+                        'avatarImage' => $data['avatar']['image']
+                    ]
+                );
             }
             $this->conn->commit();
         } catch (Exception $e) {

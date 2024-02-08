@@ -60,7 +60,10 @@ class UpdateHandler implements RequestHandlerInterface
         $response = array();
         if ($this->filter->isValid()) {
             $this->dataManager->setInputFilter($this->filter);
-            $data = $this->dataManager->getSaveData(AccountSave::class, 'users');
+            $data = $this->dataManager->getSaveData(
+                AccountSave::class, 
+                'users'
+            );
             $data['id'] = $user->getId();
             $this->userModel->update($data);
         } else {

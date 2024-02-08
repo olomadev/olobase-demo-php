@@ -119,8 +119,7 @@ class TokenModel
                 'roles' => $user->getRoles(),
                 'details' => [
                     'email' => $user->getDetail('email') ? $user->getDetail('email') : $user->getIdentity(), // User email
-                    'firstname' => $user->getDetail('firstname'),
-                    'lastname' => $user->getDetail('firstname'),
+                    'fullname' => $user->getDetail('fullname'),
                     'ip' => $user->getDetail('ip'),
                     'deviceKey' => $user->getDetail('deviceKey'),
                     'tokenId' => $tokenId,

@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Exception\JsonDecodeException;
 
 define('PROJECT_ROOT', dirname(__DIR__));
-define('PROJECT_DOMAIN', 'demo.local');
 define('CACHE_ROOT_KEY', 'demo_app:');
 define('CACHE_TMP_FILE_KEY', 'tmp_file_');
 define('SESSION_KEY', CACHE_ROOT_KEY.'sessions:');
@@ -20,7 +19,7 @@ define('SESSION_KEY', CACHE_ROOT_KEY.'sessions:');
 function getRealUserIp($default = null, $options = 12582912) 
 {
     // 
-    // clouflare support
+    // cloudflare support
     // 
     $HTTP_CF_CONNECTING_IP = isset($_SERVER["HTTP_CF_CONNECTING_IP"]) ? $_SERVER["HTTP_CF_CONNECTING_IP"] : getenv('HTTP_CF_CONNECTING_IP');
     $HTTP_X_FORWARDED_FOR = isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : getenv('HTTP_X_FORWARDED_FOR');

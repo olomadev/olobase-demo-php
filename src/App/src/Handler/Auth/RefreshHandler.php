@@ -107,15 +107,15 @@ class RefreshHandler implements RequestHandlerInterface
                     401
                 );
             }
+            $details = $data['data']['details'];
             return new JsonResponse(
                 [
                     'data' => [
                         'token' => $data['token'],
                         'user'  => [
                             'id' => $data['data']['userId'],
-                            'firstname' => trim($data['data']['details']['firstname']),            
-                            'lastname' => trim($data['data']['details']['lastname']),            
-                            'email' => trim($data['data']['details']['email']),
+                            'fullname' => $details['firstname'].' '.$details['lastname'],
+                            'email' => $details['email'],
                             'roles' => $data['data']['roles'],
                         ],
                         'expiresAt' => $data['expiresAt'],

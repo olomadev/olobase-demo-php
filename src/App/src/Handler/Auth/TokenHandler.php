@@ -89,8 +89,7 @@ class TokenHandler implements RequestHandlerInterface
                                 'token' => $encoded['token'],
                                 'user'  => [
                                     'id' => $user->getId(),
-                                    'firstname' => trim($details['firstname']),
-                                    'lastname' => trim($details['lastname']),
+                                    'fullname' => $details['firstname'].' '.$details['lastname'],
                                     'email' => trim($details['email']),
                                     'roles' => $user->getRoles(),
                                 ],
