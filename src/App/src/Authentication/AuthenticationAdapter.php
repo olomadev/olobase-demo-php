@@ -26,7 +26,8 @@ class AuthenticationAdapter extends CallbackCheckAdapter
             ->join(
                 ['ua' => 'userAvatars'], 'ua.userId = '.$this->tableName.'.userId',
                 [
-                    'avatar' => new Expression("TO_BASE64(avatarImage)")
+                    'avatar' => new Expression("TO_BASE64(avatarImage)"),
+                    'mimeType',
                 ],
                 $dbSelect::JOIN_LEFT
             )
