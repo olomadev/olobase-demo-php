@@ -153,10 +153,11 @@ class JwtAuthentication implements AuthenticationInterface
             $this->error(Self::NO_ROLE_DEFINED_ON_THE_ACCOUNT);
             return null;
         }
+        $avatarImage = empty($rowObject->avatar) ? null : "data:".$rowObject->mimeType.";base64,".$rowObject->avatar;
         $details = [
             'email' => $rowObject->email,
             'fullname' => $rowObject->firstname.' '.$rowObject->lastname,
-            'avatar' => "data:".$rowObject->mimeType.";base64,".$rowObject->avatar,
+            'avatar' => $avatarImage,
             'ip' => $this->getIpAddress(),
             'deviceKey' => $this->getDeviceKey($request),
         ];
