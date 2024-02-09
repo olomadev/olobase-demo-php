@@ -114,7 +114,7 @@ class RefreshHandler implements RequestHandlerInterface
                         'token' => $data['token'],
                         'user'  => [
                             'id' => $data['data']['userId'],
-                            'fullname' => $details['firstname'].' '.$details['lastname'],
+                            'fullname' => $details['fullname'],
                             'email' => $details['email'],
                             'roles' => $data['data']['roles'],
                         ],

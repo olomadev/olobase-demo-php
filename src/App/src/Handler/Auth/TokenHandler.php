@@ -82,14 +82,13 @@ class TokenHandler implements RequestHandlerInterface
                     $request = $request->withAttribute(UserInterface::class, $user);
                     $encoded = $this->auth->getTokenModel()->create($request);                   
                     $details = $user->getDetails();
-
                     return new JsonResponse(
                         [
                             'data' => [
                                 'token' => $encoded['token'],
                                 'user'  => [
                                     'id' => $user->getId(),
-                                    'fullname' => $details['firstname'].' '.$details['lastname'],
+                                    'fullname' => $details['fullname'],
                                     'email' => trim($details['email']),
                                     'roles' => $user->getRoles(),
                                 ],
