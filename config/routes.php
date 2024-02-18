@@ -100,11 +100,11 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/employees/findOneById/:employeeId', [...$auth, [App\Handler\Employees\FindOneByIdHandler::class]], ['GET']);
 
     // Employee Grades (private)
-    $app->route('/api/employeegrades/create', [...$auth, [App\Handler\EmployeeGrades\CreateHandler::class]], ['POST']);
-    $app->route('/api/employeegrades/update/:gradeId', [...$auth, [App\Handler\EmployeeGrades\UpdateHandler::class]], ['PUT']);
-    $app->route('/api/employeegrades/delete/:gradeId', [...$auth, [App\Handler\EmployeeGrades\DeleteHandler::class]], ['DELETE']);
-    $app->route('/api/employeegrades/findAll', [JwtAuthenticationMiddleware::class, App\Handler\EmployeeGrades\FindAllHandler::class], ['GET']);
-    $app->route('/api/employeegrades/findAllByPaging', [...$auth, [App\Handler\EmployeeGrades\FindAllByPagingHandler::class]], ['GET']);
+    $app->route('/api/employee-grades/create', [...$auth, [App\Handler\EmployeeGrades\CreateHandler::class]], ['POST']);
+    $app->route('/api/employee-grades/update/:gradeId', [...$auth, [App\Handler\EmployeeGrades\UpdateHandler::class]], ['PUT']);
+    $app->route('/api/employee-grades/delete/:gradeId', [...$auth, [App\Handler\EmployeeGrades\DeleteHandler::class]], ['DELETE']);
+    $app->route('/api/employee-grades/findAll', [JwtAuthenticationMiddleware::class, App\Handler\EmployeeGrades\FindAllHandler::class], ['GET']);
+    $app->route('/api/employee-grades/findAllByPaging', [...$auth, [App\Handler\EmployeeGrades\FindAllByPagingHandler::class]], ['GET']);
     
     // Departments (private)
     $app->route('/api/departments/create', [...$auth, [App\Handler\Departments\CreateHandler::class]], ['POST']);

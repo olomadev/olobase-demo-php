@@ -8,6 +8,12 @@ php_value post_max_size 10M
 php_value upload_max_filesize 10M
 
 RewriteEngine On
+#
+# Redirect www to non-www
+#
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
 # The following rule allows authentication to work with fast-cgi
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 # The following rule tells Apache that if the requested filename
@@ -29,5 +35,3 @@ RewriteRule ^(.*)$ %{ENV:BASE}index.html [NC,L]
 RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::\2$
 RewriteRule ^(.*) - [E=BASE:%1]
 RewriteRule ^(.*)$ %{ENV:BASE}index.php [NC,L]
-
-

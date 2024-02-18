@@ -10,6 +10,31 @@ define('CACHE_TMP_FILE_KEY', 'tmp_file_');
 define('SESSION_KEY', CACHE_ROOT_KEY.'sessions:');
 
 /**
+ * Get origin
+ *
+ * https://stackoverflow.com/questions/276516/parsing-domain-from-a-url
+ * 
+ * @param  string $host $server['SERVER_NAME']
+ * @return string|null
+ */
+function getOrigin($host) {
+    if (! $host) {
+        return $host;
+    }
+    if (filter_var($host, FILTER_VALIDATE_IP)) { // IP address returned as domain
+        return $host; //* or replace with null if you don't want an IP back
+    }
+    $domainArray = explode(".", str_replace('www.', '', $host));
+    $count = count($domainArray);
+    if( $count >= 3 && strlen($domainArray[$count-2])==2 ) {
+        // SLD (example.co.uk)
+        return implode('.', array_splice($domainArray, $count-3,3));
+    } else if ($count >= 2 ) {
+        // TLD (example.com)
+        return implode('.', array_splice($domainArray, $count-2,2));
+    }
+}
+/**
  * Get user real ip if proxy used
  * 
  * @param  string|null  $default default value
@@ -160,9 +185,9 @@ function generateRandom(string $characters, int $length)
     return $randomString;
 }
 /**
- * Front end hiçbir zaman para değerlerini 20,7 gibi bir rakam göndermemeli,
- * yoksa yanlış hesaplanır doğrusu 20,70 gibi formatlayıp göndermeli
- * ya da 20.70
+ * Front end should never send currency values as 20.7, 
+ * otherwise it will be calculated incorrectly and 
+ * the correct value should be formatted as 20.70 or sent as 20.70.
  */
 function convertToMoney($value)
 {
