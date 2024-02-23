@@ -90,7 +90,7 @@ class TokenHandler implements RequestHandlerInterface
                                     'id' => $user->getId(),
                                     'fullname' => $details['fullname'],
                                     'email' => trim($details['email']),
-                                    'roles' => $user->getRoles(),
+                                    'permissions' => $user->getRoles(),
                                 ],
                                 'avatar' => $details['avatar'],
                                 'expiresAt' => $encoded['expiresAt']

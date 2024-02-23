@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Listener;
 
-use function createGuid;
-
 use App\Model\FailedLoginModel;
 use Laminas\EventManager\EventInterface;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\EventManager\ListenerAggregateTrait;
 
+use function createGuid;
 use function getRealUserIp;
 
 class LoginListener implements ListenerAggregateInterface
