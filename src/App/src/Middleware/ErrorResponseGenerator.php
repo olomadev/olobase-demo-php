@@ -43,9 +43,6 @@ class ErrorResponseGenerator
             'error' => $e->getMessage(),
             'trace' => $trace,
         ];
-        $response = $response->withHeader('Access-Control-Allow-Origin', '*');
-        $response = $response->withHeader('Access-Control-Allow-Headers', '*');
-        $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
         $response = $response->withHeader('Access-Control-Expose-Headers', 'Token-Expired');
         $response = $response->withHeader('Access-Control-Max-Age', '3600');
         $response = $response->withHeader('Content-Type', 'application/json');

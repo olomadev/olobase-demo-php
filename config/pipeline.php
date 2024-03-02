@@ -99,9 +99,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $notFoundHandler = new NotFoundHandler(
         function () {
             $response = new Response;
-            $response = $response->withHeader('Access-Control-Allow-Origin', '*');
             $response = $response->withHeader('Access-Control-Allow-Headers', '*');
-            $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
             $response = $response->withHeader('Access-Control-Expose-Headers', 'Token-Expired');
             $response = $response->withHeader('Access-Control-Max-Age', '3600'); // 1 hour
             return $response;

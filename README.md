@@ -215,8 +215,6 @@ sudo apt install php-common php-mysql php-xml php-curl php-json php-opcache php-
 sudo apt update
 sudo apt install redis-server
 sudo systemctl enable redis-server
-sudo apt install php-redis
-sudo phpenmod redis
 ```
 
 ```sh
@@ -224,6 +222,10 @@ vim /etc/redis/redis.conf
 bind 0.0.0.0
 protected-mode no
 ```
+
+
+sudo apt install php-redis
+sudo phpenmod redis
 
 Remove all keys
 

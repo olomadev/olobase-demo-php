@@ -13,7 +13,12 @@ set_error_handler(function($errno, $errstr, $errfile, $errline ){
 });
 $args = $_SERVER['argv'];
 putenv("APP_ENV=$args[1]"); // set environment
-
+//
+// WARNING !
+// 
+// config container must be declared after putenv("APP_ENV=$args[1]")
+// functions.
+//
 require dirname(__DIR__)."/vendor/autoload.php";
 $container = require dirname(__DIR__).'/config/container.php';
 

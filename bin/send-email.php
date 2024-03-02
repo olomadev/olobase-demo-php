@@ -3,8 +3,6 @@
 declare(strict_types=1);
 
 require dirname(__DIR__).'/vendor/autoload.php';
-$container = require dirname(__DIR__).'/config/container.php';
-$config = $container->get('config');
 
 use Laminas\Mime\Part as MimePart;
 use Laminas\Mime\Message as MimeMessage;
@@ -17,6 +15,14 @@ if (empty($args[1]) || empty($args[2])) {
     echo "Mail arguments cannot be empty !".PHP_EOL;
 }
 putenv("APP_ENV=$args[1]");
+//
+// WARNING !
+// 
+// config container must be declared after putenv("APP_ENV=$args[1]")
+// functions.
+//
+$container = require dirname(__DIR__).'/config/container.php';
+$config = $container->get('config');
 
 $decodedString = base64_decode($args[2]);
 if (false == $decodedString) {

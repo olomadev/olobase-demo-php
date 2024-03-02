@@ -8,7 +8,12 @@ use Laminas\Cache\Storage\StorageInterface;
 
 $args = $_SERVER['argv'];
 putenv("APP_ENV=$args[1]");
-
+//
+// WARNING !
+// 
+// config container must be declared after putenv("APP_ENV=$args[1]")
+// functions.
+//
 $container = require '../config/container.php';
 
 $decodedString = base64_decode($args[2]);
