@@ -17,7 +17,7 @@ Install composer packages
 
 Read the environment configuration in the following link.
 
-<a href="https://oloma.dev/olobase-docs/1.0/php-api/installation.html#Local%20Environment%20Configuration">https://oloma.dev/olobase-docs/1.0/php-api/installation.html#Local%20Environment%20Configuration</a>
+<a href="https://olobase.dev/docs/latest/php-api/index.html#Local%20Environment%20Configuration">https://olobase.dev/docs/latest/php-api/index.html#Local%20Environment%20Configuration</a>
 
 ```php
 <?php
