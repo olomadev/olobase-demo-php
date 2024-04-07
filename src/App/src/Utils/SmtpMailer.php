@@ -2,6 +2,7 @@
 
 namespace App\Utils;
 
+use Predis\ClientInterface as Predis;
 use Laminas\I18n\Translator\TranslatorInterface;
 
 /**
@@ -15,21 +16,24 @@ class SmtpMailer
     protected $cc = array();
     protected $bcc = array();
     protected $name = array();
-    protected $from = null;
-    protected $fromName = null;
+    protected $from = 'example@example.com';
+    protected $fromName = 'Example From Name';
     protected $subject;
     protected $body;
     protected $isHtml = true;
     protected $attachments = array();
     protected $config = array();
-    protected $translator;
-    protected $debugOutput = false;
+    
+    private $debugOutput = false;
 
-    public function __construct(array $config, TranslatorInterface $translator)
+    public function __construct(
+        array $config,
+        Predis $predis,
+        TranslatorInterface $translator
+    )
     {
         $this->config = $config;
-        $this->from = $config['smtp']['from'];
-        $this->fromName = $config['smtp']['from_name'];
+        $this->predis = $predis;
         $this->translator = $translator;
         $this->env = getenv('APP_ENV') ?: 'local';
     }
@@ -60,7 +64,7 @@ class SmtpMailer
 
     public function subject(string $subject)
     {
-        $this->subject = trim($subject);
+        $this->subject = $this->translator->translate(trim($subject), 'templates');
     }
 
     public function getTemplate(string $name, array $data = array())
@@ -110,31 +114,26 @@ class SmtpMailer
      */
     public function send()
     {
-        $queryParams = array();
-        $data = get_object_vars($this);
-        unset($data['translator'], $data['variables'], $data['debugOutput']);
-
-        if (false == $this->debugOutput) {
-            //
-            // send email in the background
-            // 
-            $queryParams = http_build_query($data);
-            $command = 'php '.PROJECT_ROOT.'/bin/send-email.php '.$this->env.' '.base64_encode(urldecode($queryParams));
-            exec($command . " > /dev/null &"); 
-        } else {
-            // This will write error output to "/data/tmp/error-output.txt"
-            //
-            // https://stackoverflow.com/questions/6014819/how-to-get-output-of-proc-open       
-            //  
-            $descriptorSpec = array(
-                0 => array("pipe", "r"),
-                1 => array("pipe", "w"),
-                2 => array("file", PROJECT_ROOT."/data/tmp/error-output.txt", "a")
-            );
-            $command = 'php '.PROJECT_ROOT.'/bin/send-email.php '.$this->env.' '.base64_encode(urldecode($queryParams)).' ./a a.out';
-            $process = proc_open($command, $descriptorSpec, $pipes, PROJECT_ROOT.'/bin');
-            // echo stream_get_contents($pipes[1]);
-            fclose($pipes[1]);
-        } 
+        $data = array();
+        $data['from'] = $this->from;
+        $data['fromName'] = $this->fromName;
+        $data['to'] = $this->to;
+        $data['cc'] = $this->cc;
+        $data['bcc'] = $this->bcc;
+        $data['subject'] = $this->subject;
+        $data['body'] = $this->body;
+        $data['attachments'] = $this->attachments;
+        $data['isHtml'] = true;
+        //
+        // send to queue
+        // https://www.vultr.com/docs/implement-redis-queue-and-worker-with-php-on-ubuntu-20-04/
+        // 
+        $this->predis->rpush(
+            "mailer", 
+            json_encode($data)
+        );
+        if ($this->debugOutput) {
+            print_r($data);
+        }
     }
 }

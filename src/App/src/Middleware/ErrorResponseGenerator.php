@@ -41,8 +41,10 @@ class ErrorResponseGenerator
             'file' => str_replace(PROJECT_ROOT, '', $e->getFile()),
             'line' => $e->getLine(),
             'error' => $e->getMessage(),
-            'trace' => $trace,
         ];
+        if (getenv('APP_ENV') == 'local') {
+            $json['trace'] = $trace;
+        }
         $response = $response->withHeader('Access-Control-Expose-Headers', 'Token-Expired');
         $response = $response->withHeader('Access-Control-Max-Age', '3600');
         $response = $response->withHeader('Content-Type', 'application/json');

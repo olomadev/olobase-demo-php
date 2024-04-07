@@ -18,7 +18,6 @@ use Psr\Container\ContainerInterface;
 use Laminas\Diactoros\Response;
 use App\Middleware\ClientMiddleware;
 use App\Middleware\RestrictedModeMiddleware;
-use App\Middleware\RequestBodyFilterMiddleware;
 
 /**
  * Setup middleware pipeline:
