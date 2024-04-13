@@ -312,7 +312,6 @@ class UserModel
 
     public function generateResetPassword(string $username) : string
     {
-        $this->simpleCache->set('test', ['username' => 'ersin']);
         $resetCode = generateRandomNumber(6);
         $this->simpleCache->set((string)$resetCode, $username, 600); // wait confirmation for 10 minutes
         return $resetCode;
