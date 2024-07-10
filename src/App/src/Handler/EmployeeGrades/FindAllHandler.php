@@ -20,7 +20,7 @@ class FindAllHandler implements RequestHandlerInterface
     /**
      * @OA\Get(
      *   path="/employeegrades/findAll",
-     *   tags={"Permissions"},
+     *   tags={"Employee Grades"},
      *   summary="Find all employee grades",
      *   operationId="employeeGrades_findAll",
      *   

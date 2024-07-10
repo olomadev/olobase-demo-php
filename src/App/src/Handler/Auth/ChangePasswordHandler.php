@@ -57,7 +57,7 @@ class ChangePasswordHandler implements RequestHandlerInterface
             // delete failed logins attempts 
             // otherwise blocked users can't login
             //
-            $this->failedLoginModel->deleteAttempts($username);
+            $this->failedLoginModel->deleteAttemptsByUsername($username);
 
             return new JsonResponse([]);
         }

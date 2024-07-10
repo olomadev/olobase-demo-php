@@ -10,6 +10,15 @@ define('CACHE_TMP_FILE_KEY', 'tmp_file_');
 define('SESSION_KEY', CACHE_ROOT_KEY.'sessions:');
 
 /**
+ * Check value is UUID
+ * 
+ * @param  string  $value
+ * @return boolean
+ */
+function isUid($value) {
+    return preg_match('/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/', $value);
+}
+/**
  * Get origin
  *
  * https://stackoverflow.com/questions/276516/parsing-domain-from-a-url

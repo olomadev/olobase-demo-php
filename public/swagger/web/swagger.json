@@ -1003,7 +1003,7 @@
         "/employeegrades/findAll": {
             "get": {
                 "tags": [
-                    "Permissions"
+                    "Employee Grades"
                 ],
                 "summary": "Find all employee grades",
                 "operationId": "employeeGrades_findAll",

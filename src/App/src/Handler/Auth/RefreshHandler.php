@@ -66,11 +66,10 @@ class RefreshHandler implements RequestHandlerInterface
     {
         $post = $request->getParsedBody();
         if (empty($post['token'])) {
-            $message = $this->translator->translate("Token value cannot be sent empty");
             return new JsonResponse(
                 [
-                    'data' => ['error' => $message]
-                ], 
+                    'data' => ['error' => Self::LOGOUT_SIGNAL] // don't change
+                ],
                 401
             );
         }

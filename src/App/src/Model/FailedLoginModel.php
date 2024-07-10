@@ -118,6 +118,18 @@ class FailedLoginModel
         }
     }
 
+    public function deleteAttemptsByUsername(string $username)
+    {
+        try {
+            $this->conn->beginTransaction();
+            $this->failedLogins->delete(['username' => $username, 'clientId' => CLIENT_ID]);
+            $this->conn->commit();
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            throw $e;
+        }
+    }
+
     private function blockUsername(string $key, $count = 0)
     {
         if ($count > 6) { // block user for 30 seconds

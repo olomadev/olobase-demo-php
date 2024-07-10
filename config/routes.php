@@ -119,7 +119,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/jobtitles/delete/:jobTitleId', [...$auth, [App\Handler\JobTitles\DeleteHandler::class]], ['DELETE']);
     $app->route('/api/jobtitles/findAll', [JwtAuthenticationMiddleware::class, App\Handler\JobTitles\FindAllHandler::class], ['GET']);
     $app->route('/api/jobtitles/findAllByPaging', [...$auth, [App\Handler\JobTitles\FindAllByPagingHandler::class]], ['GET']);
-
+    //
     // JobTitleLists - (xlsx import functions) (private)
     // 
     $app->route('/api/jobtitlelists/upload', [...$auth, [App\Handler\JobTitleLists\UploadHandler::class]], ['POST']);
