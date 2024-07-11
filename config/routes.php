@@ -136,12 +136,15 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->route('/api/jobtitlelists/findAllByPaging', [...$auth, [App\Handler\JobTitleLists\FindAllByPagingHandler::class]], ['GET']);
 
     // FailedLogins (private)
+    $app->route('/api/failedlogins/delete/:loginId', [...$auth, [App\Handler\FailedLogins\DeleteHandler::class]], ['DELETE']);
     $app->route('/api/failedlogins/findAllByPaging', [...$auth, [App\Handler\FailedLogins\FindAllByPagingHandler::class]], ['GET']);
     $app->route('/api/failedloginips/findAll', [...$auth, [App\Handler\FailedLogins\FindAllIpAdressesHandler::class]], ['GET']);
     $app->route('/api/failedloginusernames/findAll', [...$auth, [App\Handler\FailedLogins\FindAllUsernamesHandler::class]], ['GET']);
 
     // Common (public)
     // 
+    $app->route('/api/actions/findAll', App\Handler\Common\Actions\FindAllHandler::class, ['GET']);
+    $app->route('/api/methods/findAll', App\Handler\Common\Methods\FindAllHandler::class, ['GET']);
     $app->route('/api/stream/events', App\Handler\Common\Stream\EventsHandler::class, ['GET']);
     $app->route('/api/locales/findAll', App\Handler\Common\Locales\FindAllHandler::class, ['GET']);
     $app->route('/api/years/findAll', App\Handler\Common\Years\FindAllHandler::class, ['GET']);

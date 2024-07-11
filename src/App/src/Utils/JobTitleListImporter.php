@@ -78,6 +78,8 @@ class JobTitleListImporter
                 // set status to follow progress
                 //
                 $this->simpleCache->set($fileKey.'_status2', ['status' => true, 'error' => null], 600);
+                
+                // print_r($insertData);
             }
         }               
 

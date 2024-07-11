@@ -249,6 +249,30 @@
                 }
             }
         },
+        "/actions/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all actions",
+                "operationId": "actions_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
         "/areaCodes/findAll": {
             "get": {
                 "tags": [
@@ -420,6 +444,30 @@
                 ],
                 "summary": "Find all locales",
                 "operationId": "locales_findAll",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommonFindAll"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No result found"
+                    }
+                }
+            }
+        },
+        "/methods/findAll": {
+            "get": {
+                "tags": [
+                    "Common"
+                ],
+                "summary": "Find all allowed http methods",
+                "operationId": "methods_findAll",
                 "responses": {
                     "200": {
                         "description": "Successful operation",

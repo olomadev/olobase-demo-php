@@ -95,6 +95,18 @@ class FailedLoginModel
         }
     }
 
+    public function delete(string $loginId)
+    {
+        try {
+            $this->conn->beginTransaction();
+            $this->failedLogins->delete(['loginId' => $loginId]);
+            $this->conn->commit();
+        } catch (Exception $e) {
+            $this->conn->rollback();
+            throw $e;
+        }
+    }
+    
     /**
      * In these cases we delete unsuccessful attempts:
      *
