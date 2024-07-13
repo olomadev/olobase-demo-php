@@ -347,7 +347,7 @@ class EmployeeModel
         }
         if ($this->columnFilters->orderDataIsNotEmpty()) {
             foreach ($this->columnFilters->getOrderData() as $order) {
-                $select->order(new Expression($order));
+                $select->order($order);
             }
         }
         // echo $select->getSqlString($this->adapter->getPlatform());
