@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindAllHandler implements RequestHandlerInterface
 {
-    public function __construct(EmployeeGradeModel $employeeGradeModel)
+    public function __construct(private EmployeeGradeModel $employeeGradeModel)
     {
         $this->employeeGradeModel = $employeeGradeModel;
     }

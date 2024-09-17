@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindAllByPagingHandler implements RequestHandlerInterface
 {
-    public function __construct(PermissionModel $permissionModel)
+    public function __construct(private PermissionModel $permissionModel)
     {
         $this->permissionModel = $permissionModel;
     }

@@ -18,10 +18,10 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 class ImportHandler implements RequestHandlerInterface
 {
     public function __construct(
-        Translator $translator,
-        Predis $predis,
-        ImportFilter $filter,
-        Error $error
+        private Translator $translator,
+        private Predis $predis,
+        private ImportFilter $filter,
+        private Error $error
     ) 
     {
         $this->filter = $filter;

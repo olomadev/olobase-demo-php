@@ -14,8 +14,8 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 class FindAllHandler implements RequestHandlerInterface
 {
     public function __construct(
-        Translator $translator,
-        EmployeeModel $employeeModel
+        private Translator $translator,
+        private EmployeeModel $employeeModel
     )
     {
         $this->translator = $translator;

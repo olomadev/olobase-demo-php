@@ -20,6 +20,7 @@ class FailedLoginModel
     private $adapter;
     private $message;
     private $users;
+    private $simpleCache;
     private $failedLogins;
     private $columnFilters;
 

@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindAllByPagingHandler implements RequestHandlerInterface
 {
-    public function __construct(RoleModel $roleModel)
+    public function __construct(private RoleModel $roleModel)
     {
         $this->roleModel = $roleModel;
     }

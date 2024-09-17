@@ -32,11 +32,12 @@ use Mezzio\Authentication\AuthenticationInterface as Auth;
  */
 class TokenHandler implements RequestHandlerInterface
 {
+    private $config;
     /**
      * This signal is controlled by the frontend, do not change the value.
      */
-    protected const EXPIRE_SIGNAL = 'Token Expired';
-
+    private const EXPIRE_SIGNAL = 'Token Expired';
+    
     public function __construct(
         array $config, 
         private Auth $auth,

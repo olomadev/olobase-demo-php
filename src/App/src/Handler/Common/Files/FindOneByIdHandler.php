@@ -18,10 +18,10 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 class FindOneByIdHandler implements RequestHandlerInterface
 {
     public function __construct(
-        Translator $translator,
-        FileModel $fileModel,
-        ReadFileFilter $filter,
-        Error $error
+        private Translator $translator,
+        private FileModel $fileModel,
+        private ReadFileFilter $filter,
+        private Error $error
     )
     {
         $this->filter = $filter;

@@ -19,6 +19,7 @@ use Laminas\I18n\Translator\TranslatorInterface as Translator;
 
 class RefreshHandler implements RequestHandlerInterface
 {
+    private $config;
     /**
      * This signal is controlled by the frontend, do not change the value.
      */

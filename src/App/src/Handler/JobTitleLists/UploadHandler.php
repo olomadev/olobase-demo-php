@@ -17,9 +17,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 class UploadHandler implements RequestHandlerInterface
 {
     public function __construct(
-        Predis $predis,
-        FileUploadFilter $filter,
-        Error $error
+        private Predis $predis,
+        private FileUploadFilter $filter,
+        private Error $error
     )
     {
         $this->filter = $filter;

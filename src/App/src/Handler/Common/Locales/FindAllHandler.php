@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindAllHandler implements RequestHandlerInterface
 {
-    public function __construct(CommonModel $commonModel)
+    public function __construct(private CommonModel $commonModel)
     {
         $this->commonModel = $commonModel;
     }

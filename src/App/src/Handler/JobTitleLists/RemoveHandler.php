@@ -13,7 +13,7 @@ use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class RemoveHandler implements RequestHandlerInterface
 {
-    public function __construct(SimpleCacheInterface $simpleCache) 
+    public function __construct(private SimpleCacheInterface $simpleCache) 
     {
         $this->simpleCache = $simpleCache;     
     }

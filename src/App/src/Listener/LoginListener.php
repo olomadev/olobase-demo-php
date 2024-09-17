@@ -17,6 +17,8 @@ class LoginListener implements ListenerAggregateInterface
 {
     use ListenerAggregateTrait;
 
+    protected $failedLoginModel;
+
     const onFailedLogin = 'onFailedLogin';
     const onSuccessfullLogin = 'onSuccessfullLogin';
 

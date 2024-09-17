@@ -42,6 +42,7 @@ class JwtAuthentication implements AuthenticationInterface
         Self::IP_VALIDATION_FAILED => 'Ip validation failed and you are logged out',
         Self::USER_AGENT_VALIDATION_FAILED => 'Browser validation failed and you are logged out',
     ];
+    protected $token;
     protected $config;
     protected $authAdapter;
     protected $translator;

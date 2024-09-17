@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class FindAllIpAdressesHandler implements RequestHandlerInterface
 {
-    public function __construct(FailedLoginModel $failedLoginModel)
+    public function __construct(private FailedLoginModel $failedLoginModel)
     {
         $this->failedLoginModel = $failedLoginModel;
     }

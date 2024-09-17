@@ -9,3 +9,4 @@ debugfiles/
 composer.lock
 /nbproject/private/
 nbproject
+/.github/
