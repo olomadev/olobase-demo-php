@@ -114,6 +114,13 @@ class JwtAuthentication implements AuthenticationInterface
             'translator' => $this->translator,
             'username' => $post[$usernameField],
         ];
+        $results = $this->events->trigger(LoginListener::onBeforeLogin, null, $eventParams);
+        $loginResponse = $results->last();
+        if ($loginResponse['banned']) {
+            $this->error($loginResponse['message']);
+            return null;
+        }
+        //
         // credentials are correct ? 
         //
         $result = $this->authAdapter->authenticate();
@@ -121,12 +128,7 @@ class JwtAuthentication implements AuthenticationInterface
             //
             // failed attempts event start
             //
-            $results = $this->events->trigger(LoginListener::onFailedLogin, null, $eventParams);
-            $failedResponse = $results->last();
-            if ($failedResponse['banned']) {
-                $this->error($failedResponse['message']);
-                return null;
-            }
+            $this->events->trigger(LoginListener::onFailedLogin, null, $eventParams);
             //
             // default behaviour
             //
@@ -147,7 +149,7 @@ class JwtAuthentication implements AuthenticationInterface
             return null;
         }
         //
-        // is the role exists ?
+        // is role exists ?
         // 
         $roles = $this->authModel->findRolesById($rowObject->userId);
         if (empty($roles)) {
