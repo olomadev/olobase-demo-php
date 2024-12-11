@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filter\Users;
 
 use App\Filter\InputFilter;
+use App\Filter\ObjectInputFilter;
 use App\Filter\CollectionInputFilter;
 use App\Filter\Utils\MbUcFirstFilter;
 use App\Filter\Utils\EmailNormalizeFilter;
@@ -140,8 +141,10 @@ class SaveFilter extends InputFilter
                 ['name' => ToInt::class],
             ],
         ]);
-        $this->add([
-            'name' => 'avatarImage',
+
+        $objectFilter = $this->filter->get(ObjectInputFilter::class);
+        $objectFilter->add([
+            'name' => 'image',
             'required' => false,
             'filters' => [
                 ['name' => ToFile::class],
@@ -153,12 +156,16 @@ class SaveFilter extends InputFilter
                         'operation' => HTTP_METHOD == 'POST' ? 'create' : 'update',
                         'max_allowed_upload' => 2097152,  // 2 mega bytes
                         'mime_types' => [
-                            'image/png', 'image/jpg', 'image/jpeg', 'image/gif',
+                            'image/png',
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/gif',
                         ],
                     ],
                 ]
             ]
         ]);
+        $this->add($objectFilter, 'avatar');
 
         $this->add([
             'name' => 'themeColor',
