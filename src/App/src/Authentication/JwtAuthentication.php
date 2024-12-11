@@ -113,6 +113,7 @@ class JwtAuthentication implements AuthenticationInterface
             'request' => $request,
             'translator' => $this->translator,
             'username' => $post[$usernameField],
+            'ip' => $this->getIpAddress(),
         ];
         $results = $this->events->trigger(LoginListener::onBeforeLogin, null, $eventParams);
         $loginResponse = $results->last();
@@ -126,7 +127,7 @@ class JwtAuthentication implements AuthenticationInterface
         $result = $this->authAdapter->authenticate();
         if (! $result->isValid()) {
             //
-            // failed attempts event start
+            // failed attempts event
             //
             $this->events->trigger(LoginListener::onFailedLogin, null, $eventParams);
             //

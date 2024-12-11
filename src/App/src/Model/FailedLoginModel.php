@@ -107,7 +107,7 @@ class FailedLoginModel
             throw $e;
         }
     }
-    
+
     /**
      * In these cases we delete unsuccessful attempts:
      *

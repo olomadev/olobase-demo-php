@@ -59,12 +59,14 @@ function getRealUserIp($default = null, $options = 12582912)
     $HTTP_X_FORWARDED_FOR = isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : getenv('HTTP_X_FORWARDED_FOR');
     $HTTP_CLIENT_IP = isset($_SERVER["HTTP_CLIENT_IP"]) ? $_SERVER["HTTP_CLIENT_IP"] : getenv('HTTP_CLIENT_IP');
     $REMOTE_ADDR = isset($_SERVER["REMOTE_ADDR"]) ? $_SERVER["REMOTE_ADDR"] : getenv('REMOTE_ADDR');
-
     $allIps = explode(",", "$HTTP_X_FORWARDED_FOR,$HTTP_CLIENT_IP,$HTTP_CF_CONNECTING_IP,$REMOTE_ADDR");
     foreach ($allIps as $ip) {
         if ($ip = filter_var($ip, FILTER_VALIDATE_IP, $options)) {
             break;
         }
+    }
+    if ($ip == null) {
+        $default = $REMOTE_ADDR;
     }
     return $ip ? $ip : $default;
 }

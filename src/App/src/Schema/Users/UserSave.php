@@ -50,10 +50,12 @@ class UserSave
      */
     public $themeColor;
     /**
-     * @var string
-     * @OA\Property()
-     */
-    public $avatarImage;
+    * @var object
+    * @OA\Property(
+    *     ref="#/components/schemas/AvatarObject",
+    * )
+    */
+    public $avatar;
     /**
     *  @var array
     *  @OA\Property(
